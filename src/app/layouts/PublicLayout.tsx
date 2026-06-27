@@ -9,9 +9,11 @@ type PublicLayoutProps = PropsWithChildren<{
 
 export function PublicLayout({ children, currentPath, navigation, onNavigate }: PublicLayoutProps) {
   const [language, setLanguage] = useState('en')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleNavigate = (href: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
+    setIsMobileMenuOpen(false)
     onNavigate(href)
   }
   const secondaryNavigation = navigation.filter((item) => item.href !== '/submit')
@@ -39,6 +41,19 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
             </span>
           </a>
 
+          <button
+            aria-controls="mobile-public-menu"
+            aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            className="mobile-menu-toggle"
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            type="button"
+          >
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </button>
+
           <div className="topbar-actions">
             <nav className="topbar-nav" aria-label="Public navigation">
               {secondaryNavigation.map((item) => (
@@ -64,6 +79,56 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
             </a>
           </div>
         </div>
+
+        <button
+          aria-label="Close menu"
+          className={`mobile-menu-backdrop ${isMobileMenuOpen ? 'is-open' : ''}`}
+          onClick={() => setIsMobileMenuOpen(false)}
+          type="button"
+        />
+
+        <aside
+          aria-label="Mobile public navigation"
+          className={`mobile-public-menu ${isMobileMenuOpen ? 'is-open' : ''}`}
+          id="mobile-public-menu"
+        >
+          <div className="mobile-menu-head">
+            <div>
+              <span className="brand-kicker">Menu</span>
+              <strong>Smart Citizen Platform</strong>
+            </div>
+            <button aria-label="Close menu" onClick={() => setIsMobileMenuOpen(false)} type="button">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <path d="M4 4l10 10M14 4 4 14" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+              </svg>
+            </button>
+          </div>
+
+          <nav className="mobile-menu-nav" aria-label="Mobile navigation">
+            {secondaryNavigation.map((item) => (
+              <a
+                aria-current={currentPath === item.href ? 'page' : undefined}
+                href={item.href}
+                key={item.href}
+                onClick={handleNavigate(item.href)}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="mobile-menu-language" aria-label="Language options">
+            <button type="button" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>EN</button>
+            <button type="button" aria-pressed={language === 'ta'} onClick={() => setLanguage('ta')}>à®¤à®®à®¿à®´à¯</button>
+          </div>
+
+          <a className="mobile-menu-cta" href="/submit" onClick={handleNavigate('/submit')}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            Report issue
+          </a>
+        </aside>
       </header>
 
       <div id="main-content" className="main-content">

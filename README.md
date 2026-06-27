@@ -1,32 +1,57 @@
-# React + TypeScript + Vite
+# Smart Citizen Complaint Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React TypeScript frontend with Supabase as the serverless backend platform for a Pradeshiya Sabha
+complaint and civic service management system.
 
-Currently, two official plugins are available:
+## Architecture Goal
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This project is intentionally not built as one long component file. It uses feature-first folders so the
+public portal, officer workflow, SMS communication, reporting, content, identity, locations, and settings
+can grow independently.
 
-## React Compiler
+See [docs/architecture.md](docs/architecture.md) for the full folder boundary guide.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Main Stack
 
-## Expanding the Oxlint configuration
+- React TypeScript
+- Vite
+- Supabase Auth, Postgres, Storage, RLS, and Edge Functions
+- Text.lk SMS through Supabase Edge Functions only
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Project Structure
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```text
+src/
+  app/                 App composition, layouts, providers, route registry
+  entities/            Shared domain models such as complaints and user roles
+  features/            Product modules grouped by civic workflow
+  shared/              Reusable UI, config, env, Supabase client
+  styles/              Global styling
+supabase/
+  migrations/          Database schema, RLS, policies, indexes
+  functions/           Secure Edge Functions such as Text.lk SMS
+docs/
+  architecture.md      Architecture notes and boundary rules
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Local Setup
+
+```bash
+npm install
+cp .env.example .env
+npm run dev
+```
+
+Fill these values before using Supabase-backed screens:
+
+```text
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+```
+
+## Verification
+
+```bash
+npm run build
+npm.cmd run lint
+```

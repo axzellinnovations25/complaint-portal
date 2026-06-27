@@ -52,21 +52,27 @@ const complaintCategories: Array<{
   },
 ]
 
-const preparationSteps = [
+const categoryOptions = complaintCategories.map((category) => ({
+  description: category.helper,
+  label: category.value,
+  value: category.value,
+}))
+
+const urgencyOptions = [
   {
-    title: 'Choose one main issue',
-    detail: 'One complaint should describe one service problem so it can be assigned cleanly.',
-    icon: 'file' as const,
+    description: 'Standard review and assignment.',
+    label: 'Normal service issue',
+    value: 'normal',
   },
   {
-    title: 'Make the location inspectable',
-    detail: 'Use a ward, road name, landmark, pole number, or nearby public building.',
-    icon: 'map' as const,
+    description: 'Use when access or public safety is affected.',
+    label: 'Public safety affected',
+    value: 'high',
   },
   {
-    title: 'Add follow-up details only if needed',
-    detail: 'Anonymous complaints are supported, but SMS updates require a phone number.',
-    icon: 'lock' as const,
+    description: 'For comments or lower urgency requests.',
+    label: 'General feedback',
+    value: 'low',
   },
 ]
 
@@ -164,21 +170,117 @@ function ReportIcon({ name }: { name: ReportIconName }) {
   )
 }
 
+type ReportDropdownProps = {
+  description?: string
+  error?: string
+  id: string
+  label: string
+  name: string
+  onChange: (value: string) => void
+  options: Array<{ description?: string; label: string; value: string }>
+  placeholder: string
+  value: string
+}
+
+function ReportDropdown({
+  description,
+  error,
+  id,
+  label,
+  name,
+  onChange,
+  options,
+  placeholder,
+  value,
+}: ReportDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const selectedOption = options.find((option) => option.value === value)
+
+  return (
+    <div className={`field-preview report-select-field ${isOpen ? 'report-select-field-open' : ''} ${error ? 'report-select-field-error' : ''}`}>
+      <label id={`${id}-label`} htmlFor={`${id}-button`}>{label}</label>
+      <input name={name} type="hidden" value={value} />
+      <button
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-labelledby={`${id}-label ${id}-button`}
+        className={`report-select-trigger ${selectedOption ? '' : 'report-select-trigger-placeholder'}`}
+        id={`${id}-button`}
+        onClick={() => setIsOpen((open) => !open)}
+        type="button"
+      >
+        <span>{selectedOption?.label ?? placeholder}</span>
+        <span className="report-select-arrow" aria-hidden="true">v</span>
+      </button>
+      {description && <span className="report-select-help">{description}</span>}
+      {error && <span className="report-select-error-text">{error}</span>}
+
+      {isOpen && (
+        <ul className="report-select-menu" role="listbox" aria-labelledby={`${id}-label`}>
+          {options.map((option) => (
+            <li key={option.value}>
+              <button
+                aria-selected={option.value === value}
+                onClick={() => {
+                  onChange(option.value)
+                  setIsOpen(false)
+                }}
+                role="option"
+                type="button"
+              >
+                <strong>{option.label}</strong>
+                {option.description && <span>{option.description}</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 export function SubmitComplaintPage() {
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [submittedReference, setSubmittedReference] = useState('')
-  const [initialCategory] = useState(getInitialCategory)
+  const [currentStep, setCurrentStep] = useState(1)
+  const [category, setCategory] = useState(getInitialCategory)
+  const [categoryError, setCategoryError] = useState('')
+  const [urgency, setUrgency] = useState('normal')
   const referenceHintId = useId()
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (currentStep < 3) {
+      goToNextStep(event.currentTarget)
+      return
+    }
+
     setSubmittedReference('PS-2026-00124')
   }
+
+  const goToNextStep = (form: HTMLFormElement | null) => {
+    if (currentStep === 1 && !category) {
+      setCategoryError('Choose a category to continue.')
+      return
+    }
+
+    if (form?.reportValidity()) {
+      setCurrentStep((step) => Math.min(step + 1, 3))
+    }
+  }
+
+  const goToPreviousStep = () => {
+    setCurrentStep((step) => Math.max(step - 1, 1))
+  }
+
+  const trackingHref = submittedReference
+    ? `/track?reference=${encodeURIComponent(submittedReference)}`
+    : '/track'
 
   return (
     <article className="public-page report-page">
       <section className="compact-page-hero report-hero" aria-labelledby="submit-title">
-        <div>
+        <div className="report-hero-copy">
           <p className="eyebrow">Report an issue</p>
           <h1 id="submit-title">Send a complete civic complaint in one flow.</h1>
           <p>
@@ -187,11 +289,27 @@ export function SubmitComplaintPage() {
           </p>
         </div>
         <aside className="report-hero-card" aria-label="Submission summary">
-          <span aria-hidden="true">
+          <span className="report-hero-card-icon" aria-hidden="true">
             <ReportIcon name="check" />
           </span>
-          <strong>Reference number issued after submission</strong>
-          <p>Keep it for tracking, especially when the report is anonymous.</p>
+          <div>
+            <strong>Reference number issued after submission</strong>
+            <p>Keep it for tracking, especially when the report is anonymous.</p>
+          </div>
+          <ul>
+            <li>
+              <ReportIcon name="map" />
+              <span>Add a clear location</span>
+            </li>
+            <li>
+              <ReportIcon name="file" />
+              <span>Describe one main issue</span>
+            </li>
+            <li>
+              <ReportIcon name="lock" />
+              <span>Anonymous reports are supported</span>
+            </li>
+          </ul>
         </aside>
       </section>
 
@@ -210,189 +328,215 @@ export function SubmitComplaintPage() {
       </section>
 
       <section className="workflow-panel submit-panel complaint-intake-panel" aria-label="Complaint intake">
-        <div className="workflow-copy report-workflow-copy">
-          <p className="eyebrow">What to prepare</p>
-          <h2>Include the details officers need.</h2>
-          <p>
-            Keep the report factual and specific. Mention where the issue is, when you noticed it,
-            whether it affects access or safety, and what evidence is available.
-          </p>
-
-          <ol className="report-guidance-list" aria-label="Complaint submission preparation">
-            {preparationSteps.map((step, index) => (
-              <li key={step.title}>
-                <span aria-hidden="true">
-                  <ReportIcon name={step.icon} />
-                </span>
-                <div>
-                  <strong>{index + 1}. {step.title}</strong>
-                  <p>{step.detail}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-
-          <div className="report-category-panel">
-            <p className="eyebrow">Available categories</p>
-            <div>
-              {complaintCategories.map((category) => (
-                <article key={category.value}>
-                  <span aria-hidden="true">
-                    <ReportIcon name={category.icon} />
-                  </span>
-                  <div>
-                    <strong>{category.value}</strong>
-                    <p>{category.helper}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {submittedReference ? (
           <section className="success-card report-success-card" aria-live="polite" aria-labelledby="submission-success-title">
             <span className="success-icon" aria-hidden="true">
               <ReportIcon name="check" />
             </span>
-            <div>
+            <div className="report-success-copy">
               <p className="eyebrow">Complaint received</p>
-              <h2 id="submission-success-title">Save your reference number.</h2>
+              <h2 id="submission-success-title">Complaint submitted successfully.</h2>
               <p>
-                Your complaint has been captured for review. Use this reference on the tracking page
-                whenever you want to check progress.
+                Save this number before leaving. It is the fastest way to check the latest status.
               </p>
             </div>
             <div className="reference-card" aria-describedby={referenceHintId}>
               <span>Reference number</span>
               <strong>{submittedReference}</strong>
-              <p id={referenceHintId}>Anonymous reports are tracked only with this number.</p>
+              <p id={referenceHintId}>Use this reference on the tracking page.</p>
             </div>
-            <button
-              className="button button-secondary"
-              type="button"
-              onClick={() => setSubmittedReference('')}
-            >
-              Submit another complaint
-            </button>
+            <div className="report-success-next" aria-label="What happens next">
+              <div>
+                <ReportIcon name="file" />
+                <strong>Review queued</strong>
+                <span>Officers can now assess and assign it.</span>
+              </div>
+              <div>
+                <ReportIcon name="lock" />
+                <strong>Reference secured</strong>
+                <span>Anonymous reports depend on this number.</span>
+              </div>
+            </div>
+            <div className="report-success-actions">
+              <a className="button button-primary" href={trackingHref}>
+                Track this complaint
+                <ReportIcon name="arrow" />
+              </a>
+              <button
+                className="button button-secondary"
+                type="button"
+                onClick={() => {
+                  setSubmittedReference('')
+                  setCurrentStep(1)
+                }}
+              >
+                Submit another
+              </button>
+            </div>
           </section>
         ) : (
           <form className="intake-card report-intake-card" aria-label="Complaint submission form" onSubmit={handleSubmit}>
-            <div className="form-section-title">
-              <span aria-hidden="true">1</span>
-              <div>
-                <h3>Issue details</h3>
-                <p>Tell officers what type of service problem this is.</p>
+            <div className="report-form-head">
+              <span>Step {currentStep} of 3</span>
+              <h2>Complete your complaint</h2>
+              <p>Fill one section at a time. Required details are kept visible and easy to scan.</p>
+            </div>
+
+            <ol className="report-stepper" aria-label="Complaint submission steps">
+              {['Issue', 'Follow-up', 'Submit'].map((stepLabel, index) => (
+                <li
+                  className={[
+                    currentStep === index + 1 ? 'report-step-active' : '',
+                    currentStep > index + 1 ? 'report-step-complete' : '',
+                  ].filter(Boolean).join(' ') || undefined}
+                  key={stepLabel}
+                >
+                  <span>{index + 1}</span>
+                  <strong>{stepLabel}</strong>
+                </li>
+              ))}
+            </ol>
+
+            <fieldset className="report-step-panel" disabled={currentStep !== 1} hidden={currentStep !== 1}>
+              <ReportDropdown
+                error={categoryError}
+                id="complaint-category"
+                label="Category"
+                name="category"
+                onChange={(value) => {
+                  setCategory(value)
+                  setCategoryError('')
+                }}
+                options={categoryOptions}
+                placeholder="Select a service area"
+                value={category}
+              />
+
+              <ReportDropdown
+                description="Choose the closest level. Officers can adjust it after review."
+                id="complaint-urgency"
+                label="Urgency"
+                name="urgency"
+                onChange={setUrgency}
+                options={urgencyOptions}
+                placeholder="Select urgency"
+                value={urgency}
+              />
+
+              <div className="field-preview">
+                <label htmlFor="complaint-location">Location</label>
+                <input
+                  id="complaint-location"
+                  name="location"
+                  placeholder="Ward, road name, landmark, pole number, or map note"
+                  type="text"
+                  required
+                />
               </div>
-            </div>
 
-            <div className="field-preview">
-              <label htmlFor="complaint-category">Category</label>
-              <select id="complaint-category" name="category" required defaultValue={initialCategory}>
-                <option value="" disabled>Select a service area</option>
-                {complaintCategories.map((category) => (
-                  <option value={category.value} key={category.value}>
-                    {category.value}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="field-preview">
-              <label htmlFor="complaint-urgency">Urgency</label>
-              <select id="complaint-urgency" name="urgency" required defaultValue="normal">
-                <option value="normal">Normal service issue</option>
-                <option value="high">Public safety affected</option>
-                <option value="low">General feedback</option>
-              </select>
-            </div>
-
-            <div className="field-preview">
-              <label htmlFor="complaint-location">Location</label>
-              <input
-                id="complaint-location"
-                name="location"
-                placeholder="Ward, road name, landmark, pole number, or map note"
-                type="text"
-                required
-              />
-            </div>
-
-            <div className="field-preview">
-              <label htmlFor="complaint-details">Description</label>
-              <textarea
-                id="complaint-details"
-                name="description"
-                placeholder="Describe the issue, when it started, and who is affected."
-                rows={5}
-                required
-              />
-            </div>
-
-            <div className="form-section-title">
-              <span aria-hidden="true">2</span>
-              <div>
-                <h3>Evidence and follow-up</h3>
-                <p>Photos are optional. Contact details are only needed for updates.</p>
+              <div className="field-preview">
+                <label htmlFor="complaint-details">Description</label>
+                <textarea
+                  id="complaint-details"
+                  name="description"
+                  placeholder="Describe the issue, when it started, and who is affected."
+                  rows={5}
+                  required
+                />
               </div>
-            </div>
+            </fieldset>
 
-            <div className="field-preview file-field report-file-field">
-              <label htmlFor="complaint-evidence">Photo or document</label>
-              <input
-                id="complaint-evidence"
-                name="evidence"
-                type="file"
-                accept="image/*,.pdf"
-              />
-              <span>Optional. Images or PDFs help confirm the issue and location.</span>
-            </div>
+            <fieldset className="report-step-panel" disabled={currentStep !== 2} hidden={currentStep !== 2}>
+              <div className="field-preview file-field report-file-field">
+                <label htmlFor="complaint-evidence">Photo or document</label>
+                <input
+                  id="complaint-evidence"
+                  name="evidence"
+                  type="file"
+                  accept="image/*,.pdf"
+                />
+                <span>Optional. Images or PDFs help confirm the issue and location.</span>
+              </div>
 
-            <label className="toggle-row report-toggle-row" htmlFor="anonymous-complaint">
-              <input
-                checked={isAnonymous}
-                id="anonymous-complaint"
-                name="anonymous"
-                onChange={(event) => setIsAnonymous(event.target.checked)}
-                type="checkbox"
-              />
-              <span>
-                <strong>Submit anonymously</strong>
-                <small>No name or phone number will be attached. Keep the reference number safe.</small>
-              </span>
-            </label>
+              <label className="toggle-row report-toggle-row" htmlFor="anonymous-complaint">
+                <input
+                  checked={isAnonymous}
+                  id="anonymous-complaint"
+                  name="anonymous"
+                  onChange={(event) => setIsAnonymous(event.target.checked)}
+                  type="checkbox"
+                />
+                <span>
+                  <strong>Submit anonymously</strong>
+                  <small>No name or phone number will be attached. Keep the reference number safe.</small>
+                </span>
+              </label>
 
-            {!isAnonymous && (
-              <div className="contact-grid">
-                <div className="field-preview">
-                  <label htmlFor="complainant-name">Name</label>
-                  <input
-                    id="complainant-name"
-                    name="name"
-                    placeholder="Your name"
-                    type="text"
-                  />
+              {!isAnonymous && (
+                <div className="contact-grid">
+                  <div className="field-preview">
+                    <label htmlFor="complainant-name">Name</label>
+                    <input
+                      id="complainant-name"
+                      name="name"
+                      placeholder="Your name"
+                      type="text"
+                    />
+                  </div>
+                  <div className="field-preview">
+                    <label htmlFor="complainant-phone">Phone number</label>
+                    <input
+                      id="complainant-phone"
+                      name="phone"
+                      placeholder="07X XXX XXXX"
+                      type="tel"
+                    />
+                  </div>
                 </div>
-                <div className="field-preview">
-                  <label htmlFor="complainant-phone">Phone number</label>
-                  <input
-                    id="complainant-phone"
-                    name="phone"
-                    placeholder="07X XXX XXXX"
-                    type="tel"
-                  />
+              )}
+            </fieldset>
+
+            <fieldset className="report-step-panel" disabled={currentStep !== 3} hidden={currentStep !== 3}>
+              <div className="form-section-title">
+                <span aria-hidden="true">3</span>
+                <div>
+                  <h3>Submit complaint</h3>
+                  <p>Check the reminder below, then submit the complaint.</p>
                 </div>
               </div>
-            )}
 
-            <p className="form-note report-form-note">
-              For immediate danger, contact emergency services first. This portal is for civic service follow-up only.
-            </p>
+              <div className="report-submit-review">
+                <ReportIcon name="check" />
+                <div>
+                  <strong>Ready for review</strong>
+                  <p>A reference number will be issued after submission. Save it to track progress.</p>
+                </div>
+              </div>
 
-            <button className="button button-primary report-submit-button" type="submit">
-              Submit complaint
-              <ReportIcon name="arrow" />
-            </button>
+              <p className="form-note report-form-note">
+                For immediate danger, contact emergency services first. This portal is for civic service follow-up only.
+              </p>
+            </fieldset>
+
+            <div className="report-step-actions">
+              {currentStep > 1 && (
+                <button className="button button-secondary" type="button" onClick={goToPreviousStep}>
+                  Back
+                </button>
+              )}
+
+              {currentStep < 3 ? (
+                <button className="button button-primary" type="button" onClick={(event) => goToNextStep(event.currentTarget.form)}>
+                  Next
+                  <ReportIcon name="arrow" />
+                </button>
+              ) : (
+                <button className="button button-primary" type="submit">
+                  Submit complaint
+                  <ReportIcon name="arrow" />
+                </button>
+              )}
+            </div>
           </form>
         )}
       </section>

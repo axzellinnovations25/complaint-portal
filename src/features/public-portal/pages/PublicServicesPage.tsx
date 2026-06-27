@@ -183,24 +183,48 @@ export function PublicServicesPage({ onNavigate }: PublicServicesPageProps) {
   return (
     <article className="public-page services-page">
       <section className="compact-page-hero services-hero" aria-labelledby="services-page-title">
-        <div>
+        <div className="services-hero-copy">
           <p className="eyebrow">Public service categories</p>
           <h1 id="services-page-title">Find the right civic issue type before you report.</h1>
           <p>
             Choose the closest category, add a clear location, and describe the issue in practical
             terms. The Pradeshiya Sabha team can refine the department after review.
           </p>
+          <div className="services-hero-actions">
+            <a className="button button-primary" href="/submit" onClick={navigateTo('/submit')}>
+              <ServiceIcon name="file" />
+              Submit a complaint
+            </a>
+            <a className="button button-secondary" href="/track" onClick={navigateTo('/track')}>
+              <ServiceIcon name="search" />
+              Track reference
+            </a>
+          </div>
         </div>
-        <div className="services-hero-actions">
-          <a className="button button-primary" href="/submit" onClick={navigateTo('/submit')}>
-            <ServiceIcon name="file" />
-            Submit a complaint
-          </a>
-          <a className="button button-secondary" href="/track" onClick={navigateTo('/track')}>
-            <ServiceIcon name="search" />
-            Track reference
-          </a>
-        </div>
+
+        <aside className="services-hero-card" aria-label="Service category summary">
+          <span className="services-hero-card-icon" aria-hidden="true">
+            <ServiceIcon name="check" />
+          </span>
+          <div>
+            <strong>Choose the closest category</strong>
+            <p>Officers can reassign the complaint after review if another team should handle it.</p>
+          </div>
+          <ul>
+            <li>
+              <ServiceIcon name="building" />
+              <span>6 common civic service groups</span>
+            </li>
+            <li>
+              <ServiceIcon name="map" />
+              <span>Location details guide field officers</span>
+            </li>
+            <li>
+              <ServiceIcon name="lock" />
+              <span>Reference number supports tracking</span>
+            </li>
+          </ul>
+        </aside>
       </section>
 
       <section className="services-boundary-grid" aria-label="Important service guidance">

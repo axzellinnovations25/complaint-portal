@@ -125,24 +125,48 @@ export function PublicNoticesPage({ onNavigate }: PublicNoticesPageProps) {
   return (
     <article className="public-page notices-page">
       <section className="compact-page-hero notices-hero" aria-labelledby="notices-page-title">
-        <div>
+        <div className="notices-hero-copy">
           <p className="eyebrow">Notices and guidance</p>
           <h1 id="notices-page-title">Read this before sending a complaint.</h1>
           <p>
             These notes help citizens submit complete, useful complaints and understand when another
             service channel is more appropriate.
           </p>
+          <div className="notices-hero-actions">
+            <a className="button button-primary" href="/submit" onClick={navigateTo('/submit')}>
+              <NoticeIcon name="file" />
+              Start a report
+            </a>
+            <a className="button button-secondary" href="/track" onClick={navigateTo('/track')}>
+              <NoticeIcon name="search" />
+              Track complaint
+            </a>
+          </div>
         </div>
-        <div className="notices-hero-actions">
-          <a className="button button-primary" href="/submit" onClick={navigateTo('/submit')}>
-            <NoticeIcon name="file" />
-            Start a report
-          </a>
-          <a className="button button-secondary" href="/track" onClick={navigateTo('/track')}>
-            <NoticeIcon name="search" />
-            Track complaint
-          </a>
-        </div>
+
+        <aside className="notices-hero-card" aria-label="Notice summary">
+          <span className="notices-hero-card-icon" aria-hidden="true">
+            <NoticeIcon name="alert" />
+          </span>
+          <div>
+            <strong>Check the guidance first</strong>
+            <p>Use this portal for civic service complaints, not immediate danger or emergency requests.</p>
+          </div>
+          <ul>
+            <li>
+              <NoticeIcon name="phone" />
+              <span>Emergency matters go elsewhere</span>
+            </li>
+            <li>
+              <NoticeIcon name="map" />
+              <span>Location details help field teams</span>
+            </li>
+            <li>
+              <NoticeIcon name="lock" />
+              <span>Reference numbers support tracking</span>
+            </li>
+          </ul>
+        </aside>
       </section>
 
       <section className="notices-priority-panel" aria-labelledby="priority-notice-title">

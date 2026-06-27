@@ -183,17 +183,126 @@ export function TrackComplaintPage() {
             and useful when following up with the Pradeshiya Sabha office.
           </p>
         </div>
+        <aside className="track-hero-panel" aria-label="Tracking portal summary">
+          <span className="track-hero-icon" aria-hidden="true">
+            <TrackIcon name="search" />
+          </span>
+          <div>
+            <strong>Reference-based tracking portal</strong>
+            <p>See whether a complaint is submitted, acknowledged, assigned, in progress, or resolved.</p>
+          </div>
+          <ul>
+            <li>
+              <TrackIcon name="shield" />
+              <span>Private reference lookup</span>
+            </li>
+            <li>
+              <TrackIcon name="calendar" />
+              <span>Latest status and next step</span>
+            </li>
+          </ul>
+        </aside>
       </section>
 
       <section className="track-lookup-panel" aria-label="Reference tracking">
-        <div className="track-lookup-copy">
-          <p className="eyebrow">Progress lookup</p>
-          <h2>Track from submission to closure.</h2>
-          <p>
-            Status updates show when a complaint is acknowledged, assigned, in progress, resolved,
-            reopened, or closed by the responsible team.
-          </p>
+        <div className={`track-card-flip ${lookupState !== 'idle' ? 'track-card-flip-active' : ''}`}>
+          <div className="track-card-flip-inner">
+            <form className="track-card track-card-front" aria-label="Track complaint by reference" onSubmit={handleSubmit}>
+              <span className="track-card-icon" aria-hidden="true">
+                <TrackIcon name="search" />
+              </span>
+              <div>
+                <label htmlFor="reference-number">Complaint reference number</label>
+                <h2>Enter your reference to track progress.</h2>
+                <p>Use the full reference exactly as shown after submission.</p>
+              </div>
+              <div className="track-form-row">
+                <input
+                  id="reference-number"
+                  name="reference-number"
+                  onChange={(event) => setReferenceNumber(event.target.value)}
+                  placeholder={`Example: ${demoReference}`}
+                  required
+                  type="text"
+                  value={referenceNumber}
+                  disabled={lookupState !== 'idle'}
+                />
+                <button type="submit" disabled={lookupState !== 'idle'}>
+                  <TrackIcon name="search" />
+                  Track
+                </button>
+              </div>
+            </form>
 
+            <div className="track-card track-card-back" aria-live="polite">
+              {lookupState === 'found' && (
+                <>
+                  <div className="tracking-summary">
+                    <div>
+                      <p className="eyebrow">Current status</p>
+                      <h2 id="tracking-result-title">Assigned to Public Health</h2>
+                      <p>Blocked drainage near market road. Last updated today at 10:05 AM.</p>
+                    </div>
+                    <span className="status-pill status-pill-active">In progress</span>
+                  </div>
+
+                  <div className="track-reference-badge">
+                    <span>Reference</span>
+                    <strong>{referenceNumber}</strong>
+                  </div>
+
+                  <ol className="track-timeline">
+                    {demoTimeline.map((item) => (
+                      <li className={item.complete ? 'timeline-complete' : undefined} key={item.label}>
+                        <span aria-hidden="true">
+                          <TrackIcon name={item.icon} />
+                        </span>
+                        <div>
+                          <strong>{item.label}</strong>
+                          <p>{item.detail}</p>
+                        </div>
+                        <time>{item.time}</time>
+                      </li>
+                    ))}
+                  </ol>
+
+                  <div className="track-next-step">
+                    <span aria-hidden="true">
+                      <TrackIcon name="calendar" />
+                    </span>
+                    <div>
+                      <strong>Next expected update</strong>
+                      <p>The assigned officer will update the record after the site inspection.</p>
+                    </div>
+                  </div>
+
+                  <button className="button button-secondary track-card-reset" type="button" onClick={resetLookup}>
+                    Track another reference
+                  </button>
+                </>
+              )}
+
+              {lookupState === 'missing' && (
+                <div className="track-empty-content">
+                  <span aria-hidden="true">
+                    <TrackIcon name="search" />
+                  </span>
+                  <p className="eyebrow">Reference not found</p>
+                  <h2 id="tracking-missing-title">Check the number and try again.</h2>
+                  <p>
+                    Use the full reference exactly as shown after submission. If you submitted anonymously,
+                    the portal cannot recover the reference from a phone number.
+                  </p>
+                  <button className="button button-secondary" type="button" onClick={resetLookup}>
+                    Clear and try again
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="track-lookup-support" aria-label="Tracking guidance">
           <div className="track-reference-demo" aria-label="Demo reference">
             <span>Try this demo reference</span>
             <strong>{demoReference}</strong>
@@ -205,35 +314,14 @@ export function TrackComplaintPage() {
             </span>
             <p>Keep the reference private if the complaint was submitted anonymously.</p>
           </div>
-        </div>
 
-        <form className="track-card" aria-label="Track complaint by reference" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="reference-number">Complaint reference number</label>
-            <p>Enter the reference exactly as shown after submission.</p>
-          </div>
-          <div className="track-form-row">
-            <input
-              id="reference-number"
-              name="reference-number"
-              onChange={(event) => setReferenceNumber(event.target.value)}
-              placeholder={`Example: ${demoReference}`}
-              required
-              type="text"
-              value={referenceNumber}
-            />
-            <button type="submit">
-              <TrackIcon name="search" />
-              Track
-            </button>
-          </div>
           <div className="track-form-tip">
             <span aria-hidden="true">
               <TrackIcon name="alert" />
             </span>
             <p>SMS updates are only available when a phone number was provided during submission.</p>
           </div>
-        </form>
+        </div>
       </section>
 
       <section className="track-status-guide" aria-labelledby="track-status-guide-title">
@@ -259,66 +347,6 @@ export function TrackComplaintPage() {
           ))}
         </div>
       </section>
-
-      {lookupState === 'found' && (
-        <section className="track-result-panel" aria-live="polite" aria-labelledby="tracking-result-title">
-          <div className="tracking-summary">
-            <div>
-              <p className="eyebrow">Current status</p>
-              <h2 id="tracking-result-title">Assigned to Public Health</h2>
-              <p>Blocked drainage near market road. Last updated today at 10:05 AM.</p>
-            </div>
-            <span className="status-pill status-pill-active">In progress</span>
-          </div>
-
-          <div className="track-reference-badge">
-            <span>Reference</span>
-            <strong>{referenceNumber}</strong>
-          </div>
-
-          <ol className="track-timeline">
-            {demoTimeline.map((item) => (
-              <li className={item.complete ? 'timeline-complete' : undefined} key={item.label}>
-                <span aria-hidden="true">
-                  <TrackIcon name={item.icon} />
-                </span>
-                <div>
-                  <strong>{item.label}</strong>
-                  <p>{item.detail}</p>
-                </div>
-                <time>{item.time}</time>
-              </li>
-            ))}
-          </ol>
-
-          <div className="track-next-step">
-            <span aria-hidden="true">
-              <TrackIcon name="calendar" />
-            </span>
-            <div>
-              <strong>Next expected update</strong>
-              <p>The assigned officer will update the record after the site inspection.</p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {lookupState === 'missing' && (
-        <section className="track-empty-panel" aria-live="polite" aria-labelledby="tracking-missing-title">
-          <span aria-hidden="true">
-            <TrackIcon name="search" />
-          </span>
-          <p className="eyebrow">Reference not found</p>
-          <h2 id="tracking-missing-title">Check the number and try again.</h2>
-          <p>
-            Use the full reference exactly as shown after submission. If you submitted anonymously,
-            the portal cannot recover the reference from a phone number.
-          </p>
-          <button className="button button-secondary" type="button" onClick={resetLookup}>
-            Clear and try again
-          </button>
-        </section>
-      )}
     </article>
   )
 }

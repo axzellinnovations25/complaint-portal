@@ -53,10 +53,10 @@ const trustFacts = [
 ]
 
 const requiredDetails = [
-  'A clear location or landmark',
-  'What happened and when it was noticed',
-  'A photo or document when available',
-  'A phone number only if you want SMS updates',
+  'Location or landmark',
+  'Issue and time noticed',
+  'Photo or document',
+  'Phone number for SMS',
 ]
 
 function HomeIcon({ name }: { name: IconName }) {
@@ -158,7 +158,7 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
   }
 
   return (
-    <>
+    <article className="home-page">
       <section className="hero-section civic-hero-section" aria-labelledby="public-home-title">
         <div className="hero-copy">
           <p className="eyebrow">Official civic complaint portal</p>
@@ -167,16 +167,6 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
             Use this Pradeshiya Sabha public portal to report local service issues, receive a
             complaint reference, and check progress without visiting the office.
           </p>
-
-          <div className="official-notice" role="note">
-            <span aria-hidden="true">
-              <HomeIcon name="building" />
-            </span>
-            <div>
-              <strong>Managed by the Pradeshiya Sabha civic service team</strong>
-              <p>For immediate danger, contact police, fire, ambulance, or other emergency channels first.</p>
-            </div>
-          </div>
 
           <div className="hero-actions" aria-label="Primary citizen actions">
             <a className="button button-primary" href="/submit" onClick={navigateTo('/submit')}>
@@ -198,18 +188,15 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
 
         <div className="home-hero-stack">
           <figure className="home-hero-media">
-            <img src="/civic-service-hero.png" alt="Civic service officers reviewing local public service reports" />
+            <img src="/sri-lanka-civic-office.jpg" alt="Colombo Town Hall civic office building in Sri Lanka" />
             <figcaption>Public service requests are recorded for review and follow-up.</figcaption>
           </figure>
 
           <aside className="home-action-panel" aria-label="Quick complaint actions">
             <div className="home-action-panel-header">
-              <span aria-hidden="true">
-                <HomeIcon name="check" />
-              </span>
               <div>
                 <p className="eyebrow">Quick access</p>
-                <h2>What do you need to do?</h2>
+                <h2>Start here</h2>
               </div>
             </div>
 
@@ -218,19 +205,19 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
                 <HomeIcon name="file" />
               </span>
               <div>
-                <strong>Submit a new complaint</strong>
-                <p>Share the location, category, details, and evidence.</p>
+                <strong>Submit complaint</strong>
+                <p>Report a civic service issue.</p>
               </div>
               <HomeIcon name="arrow" />
             </a>
 
             <form className="home-track-form" aria-label="Track complaint from home page" onSubmit={handleTrackSubmit}>
-              <label htmlFor="home-reference">Already submitted?</label>
+              <label htmlFor="home-reference">Track reference</label>
               <div>
-                <input id="home-reference" name="reference" placeholder="Example: PS-2026-00124" />
+                <input id="home-reference" name="reference" placeholder="PS-2026-00124" />
                 <button type="submit">Track</button>
               </div>
-              <p>Enter your reference number to open the tracking page with it filled in.</p>
+              <p>Enter the complaint reference number.</p>
             </form>
           </aside>
         </div>
@@ -339,7 +326,7 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
         <div className="submission-checklist">
           <div>
             <p className="eyebrow">Useful details</p>
-            <strong>Have these ready before you start.</strong>
+            <strong>Prepare these before submitting</strong>
           </div>
           <ul>
             {requiredDetails.map((detail) => (
@@ -367,6 +354,6 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
           </a>
         </div>
       </div>
-    </>
+    </article>
   )
 }

@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="none" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
   <title id="title">Smart Citizen Platform logo</title>
   <desc id="desc">A civic shield with a complaint message, route line, and confirmation check.</desc>
-  <rect width="128" height="128" rx="28" fill="#111827"/>
   <path fill="url(#a)" d="M64 13.5 105.5 30v29.4c0 26.8-16.9 45.5-41.5 55.1-24.6-9.6-41.5-28.3-41.5-55.1V30L64 13.5Z"/>
   <path fill="#111827" fill-opacity=".18" d="M64 23.5 96 36.3v23c0 20.5-12.7 35.6-32 44.3-19.3-8.7-32-23.8-32-44.3v-23L64 23.5Z"/>
   <path stroke="#ECFEFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="m76 52 12 12-21.5 21.5L54 73"/>

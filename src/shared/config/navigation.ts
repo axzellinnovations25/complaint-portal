@@ -10,9 +10,11 @@ export type ModuleDefinition = {
 }
 
 export const publicNavigation: NavigationItem[] = [
-  { label: 'Submit', href: '#submit' },
-  { label: 'Track', href: '#track' },
-  { label: 'Notices', href: '#notices' },
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services' },
+  { label: 'Submit', href: '/submit' },
+  { label: 'Track', href: '/track' },
+  { label: 'Notices', href: '/notices' },
 ]
 
 export const systemModules = {
@@ -24,19 +26,19 @@ export const systemModules = {
     },
     {
       title: 'Tracking and feedback',
-      description: 'Reference-based status lookup, resolved-case feedback, and reopening request flow.',
+      description: 'Reference-based status lookup with clear complaint progress and next-step guidance.',
       owner: 'features/public-portal',
     },
     {
       title: 'Notices and service information',
-      description: 'Tamil and English public content for categories, service updates, FAQs, and documents.',
+      description: 'Public guidance for service categories, emergency boundaries, and useful report details.',
       owner: 'features/content',
     },
   ],
   admin: [
     {
       title: 'Complaint operations',
-      description: 'Review, categorise, assign, update, resolve, reopen, and close civic submissions.',
+      description: 'Review, prioritise, assign, update, and resolve civic submissions from one queue.',
       owner: 'features/admin-complaints',
     },
     {
@@ -46,7 +48,7 @@ export const systemModules = {
     },
     {
       title: 'SLA, reports, and audit',
-      description: 'Overdue detection, management reports, export logs, and full action history.',
+      description: 'SLA risk indicators, workload summaries, exports, and case history visibility.',
       owner: 'features/reporting',
     },
     {

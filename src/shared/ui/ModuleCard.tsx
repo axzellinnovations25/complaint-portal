@@ -10,7 +10,7 @@ export function ModuleCard({ module, compact = false }: ModuleCardProps) {
     <article className={compact ? 'module-card module-card-compact' : 'module-card'}>
       <h3>{module.title}</h3>
       <p>{module.description}</p>
-      <span>{module.owner}</span>
+      {!compact && <span>{module.owner}</span>}
     </article>
   )
 }

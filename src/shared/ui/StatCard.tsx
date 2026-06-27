@@ -1,7 +1,7 @@
 type StatCardProps = {
   label: string
   value: string
-  tone: 'blue' | 'green' | 'amber' | 'red'
+  tone: 'blue' | 'cyan' | 'amber' | 'red'
 }
 
 export function StatCard({ label, value, tone }: StatCardProps) {

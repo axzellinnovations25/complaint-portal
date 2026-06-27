@@ -1,4 +1,4 @@
-# Smart Citizen Complaint Platform
+# Smart Citizen Platform | Complaint Portal
 
 React TypeScript frontend with Supabase as the serverless backend platform for a Pradeshiya Sabha
 complaint and civic service management system.

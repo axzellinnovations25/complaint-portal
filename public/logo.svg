@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="none" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Smart Citizen Platform logo</title>
+  <desc id="desc">A civic shield with a complaint message, route line, and confirmation check.</desc>
+  <rect width="128" height="128" rx="28" fill="#111827"/>
+  <path fill="url(#a)" d="M64 13.5 105.5 30v29.4c0 26.8-16.9 45.5-41.5 55.1-24.6-9.6-41.5-28.3-41.5-55.1V30L64 13.5Z"/>
+  <path fill="#111827" fill-opacity=".18" d="M64 23.5 96 36.3v23c0 20.5-12.7 35.6-32 44.3-19.3-8.7-32-23.8-32-44.3v-23L64 23.5Z"/>
+  <path stroke="#ECFEFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" d="m76 52 12 12-21.5 21.5L54 73"/>
+  <path fill="#CFFAFE" d="M39 45.5A12.5 12.5 0 0 1 51.5 33h20A12.5 12.5 0 0 1 84 45.5v10A12.5 12.5 0 0 1 71.5 68H60.2L47.7 78.1A3 3 0 0 1 43 75.8V66.5a12.5 12.5 0 0 1-4-9.2V45.5Z"/>
+  <path fill="#164E63" d="M50 45.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0Zm15 0a4 4 0 1 1 8 0 4 4 0 0 1-8 0Zm-15 13a3.5 3.5 0 0 1 3.5-3.5H70a3.5 3.5 0 1 1 0 7H53.5a3.5 3.5 0 0 1-3.5-3.5Z"/>
+  <path stroke="#67E8F9" stroke-linecap="round" stroke-width="5" d="M39 96c10.8 5.9 22.4 7.9 35 5"/>
+  <defs>
+    <linearGradient id="a" x1="22.5" x2="105.5" y1="13.5" y2="114.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#164E63"/>
+      <stop offset=".58" stop-color="#06B6D4"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+</svg>

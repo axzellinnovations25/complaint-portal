@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Noto+Serif+Tamil:wght@500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 /* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
@@ -6955,4 +6955,58 @@ html[lang='ta'] .report-select-field label {
   }
 }
 
+/* Tamil font style override */
+html[lang='ta'] {
+  --ta-body-font: 'Noto Sans Tamil', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --ta-display-font: 'Noto Serif Tamil', 'Noto Sans Tamil', ui-serif, serif;
+}
+
+html[lang='ta'],
+html[lang='ta'] body,
+html[lang='ta'] button,
+html[lang='ta'] input,
+html[lang='ta'] select,
+html[lang='ta'] textarea {
+  font-family: var(--ta-body-font);
+}
+
+html[lang='ta'] h1,
+html[lang='ta'] h2,
+html[lang='ta'] h3,
+html[lang='ta'] .brand-lockup strong,
+html[lang='ta'] .footer-brand strong,
+html[lang='ta'] .mobile-menu-head strong,
+html[lang='ta'] .home-action-panel-header h2,
+html[lang='ta'] .home-action-card strong,
+html[lang='ta'] .service-card h3,
+html[lang='ta'] .process-list strong,
+html[lang='ta'] .notice-card-heading strong,
+html[lang='ta'] .services-category-heading h3,
+html[lang='ta'] .report-hero-card strong,
+html[lang='ta'] .services-hero-card strong,
+html[lang='ta'] .notices-hero-card strong,
+html[lang='ta'] .track-hero-panel strong,
+html[lang='ta'] .track-status-grid strong,
+html[lang='ta'] .notices-check-grid strong,
+html[lang='ta'] .help-band strong {
+  font-family: var(--ta-display-font);
+}
+
+html[lang='ta'] h1 {
+  font-weight: 800;
+  line-height: 1.28;
+}
+
+html[lang='ta'] h2,
+html[lang='ta'] h3 {
+  font-weight: 750;
+}
+
+html[lang='ta'] .home-page .hero-copy h1,
+html[lang='ta'] .services-hero h1,
+html[lang='ta'] .notices-hero h1,
+html[lang='ta'] .track-hero h1,
+html[lang='ta'] .report-hero h1 {
+  letter-spacing: 0;
+}
 

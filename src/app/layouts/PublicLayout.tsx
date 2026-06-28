@@ -1,5 +1,6 @@
-import { useState, type MouseEvent, type PropsWithChildren } from 'react'
+import { useEffect, useState, type MouseEvent, type PropsWithChildren } from 'react'
 import type { NavigationItem } from '../../shared/config/navigation'
+import { PublicLanguageProvider, type PublicLanguage } from '../../shared/i18n/PublicLanguageContext'
 
 type PublicLayoutProps = PropsWithChildren<{
   currentPath: string
@@ -7,9 +8,77 @@ type PublicLayoutProps = PropsWithChildren<{
   navigation: NavigationItem[]
 }>
 
+const layoutCopy = {
+  en: {
+    skip: 'Skip to main content',
+    homeLabel: 'Smart Citizen Platform home',
+    brandKicker: 'Pradeshiya Sabha',
+    brandName: 'Smart Citizen Platform',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+    menu: 'Menu',
+    languageOptions: 'Language options',
+    publicNavigation: 'Public navigation',
+    mobileNavigation: 'Mobile navigation',
+    mobilePublicNavigation: 'Mobile public navigation',
+    navLabels: {
+      '/': 'Home',
+      '/services': 'Services',
+      '/submit': 'Submit',
+      '/track': 'Track',
+      '/notices': 'Notices',
+    } as Record<string, string>,
+    reportIssue: 'Report issue',
+    footerText: 'Submit complaints, track progress, and reach the right civic team without visiting an office.',
+    quickLinks: 'Quick links',
+    submitComplaint: 'Submit complaint',
+    trackComplaint: 'Track complaint',
+    information: 'Information',
+    serviceCategories: 'Service categories',
+    publicNotices: 'Public notices',
+    emergencyNote: 'Emergency matters should go to emergency services first.',
+    footerBoundary: 'Public civic service complaints only',
+  },
+  ta: {
+    skip: 'முக்கிய உள்ளடக்கத்துக்கு செல்ல',
+    homeLabel: 'மக்கள் சேவை மைய முகப்பு',
+    brandKicker: 'பிரதேச சபை',
+    brandName: 'மக்கள் சேவை மையம்',
+    openMenu: 'மெனுவை திறக்க',
+    closeMenu: 'மெனுவை மூட',
+    menu: 'மெனு',
+    languageOptions: 'மொழி தேர்வு',
+    publicNavigation: 'பொது வழிசெலுத்தல்',
+    mobileNavigation: 'கைபேசி வழிசெலுத்தல்',
+    mobilePublicNavigation: 'கைபேசி பொது மெனு',
+    navLabels: {
+      '/': 'முகப்பு',
+      '/services': 'சேவைகள்',
+      '/submit': 'முறைப்பாடு',
+      '/track': 'முறைப்பாடு நிலை',
+      '/notices': 'அறிவிப்புகள்',
+    } as Record<string, string>,
+    reportIssue: 'முறைப்பாடு பதிவு',
+    footerText: 'அலுவலகத்துக்கு வராமலே முறைப்பாடு அனுப்பவும், நிலையைப் பார்க்கவும், சரியான சேவை அணியை அணுகவும்.',
+    quickLinks: 'விரைவு இணைப்புகள்',
+    submitComplaint: 'முறைப்பாடு பதிவு',
+    trackComplaint: 'முறைப்பாடு நிலை',
+    information: 'தகவல்',
+    serviceCategories: 'சேவை வகைகள்',
+    publicNotices: 'பொது அறிவிப்புகள்',
+    emergencyNote: 'அவசர நிலை என்றால் முதலில் அவசர சேவையையே தொடர்புகொள்ளுங்கள்.',
+    footerBoundary: 'பொது சேவை முறைப்பாடுகளுக்கே',
+  },
+}
+
 export function PublicLayout({ children, currentPath, navigation, onNavigate }: PublicLayoutProps) {
-  const [language, setLanguage] = useState('en')
+  const [language, setLanguage] = useState<PublicLanguage>('en')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const copy = layoutCopy[language]
+
+  useEffect(() => {
+    document.documentElement.lang = language
+  }, [language])
 
   const handleNavigate = (href: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
@@ -21,7 +90,7 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
   return (
     <section className="public-shell">
       <a className="skip-link" href="#main-content">
-        Skip to main content
+        {copy.skip}
       </a>
 
       <header className="site-header">
@@ -29,22 +98,22 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
           <a
             className="brand-lockup"
             href="/"
-            aria-label="Smart Citizen Platform home"
+            aria-label={copy.homeLabel}
             onClick={handleNavigate('/')}
           >
             <span className="brand-mark" aria-hidden="true">
               <img src="/logo.svg" alt="" />
             </span>
             <span>
-              <span className="brand-kicker">Pradeshiya Sabha</span>
-              <strong>Smart Citizen Platform</strong>
+              <span className="brand-kicker">{copy.brandKicker}</span>
+              <strong>{copy.brandName}</strong>
             </span>
           </a>
 
           <button
             aria-controls="mobile-public-menu"
             aria-expanded={isMobileMenuOpen}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={isMobileMenuOpen ? copy.closeMenu : copy.openMenu}
             className="mobile-menu-toggle"
             onClick={() => setIsMobileMenuOpen((open) => !open)}
             type="button"
@@ -55,7 +124,7 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
           </button>
 
           <div className="topbar-actions">
-            <nav className="topbar-nav" aria-label="Public navigation">
+            <nav className="topbar-nav" aria-label={copy.publicNavigation}>
               {secondaryNavigation.map((item) => (
                 <a
                   aria-current={currentPath === item.href ? 'page' : undefined}
@@ -63,11 +132,11 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
                   key={item.href}
                   onClick={handleNavigate(item.href)}
                 >
-                  {item.label}
+                  {copy.navLabels[item.href] ?? item.label}
                 </a>
               ))}
             </nav>
-            <div className="language-switcher" aria-label="Language options">
+            <div className="language-switcher" aria-label={copy.languageOptions}>
               <button type="button" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>EN</button>
               <button type="button" aria-pressed={language === 'ta'} onClick={() => setLanguage('ta')}>தமிழ்</button>
             </div>
@@ -75,36 +144,36 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
-              Report issue
+              {copy.reportIssue}
             </a>
           </div>
         </div>
 
         <button
-          aria-label="Close menu"
+          aria-label={copy.closeMenu}
           className={`mobile-menu-backdrop ${isMobileMenuOpen ? 'is-open' : ''}`}
           onClick={() => setIsMobileMenuOpen(false)}
           type="button"
         />
 
         <aside
-          aria-label="Mobile public navigation"
+          aria-label={copy.mobilePublicNavigation}
           className={`mobile-public-menu ${isMobileMenuOpen ? 'is-open' : ''}`}
           id="mobile-public-menu"
         >
           <div className="mobile-menu-head">
             <div>
-              <span className="brand-kicker">Menu</span>
-              <strong>Smart Citizen Platform</strong>
+              <span className="brand-kicker">{copy.menu}</span>
+              <strong>{copy.brandName}</strong>
             </div>
-            <button aria-label="Close menu" onClick={() => setIsMobileMenuOpen(false)} type="button">
+            <button aria-label={copy.closeMenu} onClick={() => setIsMobileMenuOpen(false)} type="button">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                 <path d="M4 4l10 10M14 4 4 14" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
               </svg>
             </button>
           </div>
 
-          <nav className="mobile-menu-nav" aria-label="Mobile navigation">
+          <nav className="mobile-menu-nav" aria-label={copy.mobileNavigation}>
             {secondaryNavigation.map((item) => (
               <a
                 aria-current={currentPath === item.href ? 'page' : undefined}
@@ -112,27 +181,27 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
                 key={item.href}
                 onClick={handleNavigate(item.href)}
               >
-                {item.label}
+                {copy.navLabels[item.href] ?? item.label}
               </a>
             ))}
           </nav>
 
-          <div className="mobile-menu-language" aria-label="Language options">
+          <div className="mobile-menu-language" aria-label={copy.languageOptions}>
             <button type="button" aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>EN</button>
-            <button type="button" aria-pressed={language === 'ta'} onClick={() => setLanguage('ta')}>à®¤à®®à®¿à®´à¯</button>
+            <button type="button" aria-pressed={language === 'ta'} onClick={() => setLanguage('ta')}>தமிழ்</button>
           </div>
 
           <a className="mobile-menu-cta" href="/submit" onClick={handleNavigate('/submit')}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
               <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            Report issue
+            {copy.reportIssue}
           </a>
         </aside>
       </header>
 
       <div id="main-content" className="main-content">
-        {children}
+        <PublicLanguageProvider language={language}>{children}</PublicLanguageProvider>
       </div>
 
       <footer aria-label="Site footer" className="site-footer">
@@ -144,33 +213,31 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
                   <img src="/logo.svg" alt="" />
                 </span>
                 <div>
-                  <span className="brand-kicker">Pradeshiya Sabha</span>
-                  <strong>Smart Citizen Platform</strong>
+                  <span className="brand-kicker">{copy.brandKicker}</span>
+                  <strong>{copy.brandName}</strong>
                 </div>
               </div>
-              <p>
-                Submit complaints, track progress, and reach the right civic team without visiting an office.
-              </p>
+              <p>{copy.footerText}</p>
             </div>
 
             <div className="footer-column">
-              <span className="footer-heading">Quick links</span>
-              <a href="/" onClick={handleNavigate('/')}>Home</a>
-              <a href="/submit" onClick={handleNavigate('/submit')}>Submit complaint</a>
-              <a href="/track" onClick={handleNavigate('/track')}>Track complaint</a>
+              <span className="footer-heading">{copy.quickLinks}</span>
+              <a href="/" onClick={handleNavigate('/')}>{copy.navLabels['/']}</a>
+              <a href="/submit" onClick={handleNavigate('/submit')}>{copy.submitComplaint}</a>
+              <a href="/track" onClick={handleNavigate('/track')}>{copy.trackComplaint}</a>
             </div>
 
             <div className="footer-column">
-              <span className="footer-heading">Information</span>
-              <a href="/services" onClick={handleNavigate('/services')}>Service categories</a>
-              <a href="/notices" onClick={handleNavigate('/notices')}>Public notices</a>
-              <span className="footer-muted">Emergency matters should go to emergency services first.</span>
+              <span className="footer-heading">{copy.information}</span>
+              <a href="/services" onClick={handleNavigate('/services')}>{copy.serviceCategories}</a>
+              <a href="/notices" onClick={handleNavigate('/notices')}>{copy.publicNotices}</a>
+              <span className="footer-muted">{copy.emergencyNote}</span>
             </div>
           </div>
 
           <div className="site-footer-bar">
-            <span>Smart Citizen Platform</span>
-            <span>Public civic service complaints only</span>
+            <span>{copy.brandName}</span>
+            <span>{copy.footerBoundary}</span>
           </div>
         </div>
       </footer>

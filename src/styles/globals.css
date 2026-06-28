@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 /* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
@@ -118,6 +118,129 @@ h2 {
 
 h3 {
   font-family: 'Outfit', sans-serif;
+}
+
+html[lang='ta'] {
+  font-family: 'Noto Sans Tamil', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+html[lang='ta'] body,
+html[lang='ta'] button,
+html[lang='ta'] input,
+html[lang='ta'] select,
+html[lang='ta'] textarea {
+  font-family: 'Noto Sans Tamil', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+html[lang='ta'] h1,
+html[lang='ta'] h2,
+html[lang='ta'] h3,
+html[lang='ta'] .brand-mark,
+html[lang='ta'] .brand-lockup strong,
+html[lang='ta'] .footer-brand strong,
+html[lang='ta'] .hero-copy h1,
+html[lang='ta'] .compact-page-hero h1,
+html[lang='ta'] .home-action-panel-header h2,
+html[lang='ta'] .report-select-trigger,
+html[lang='ta'] .report-step-panel .field-preview input,
+html[lang='ta'] .report-step-panel .field-preview textarea,
+html[lang='ta'] .track-form-row input {
+  font-family: 'Noto Sans Tamil', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+html[lang='ta'] h1,
+html[lang='ta'] .hero-copy h1,
+html[lang='ta'] .compact-page-hero h1,
+html[lang='ta'] .services-hero h1,
+html[lang='ta'] .notices-hero h1,
+html[lang='ta'] .track-hero h1,
+html[lang='ta'] .report-hero h1 {
+  line-height: 1.18;
+}
+
+html[lang='ta'] h2,
+html[lang='ta'] h3 {
+  line-height: 1.28;
+}
+
+html[lang='ta'] .eyebrow,
+html[lang='ta'] .brand-kicker,
+html[lang='ta'] .footer-heading,
+html[lang='ta'] .report-step-panel .field-preview label,
+html[lang='ta'] .reference-card span,
+html[lang='ta'] .track-reference-badge span,
+html[lang='ta'] .track-reference-demo span,
+html[lang='ta'] .report-form-head span,
+html[lang='ta'] .status-pill {
+  letter-spacing: 0;
+  line-height: 1.45;
+  text-transform: none;
+}
+
+html[lang='ta'] .button,
+html[lang='ta'] .nav-cta,
+html[lang='ta'] .mobile-menu-cta,
+html[lang='ta'] .home-track-form button,
+html[lang='ta'] .track-form-row button,
+html[lang='ta'] .tracking-row button {
+  font-weight: 750;
+  line-height: 1.35;
+  min-height: 48px;
+  padding-bottom: 11px;
+  padding-top: 11px;
+}
+
+html[lang='ta'] .topbar-nav a,
+html[lang='ta'] .language-switcher button,
+html[lang='ta'] .mobile-menu-language button {
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+html[lang='ta'] .language-switcher button {
+  min-width: 48px;
+}
+
+html[lang='ta'] .nav-cta {
+  white-space: nowrap;
+}
+
+html[lang='ta'] .hero-copy > p,
+html[lang='ta'] .compact-page-hero p:not(.eyebrow),
+html[lang='ta'] .section-heading p:not(.eyebrow),
+html[lang='ta'] .process-intro p:not(.eyebrow),
+html[lang='ta'] .report-hero-card p,
+html[lang='ta'] .services-hero-card p,
+html[lang='ta'] .notices-hero-card p,
+html[lang='ta'] .track-hero-panel p {
+  line-height: 1.78;
+}
+
+html[lang='ta'] .hero-trust-row span,
+html[lang='ta'] .service-card p,
+html[lang='ta'] .notice-grid article p,
+html[lang='ta'] .home-action-card p,
+html[lang='ta'] .services-category-card p,
+html[lang='ta'] .track-status-grid p,
+html[lang='ta'] .notice-card p,
+html[lang='ta'] .notices-check-grid li,
+html[lang='ta'] .submission-checklist li,
+html[lang='ta'] .report-select-help,
+html[lang='ta'] .report-select-error-text,
+html[lang='ta'] .report-select-menu span {
+  line-height: 1.55;
+}
+
+html[lang='ta'] .report-select-trigger,
+html[lang='ta'] .report-step-panel .field-preview input,
+html[lang='ta'] .report-step-panel .field-preview textarea {
+  line-height: 1.45;
+}
+
+html[lang='ta'] .track-form-row input {
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: none;
 }
 
 /* ─── Eyebrow ────────────────────────────────────────────────────────────── */
@@ -6690,6 +6813,144 @@ h3 {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-500);
+}
+
+/* Tamil type needs its own optical scale to match the English layout density. */
+html[lang='ta'] .home-page .hero-copy h1,
+html[lang='ta'] .hero-copy h1,
+html[lang='ta'] .services-hero h1,
+html[lang='ta'] .notices-hero h1,
+html[lang='ta'] .track-hero h1,
+html[lang='ta'] .report-hero h1 {
+  font-size: clamp(1.85rem, 2.45vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.22;
+  max-width: 760px;
+}
+
+html[lang='ta'] .home-page .hero-copy h1 span {
+  display: block;
+}
+
+@media (min-width: 761px) {
+  html[lang='ta'] .home-page .hero-copy h1 span {
+    white-space: nowrap;
+  }
+}
+
+html[lang='ta'] .home-page .hero-copy {
+  gap: 18px;
+  max-width: 760px;
+}
+
+html[lang='ta'] .home-page .hero-copy > p,
+html[lang='ta'] .hero-copy > p,
+html[lang='ta'] .services-hero-copy > p:not(.eyebrow),
+html[lang='ta'] .notices-hero-copy > p:not(.eyebrow),
+html[lang='ta'] .track-hero > div > p:not(.eyebrow),
+html[lang='ta'] .report-hero-copy > p:not(.eyebrow) {
+  font-size: 0.98rem;
+  line-height: 1.72;
+  max-width: 620px;
+}
+
+html[lang='ta'] .topbar {
+  gap: 18px;
+}
+
+html[lang='ta'] .topbar-actions {
+  gap: 12px;
+}
+
+html[lang='ta'] .brand-lockup {
+  gap: 10px;
+}
+
+html[lang='ta'] .brand-lockup strong {
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+html[lang='ta'] .brand-kicker {
+  font-size: 0.62rem;
+}
+
+html[lang='ta'] .topbar-nav a {
+  font-size: 0.82rem;
+  padding: 8px 12px;
+}
+
+html[lang='ta'] .nav-cta {
+  font-size: 0.84rem;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+html[lang='ta'] .hero-actions .button,
+html[lang='ta'] .services-hero-actions .button,
+html[lang='ta'] .notices-hero-actions .button,
+html[lang='ta'] .home-cta-banner .button {
+  font-size: 0.9rem;
+  min-width: 0;
+}
+
+html[lang='ta'] .hero-trust-row {
+  max-width: 620px;
+}
+
+html[lang='ta'] .hero-trust-row span {
+  font-size: 0.78rem;
+  padding: 7px 12px;
+}
+
+html[lang='ta'] .home-action-panel-header h2,
+html[lang='ta'] .home-action-card strong,
+html[lang='ta'] .report-hero-card strong,
+html[lang='ta'] .services-hero-card strong,
+html[lang='ta'] .notices-hero-card strong,
+html[lang='ta'] .track-hero-panel strong {
+  line-height: 1.32;
+}
+
+html[lang='ta'] .home-track-form label,
+html[lang='ta'] .track-card label,
+html[lang='ta'] .field-preview label,
+html[lang='ta'] .report-select-field label {
+  line-height: 1.35;
+}
+
+@media (max-width: 1020px) {
+  html[lang='ta'] .topbar {
+    gap: 12px;
+  }
+
+  html[lang='ta'] .topbar-nav a {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  html[lang='ta'] .nav-cta {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+@media (max-width: 760px) {
+  html[lang='ta'] .home-page .hero-copy h1,
+  html[lang='ta'] .hero-copy h1,
+  html[lang='ta'] .services-hero h1,
+  html[lang='ta'] .notices-hero h1,
+  html[lang='ta'] .track-hero h1,
+  html[lang='ta'] .report-hero h1 {
+    font-size: clamp(1.7rem, 7.5vw, 2.3rem);
+    line-height: 1.2;
+  }
+
+  html[lang='ta'] .hero-actions,
+  html[lang='ta'] .services-hero-actions,
+  html[lang='ta'] .notices-hero-actions {
+    align-items: stretch;
+  }
 }
 
 

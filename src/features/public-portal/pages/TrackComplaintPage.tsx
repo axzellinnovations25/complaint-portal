@@ -1,72 +1,150 @@
 import { useState, type FormEvent } from 'react'
+import { usePublicLanguage, type PublicLanguage } from '../../../shared/i18n/PublicLanguageContext'
 
 const demoReference = 'PS-2026-00124'
 
 type TrackIconName = 'alert' | 'calendar' | 'check' | 'clipboard' | 'file' | 'lock' | 'search' | 'shield' | 'user' | 'work'
 
-const statusStages: Array<{ label: string; description: string; icon: TrackIconName }> = [
+const statusStages: Array<{ label: Record<PublicLanguage, string>; description: Record<PublicLanguage, string>; icon: TrackIconName }> = [
   {
-    label: 'Submitted',
-    description: 'The portal received the complaint and created a reference number.',
+    label: { en: 'Submitted', ta: 'பெறப்பட்டது' },
+    description: { en: 'The portal received the complaint and created a reference number.', ta: 'முறைப்பாடு பதிவு செய்யப்பட்டு குறிப்பு எண் உருவாக்கப்பட்டது.' },
     icon: 'file',
   },
   {
-    label: 'Acknowledged',
-    description: 'The front desk or review team checked the category and basic details.',
+    label: { en: 'Acknowledged', ta: 'ஏற்றுக்கொள்ளப்பட்டது' },
+    description: { en: 'The front desk or review team checked the category and basic details.', ta: 'வகையும் அடிப்படை விவரங்களும் பரிசீலனை அணியால் பார்க்கப்பட்டது.' },
     icon: 'clipboard',
   },
   {
-    label: 'Assigned',
-    description: 'The complaint was sent to the responsible department or field officer.',
+    label: { en: 'Assigned', ta: 'ஒதுக்கப்பட்டது' },
+    description: { en: 'The complaint was sent to the responsible department or field officer.', ta: 'பொறுப்பான துறை அல்லது கள அலுவலருக்கு அனுப்பப்பட்டது.' },
     icon: 'user',
   },
   {
-    label: 'In progress',
-    description: 'An officer or department is inspecting, updating, or resolving the issue.',
+    label: { en: 'In progress', ta: 'செயலில் உள்ளது' },
+    description: { en: 'An officer or department is inspecting, updating, or resolving the issue.', ta: 'அலுவலர் ஆய்வு, புதுப்பிப்பு அல்லது தீர்வு நடவடிக்கையில் உள்ளார்.' },
     icon: 'work',
   },
   {
-    label: 'Resolved',
-    description: 'The team has marked the service issue as handled.',
+    label: { en: 'Resolved', ta: 'தீர்க்கப்பட்டது' },
+    description: { en: 'The team has marked the service issue as handled.', ta: 'சேவை குறை கையாளப்பட்டது என அணி பதிவு செய்துள்ளது.' },
     icon: 'check',
   },
   {
-    label: 'Closed',
-    description: 'The complaint record is complete and kept for future audit history.',
+    label: { en: 'Closed', ta: 'மூடப்பட்டது' },
+    description: { en: 'The complaint record is complete and kept for future audit history.', ta: 'பதிவு முடிக்கப்பட்டு எதிர்கால சரிபார்ப்புக்காக சேமிக்கப்பட்டுள்ளது.' },
     icon: 'lock',
   },
 ]
 
 const demoTimeline = [
   {
-    label: 'Submitted',
-    detail: 'Complaint submitted through the public portal.',
-    time: 'Today, 9:12 AM',
+    label: { en: 'Submitted', ta: 'பெறப்பட்டது' },
+    detail: { en: 'Complaint submitted through the public portal.', ta: 'பொது மையம் மூலம் முறைப்பாடு பதிவு செய்யப்பட்டது.' },
+    time: { en: 'Today, 9:12 AM', ta: 'இன்று, காலை 9:12' },
     complete: true,
     icon: 'file' as const,
   },
   {
-    label: 'Acknowledged',
-    detail: 'Front desk team checked the drainage category and location details.',
-    time: 'Today, 9:24 AM',
+    label: { en: 'Acknowledged', ta: 'ஏற்றுக்கொள்ளப்பட்டது' },
+    detail: { en: 'Front desk team checked the drainage category and location details.', ta: 'வடிகால் வகையும் இட விவரமும் முன்பரிசீலனையில் பார்க்கப்பட்டது.' },
+    time: { en: 'Today, 9:24 AM', ta: 'இன்று, காலை 9:24' },
     complete: true,
     icon: 'clipboard' as const,
   },
   {
-    label: 'Assigned',
-    detail: 'Forwarded to the Public Health field team for inspection.',
-    time: 'Today, 10:05 AM',
+    label: { en: 'Assigned', ta: 'ஒதுக்கப்பட்டது' },
+    detail: { en: 'Forwarded to the Public Health field team for inspection.', ta: 'ஆய்வுக்காக பொது சுகாதார கள அணிக்கு அனுப்பப்பட்டது.' },
+    time: { en: 'Today, 10:05 AM', ta: 'இன்று, காலை 10:05' },
     complete: true,
     icon: 'user' as const,
   },
   {
-    label: 'In progress',
-    detail: 'Officer visit pending. Next update is expected after inspection.',
-    time: 'Pending',
+    label: { en: 'In progress', ta: 'செயலில் உள்ளது' },
+    detail: { en: 'Officer visit pending. Next update is expected after inspection.', ta: 'அலுவலர் வருகை நிலுவையில் உள்ளது. ஆய்வுக்குப் பின் அடுத்த புதுப்பிப்பு வரும்.' },
+    time: { en: 'Pending', ta: 'நிலுவை' },
     complete: false,
     icon: 'work' as const,
   },
 ]
+
+const trackCopy = {
+  en: {
+    heroEyebrow: 'Track complaint',
+    heroTitle: 'Check the latest status using your reference number.',
+    heroBody:
+      'The reference number is shown after submission. It is required for anonymous complaints and useful when following up with the Pradeshiya Sabha office.',
+    summaryLabel: 'Tracking portal summary',
+    summaryTitle: 'Reference-based tracking portal',
+    summaryBody: 'See whether a complaint is submitted, acknowledged, assigned, in progress, or resolved.',
+    summaryBullets: ['Private reference lookup', 'Latest status and next step'],
+    lookupLabel: 'Reference tracking',
+    formLabel: 'Track complaint by reference',
+    referenceLabel: 'Complaint reference number',
+    formTitle: 'Enter your reference to track progress.',
+    formBody: 'Use the full reference exactly as shown after submission.',
+    example: 'Example',
+    track: 'Track',
+    currentStatus: 'Current status',
+    assignedTitle: 'Assigned to Public Health',
+    assignedBody: 'Blocked drainage near market road. Last updated today at 10:05 AM.',
+    progressStatus: 'In progress',
+    reference: 'Reference',
+    nextUpdate: 'Next expected update',
+    nextUpdateBody: 'The assigned officer will update the record after the site inspection.',
+    trackAnother: 'Track another reference',
+    missingEyebrow: 'Reference not found',
+    missingTitle: 'Check the number and try again.',
+    missingBody:
+      'Use the full reference exactly as shown after submission. If you submitted anonymously, the portal cannot recover the reference from a phone number.',
+    clear: 'Clear and try again',
+    supportLabel: 'Tracking guidance',
+    demoLabel: 'Try this demo reference',
+    privacyNote: 'Keep the reference private if the complaint was submitted anonymously.',
+    smsNote: 'SMS updates are only available when a phone number was provided during submission.',
+    guideEyebrow: 'Status guide',
+    guideTitle: 'What each status means',
+    guideBody: 'These labels help citizens understand what is happening after a complaint reaches the office or field team.',
+  },
+  ta: {
+    heroEyebrow: 'நிலை பார்க்க',
+    heroTitle: 'குறிப்பு எண்ணை வைத்து முறைப்பாட்டின் நிலையைப் பாருங்கள்.',
+    heroBody:
+      'முறைப்பாடு அனுப்பிய பின் கிடைக்கும் குறிப்பு எண் இங்கே தேவைப்படும். பெயரில்லா முறைப்பாட்டுக்கும் அலுவலகத்தில் தொடர்வதற்கும் இது முக்கியம்.',
+    summaryLabel: 'நிலை பார்க்கும் சுருக்கம்',
+    summaryTitle: 'குறிப்பு எண்ணால் நிலை பார்க்கும் மையம்',
+    summaryBody: 'பெறப்பட்டது, ஏற்றுக்கொள்ளப்பட்டது, ஒதுக்கப்பட்டது, செயலில் உள்ளது, தீர்க்கப்பட்டது போன்ற நிலைகளைப் பாருங்கள்.',
+    summaryBullets: ['தனிப்பட்ட குறிப்பு எண் தேடல்', 'சமீபத்திய நிலை மற்றும் அடுத்த படி'],
+    lookupLabel: 'குறிப்பு எண் தேடல்',
+    formLabel: 'குறிப்பு எண்ணால் முறைப்பாடு தேடல்',
+    referenceLabel: 'முறைப்பாட்டு குறிப்பு எண்',
+    formTitle: 'நிலையைப் பார்க்க உங்கள் குறிப்பு எண்ணை இடுங்கள்.',
+    formBody: 'அனுப்பிய பின் காட்டிய முழு எண்ணையும் அதேபடி பயன்படுத்துங்கள்.',
+    example: 'உதாரணம்',
+    track: 'பார்',
+    currentStatus: 'தற்போதைய நிலை',
+    assignedTitle: 'பொது சுகாதார அணிக்கு ஒதுக்கப்பட்டது',
+    assignedBody: 'சந்தை வீதிக்கருகில் வடிகால் அடைப்பு. கடைசியாக இன்று காலை 10:05க்கு புதுப்பிக்கப்பட்டது.',
+    progressStatus: 'செயலில் உள்ளது',
+    reference: 'குறிப்பு எண்',
+    nextUpdate: 'அடுத்த புதுப்பிப்பு',
+    nextUpdateBody: 'இட ஆய்வுக்குப் பின் பொறுப்பான அலுவலர் பதிவை புதுப்பிப்பார்.',
+    trackAnother: 'மற்றொரு எண்ணை பார்க்க',
+    missingEyebrow: 'குறிப்பு எண் கிடைக்கவில்லை',
+    missingTitle: 'எண்ணை சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
+    missingBody:
+      'அனுப்பிய பின் காட்டிய முழு எண்ணையும் அதேபடி இடுங்கள். பெயர் இல்லாமல் அனுப்பியிருந்தால் தொலைபேசி எண்ணால் இதை மீட்டெடுக்க முடியாது.',
+    clear: 'அழித்து மீண்டும் முயற்சி',
+    supportLabel: 'நிலை பார்க்க உதவி',
+    demoLabel: 'இந்த மாதிரி எண்ணை முயற்சி செய்யுங்கள்',
+    privacyNote: 'பெயரில்லா முறைப்பாடு என்றால் குறிப்பு எண்ணை தனியாக வைத்துக்கொள்ளுங்கள்.',
+    smsNote: 'அனுப்பும்போது தொலைபேசி எண் கொடுத்திருந்தால் மட்டுமே SMS புதுப்பிப்பு கிடைக்கும்.',
+    guideEyebrow: 'நிலை விளக்கம்',
+    guideTitle: 'ஒவ்வொரு நிலையும் என்ன சொல்கிறது',
+    guideBody: 'முறைப்பாடு அலுவலகம் அல்லது கள அணியை அடைந்த பின் என்ன நடக்கிறது என்பதை இந்த நிலைகள் எளிதாக காட்டும்.',
+  },
+}
 
 function normalizeReference(reference: string) {
   return reference.trim().toUpperCase()
@@ -150,6 +228,8 @@ function TrackIcon({ name }: { name: TrackIconName }) {
 }
 
 export function TrackComplaintPage() {
+  const language = usePublicLanguage()
+  const copy = trackCopy[language]
   const [referenceNumber, setReferenceNumber] = useState(getInitialReference)
   const [lookupState, setLookupState] = useState<'idle' | 'found' | 'missing'>(() => {
     const initialReference = getInitialReference()
@@ -176,52 +256,47 @@ export function TrackComplaintPage() {
     <article className="public-page track-page">
       <section className="compact-page-hero track-hero" aria-labelledby="track-title">
         <div>
-          <p className="eyebrow">Track complaint</p>
-          <h1 id="track-title">Check the latest status using your reference number.</h1>
-          <p>
-            The reference number is shown after submission. It is required for anonymous complaints
-            and useful when following up with the Pradeshiya Sabha office.
-          </p>
+          <p className="eyebrow">{copy.heroEyebrow}</p>
+          <h1 id="track-title">{copy.heroTitle}</h1>
+          <p>{copy.heroBody}</p>
         </div>
-        <aside className="track-hero-panel" aria-label="Tracking portal summary">
+        <aside className="track-hero-panel" aria-label={copy.summaryLabel}>
           <span className="track-hero-icon" aria-hidden="true">
             <TrackIcon name="search" />
           </span>
           <div>
-            <strong>Reference-based tracking portal</strong>
-            <p>See whether a complaint is submitted, acknowledged, assigned, in progress, or resolved.</p>
+            <strong>{copy.summaryTitle}</strong>
+            <p>{copy.summaryBody}</p>
           </div>
           <ul>
-            <li>
-              <TrackIcon name="shield" />
-              <span>Private reference lookup</span>
-            </li>
-            <li>
-              <TrackIcon name="calendar" />
-              <span>Latest status and next step</span>
-            </li>
+            {copy.summaryBullets.map((item, index) => (
+              <li key={item}>
+                <TrackIcon name={index === 0 ? 'shield' : 'calendar'} />
+                <span>{item}</span>
+              </li>
+            ))}
           </ul>
         </aside>
       </section>
 
-      <section className="track-lookup-panel" aria-label="Reference tracking">
+      <section className="track-lookup-panel" aria-label={copy.lookupLabel}>
         <div className={`track-card-flip ${lookupState !== 'idle' ? 'track-card-flip-active' : ''}`}>
           <div className="track-card-flip-inner">
-            <form className="track-card track-card-front" aria-label="Track complaint by reference" onSubmit={handleSubmit}>
+            <form className="track-card track-card-front" aria-label={copy.formLabel} onSubmit={handleSubmit}>
               <span className="track-card-icon" aria-hidden="true">
                 <TrackIcon name="search" />
               </span>
               <div>
-                <label htmlFor="reference-number">Complaint reference number</label>
-                <h2>Enter your reference to track progress.</h2>
-                <p>Use the full reference exactly as shown after submission.</p>
+                <label htmlFor="reference-number">{copy.referenceLabel}</label>
+                <h2>{copy.formTitle}</h2>
+                <p>{copy.formBody}</p>
               </div>
               <div className="track-form-row">
                 <input
                   id="reference-number"
                   name="reference-number"
                   onChange={(event) => setReferenceNumber(event.target.value)}
-                  placeholder={`Example: ${demoReference}`}
+                  placeholder={`${copy.example}: ${demoReference}`}
                   required
                   type="text"
                   value={referenceNumber}
@@ -229,7 +304,7 @@ export function TrackComplaintPage() {
                 />
                 <button type="submit" disabled={lookupState !== 'idle'}>
                   <TrackIcon name="search" />
-                  Track
+                  {copy.track}
                 </button>
               </div>
             </form>
@@ -239,29 +314,29 @@ export function TrackComplaintPage() {
                 <>
                   <div className="tracking-summary">
                     <div>
-                      <p className="eyebrow">Current status</p>
-                      <h2 id="tracking-result-title">Assigned to Public Health</h2>
-                      <p>Blocked drainage near market road. Last updated today at 10:05 AM.</p>
+                      <p className="eyebrow">{copy.currentStatus}</p>
+                      <h2 id="tracking-result-title">{copy.assignedTitle}</h2>
+                      <p>{copy.assignedBody}</p>
                     </div>
-                    <span className="status-pill status-pill-active">In progress</span>
+                    <span className="status-pill status-pill-active">{copy.progressStatus}</span>
                   </div>
 
                   <div className="track-reference-badge">
-                    <span>Reference</span>
+                    <span>{copy.reference}</span>
                     <strong>{referenceNumber}</strong>
                   </div>
 
                   <ol className="track-timeline">
                     {demoTimeline.map((item) => (
-                      <li className={item.complete ? 'timeline-complete' : undefined} key={item.label}>
+                      <li className={item.complete ? 'timeline-complete' : undefined} key={item.label.en}>
                         <span aria-hidden="true">
                           <TrackIcon name={item.icon} />
                         </span>
                         <div>
-                          <strong>{item.label}</strong>
-                          <p>{item.detail}</p>
+                          <strong>{item.label[language]}</strong>
+                          <p>{item.detail[language]}</p>
                         </div>
-                        <time>{item.time}</time>
+                        <time>{item.time[language]}</time>
                       </li>
                     ))}
                   </ol>
@@ -271,13 +346,13 @@ export function TrackComplaintPage() {
                       <TrackIcon name="calendar" />
                     </span>
                     <div>
-                      <strong>Next expected update</strong>
-                      <p>The assigned officer will update the record after the site inspection.</p>
+                      <strong>{copy.nextUpdate}</strong>
+                      <p>{copy.nextUpdateBody}</p>
                     </div>
                   </div>
 
                   <button className="button button-secondary track-card-reset" type="button" onClick={resetLookup}>
-                    Track another reference
+                    {copy.trackAnother}
                   </button>
                 </>
               )}
@@ -287,14 +362,11 @@ export function TrackComplaintPage() {
                   <span aria-hidden="true">
                     <TrackIcon name="search" />
                   </span>
-                  <p className="eyebrow">Reference not found</p>
-                  <h2 id="tracking-missing-title">Check the number and try again.</h2>
-                  <p>
-                    Use the full reference exactly as shown after submission. If you submitted anonymously,
-                    the portal cannot recover the reference from a phone number.
-                  </p>
+                  <p className="eyebrow">{copy.missingEyebrow}</p>
+                  <h2 id="tracking-missing-title">{copy.missingTitle}</h2>
+                  <p>{copy.missingBody}</p>
                   <button className="button button-secondary" type="button" onClick={resetLookup}>
-                    Clear and try again
+                    {copy.clear}
                   </button>
                 </div>
               )}
@@ -302,9 +374,9 @@ export function TrackComplaintPage() {
           </div>
         </div>
 
-        <div className="track-lookup-support" aria-label="Tracking guidance">
+        <div className="track-lookup-support" aria-label={copy.supportLabel}>
           <div className="track-reference-demo" aria-label="Demo reference">
-            <span>Try this demo reference</span>
+            <span>{copy.demoLabel}</span>
             <strong>{demoReference}</strong>
           </div>
 
@@ -312,36 +384,33 @@ export function TrackComplaintPage() {
             <span aria-hidden="true">
               <TrackIcon name="shield" />
             </span>
-            <p>Keep the reference private if the complaint was submitted anonymously.</p>
+            <p>{copy.privacyNote}</p>
           </div>
 
           <div className="track-form-tip">
             <span aria-hidden="true">
               <TrackIcon name="alert" />
             </span>
-            <p>SMS updates are only available when a phone number was provided during submission.</p>
+            <p>{copy.smsNote}</p>
           </div>
         </div>
       </section>
 
       <section className="track-status-guide" aria-labelledby="track-status-guide-title">
         <div className="section-heading">
-          <p className="eyebrow">Status guide</p>
-          <h2 id="track-status-guide-title">What each status means</h2>
-          <p>
-            These labels help citizens understand what is happening after a complaint reaches the
-            office or field team.
-          </p>
+          <p className="eyebrow">{copy.guideEyebrow}</p>
+          <h2 id="track-status-guide-title">{copy.guideTitle}</h2>
+          <p>{copy.guideBody}</p>
         </div>
         <div className="track-status-grid">
           {statusStages.map((stage) => (
-            <article key={stage.label}>
+            <article key={stage.label.en}>
               <span aria-hidden="true">
                 <TrackIcon name={stage.icon} />
               </span>
               <div>
-                <strong>{stage.label}</strong>
-                <p>{stage.description}</p>
+                <strong>{stage.label[language]}</strong>
+                <p>{stage.description[language]}</p>
               </div>
             </article>
           ))}

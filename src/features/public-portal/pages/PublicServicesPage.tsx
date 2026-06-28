@@ -119,6 +119,7 @@ const servicesCopy = {
   ta: {
     heroEyebrow: 'பொது சேவை வகைகள்',
     heroTitle: 'முறைப்பாட்டைப் பதிவு செய்வதற்கு முன் பொருத்தமான சேவை வகையை அறியவும்.',
+    heroTitleLines: ['முறைப்பாட்டைப் பதிவுசெய்ய முன்', 'பொருத்தமான சேவை வகையை', 'அறியவும்.'],
     heroBody:
       'பிரச்சினைக்கு மிக அருகான வகையைத் தேர்ந்தெடுத்து, இட விவரத்தை தெளிவாக வழங்கவும். தேவையெனில் பிரதேச சபை அணி பரிசீலனையின் பின்னர் உரிய துறைக்கு மாற்றும்.',
     submitComplaint: 'முறைப்பாடு பதிவு',
@@ -249,7 +250,11 @@ export function PublicServicesPage({ onNavigate }: PublicServicesPageProps) {
       <section className="compact-page-hero services-hero" aria-labelledby="services-page-title">
         <div className="services-hero-copy">
           <p className="eyebrow">{copy.heroEyebrow}</p>
-          <h1 id="services-page-title">{copy.heroTitle}</h1>
+          <h1 id="services-page-title">
+            {'heroTitleLines' in copy
+              ? copy.heroTitleLines.map((line) => <span key={line}>{line}</span>)
+              : copy.heroTitle}
+          </h1>
           <p>{copy.heroBody}</p>
           <div className="services-hero-actions">
             <a className="button button-primary" href="/submit" onClick={navigateTo('/submit')}>

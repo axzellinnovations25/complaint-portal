@@ -7285,3 +7285,1848 @@ html[lang='ta'] .track-form-tip p {
   }
 }
 
+/* Mobile comfort pass: keep public pages readable and touch-friendly. */
+@media (max-width: 720px) {
+  :root {
+    --section-gap: 56px;
+  }
+
+  .public-shell {
+    --public-header-space: 92px;
+  }
+
+  .site-header {
+    padding: 10px 12px;
+  }
+
+  .topbar {
+    border-radius: 18px;
+    min-height: 64px;
+    padding: 10px 12px;
+  }
+
+  .brand-mark {
+    height: 40px;
+    width: 40px;
+  }
+
+  .brand-lockup strong {
+    font-size: 0.88rem;
+    line-height: 1.2;
+  }
+
+  .brand-kicker {
+    font-size: 0.58rem;
+  }
+
+  .mobile-menu-toggle {
+    height: 44px;
+    width: 46px;
+  }
+
+  .public-shell > #main-content,
+  .main-content {
+    padding: calc(var(--public-header-space) + 14px) 16px 64px;
+  }
+
+  .hero-section,
+  .compact-page-hero,
+  .services-hero,
+  .notices-hero,
+  .track-hero,
+  .report-hero {
+    border-radius: 20px;
+    gap: 24px;
+    padding: 28px 18px;
+  }
+
+  .home-page .civic-hero-section {
+    gap: 24px;
+    padding: 16px 0 0;
+  }
+
+  .hero-copy,
+  .home-page .hero-copy,
+  .services-hero-copy,
+  .notices-hero-copy,
+  .report-hero-copy,
+  .track-hero > div,
+  .section-heading,
+  .process-intro {
+    gap: 16px;
+  }
+
+  .hero-copy h1,
+  .home-page .hero-copy h1,
+  .services-hero h1,
+  .notices-hero h1,
+  .track-hero h1,
+  .report-hero h1 {
+    font-size: clamp(2rem, 8.2vw, 2.65rem);
+    line-height: 1.12;
+    max-width: 100%;
+  }
+
+  .hero-copy > p,
+  .home-page .hero-copy > p,
+  .services-hero-copy > p:not(.eyebrow),
+  .notices-hero-copy > p:not(.eyebrow),
+  .track-hero > div > p:not(.eyebrow),
+  .report-hero-copy > p:not(.eyebrow),
+  .section-heading p:not(.eyebrow),
+  .process-intro p:not(.eyebrow) {
+    font-size: 0.96rem;
+    line-height: 1.65;
+    max-width: 38rem;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .button,
+  .home-track-form button,
+  .track-form-row button,
+  .tracking-row button,
+  .mobile-menu-cta {
+    border-radius: 14px;
+    font-size: 0.92rem;
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+
+  .hero-actions,
+  .home-page .hero-actions,
+  .services-hero-actions,
+  .notices-hero-actions,
+  .home-cta-banner > div {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .hero-trust-row,
+  .home-page .hero-trust-row {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .hero-trust-row span {
+    font-size: 0.84rem;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 14px;
+  }
+
+  .home-hero-stack,
+  .home-action-panel,
+  .track-card,
+  .report-intake-card {
+    gap: 16px;
+  }
+
+  .home-page .home-hero-media,
+  .home-hero-media {
+    aspect-ratio: 4 / 3;
+    border-radius: 18px;
+  }
+
+  .home-page .home-hero-media figcaption,
+  .home-hero-media figcaption {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    padding: 34px 14px 14px;
+  }
+
+  .home-page .home-action-panel-header {
+    display: grid;
+  }
+
+  .home-action-panel,
+  .home-page .home-action-panel,
+  .report-intake-card,
+  .track-card,
+  .success-card,
+  .services-hero-card,
+  .notices-hero-card,
+  .track-hero-panel,
+  .report-hero-card,
+  .trust-fact-grid,
+  .submission-checklist,
+  .services-help-section,
+  .notices-check-section,
+  .track-lookup-panel,
+  .help-band,
+  .home-cta-banner {
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  .home-action-card,
+  .home-page .home-action-card,
+  .home-track-form,
+  .home-page .home-track-form,
+  .service-card,
+  .home-page .service-card,
+  .notice-grid article,
+  .home-page .notice-grid article,
+  .services-category-card,
+  .notice-card,
+  .track-status-grid article,
+  .notices-check-grid article,
+  .track-reference-demo,
+  .track-privacy-note,
+  .track-form-tip {
+    border-radius: 16px;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .home-action-card,
+  .home-page .home-action-card {
+    grid-template-columns: 42px minmax(0, 1fr);
+    min-height: 84px;
+  }
+
+  .home-action-card > span,
+  .home-page .home-action-card > span,
+  .service-card > span,
+  .home-page .service-card > span,
+  .services-category-heading > span,
+  .notice-card > span,
+  .notices-priority-panel > span,
+  .report-hero-card-icon,
+  .services-hero-card-icon,
+  .notices-hero-card-icon,
+  .track-hero-icon,
+  .success-icon {
+    border-radius: 12px;
+    height: 42px;
+    width: 42px;
+  }
+
+  .home-action-card strong,
+  .home-page .home-action-card strong,
+  .submission-checklist strong,
+  .home-page .submission-checklist strong,
+  .service-card h3,
+  .home-page .service-card h3,
+  .notice-grid strong,
+  .home-page .notice-grid strong,
+  .services-category-heading h3,
+  .notice-card strong,
+  .track-status-grid strong {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .home-action-card p,
+  .home-page .home-action-card p,
+  .home-track-form p,
+  .home-page .home-track-form p,
+  .service-card p,
+  .home-page .service-card p,
+  .notice-grid p,
+  .home-page .notice-grid p,
+  .services-category-heading p,
+  .services-category-card li,
+  .notice-card p,
+  .track-status-grid p,
+  .notices-check-grid li,
+  .report-hero-card p,
+  .services-hero-card p,
+  .notices-hero-card p,
+  .track-hero-panel p {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .home-page .service-card p {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: initial;
+  }
+
+  .home-page .citizen-category-grid,
+  .citizen-category-grid,
+  .home-page .trust-fact-grid,
+  .trust-fact-grid,
+  .home-page .submission-checklist ul,
+  .submission-checklist ul {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .citizen-category-grid,
+  .service-grid,
+  .notice-grid,
+  .services-boundary-grid,
+  .services-category-grid,
+  .notices-grid,
+  .notices-check-grid,
+  .track-status-grid,
+  .track-lookup-support {
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .home-page .trust-fact-grid {
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .home-page .trust-fact-grid article,
+  .trust-fact-grid article {
+    min-height: auto;
+    padding: 18px 16px;
+  }
+
+  .home-page .trust-fact-grid strong,
+  .trust-fact-grid strong {
+    font-size: 1.55rem;
+  }
+
+  .home-page .trust-fact-grid span,
+  .trust-fact-grid span {
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+
+  .home-page .section-block,
+  .home-page .process-section,
+  .home-page .notice-section,
+  .section-block,
+  .process-section,
+  .notice-section,
+  .services-page .page-section,
+  .notices-page .page-section,
+  .track-status-guide,
+  .services-page .help-band,
+  .notices-page .help-band {
+    padding-top: 56px;
+  }
+
+  .home-page .section-heading h2,
+  .home-page .process-intro h2,
+  .home-page .home-cta-banner h2,
+  .section-heading h2,
+  .process-intro h2 {
+    font-size: clamp(1.55rem, 6vw, 2rem);
+    line-height: 1.18;
+    max-width: 100%;
+  }
+
+  .home-page .section-heading p:not(.eyebrow),
+  .home-page .process-intro p:not(.eyebrow) {
+    font-size: 0.94rem;
+    line-height: 1.62;
+    max-width: 38rem;
+  }
+
+  .process-list,
+  .home-page .process-list {
+    gap: 14px;
+  }
+
+  .process-list li,
+  .home-page .process-list li {
+    border-radius: 16px;
+    gap: 12px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding: 16px;
+  }
+
+  .process-list span,
+  .home-page .process-list span {
+    height: 38px;
+    width: 38px;
+  }
+
+  .process-list strong,
+  .home-page .process-list strong {
+    font-size: 1rem;
+  }
+
+  .process-list p,
+  .home-page .process-list p {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .home-page .submission-checklist {
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .home-page .submission-checklist ul,
+  .submission-checklist ul {
+    gap: 12px;
+  }
+
+  .home-page .submission-checklist li,
+  .submission-checklist li {
+    min-height: auto;
+    padding: 14px;
+  }
+
+  .home-page .submission-checklist li span,
+  .submission-checklist li span {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .home-page .home-cta-banner,
+  .home-cta-banner {
+    gap: 18px;
+    margin-top: 56px;
+  }
+
+  .home-track-form > div,
+  .home-page .home-track-form > div,
+  .track-form-row,
+  .contact-grid {
+    gap: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .home-track-form input,
+  .home-page .home-track-form input,
+  .track-form-row input,
+  .tracking-row input,
+  .report-step-panel .field-preview input,
+  .report-step-panel .field-preview textarea,
+  .report-select-trigger {
+    font-size: 0.98rem;
+    min-height: 48px;
+  }
+
+  .report-stepper {
+    gap: 10px;
+    grid-template-columns: 1fr;
+  }
+
+  .report-stepper li {
+    grid-template-columns: 34px minmax(0, 1fr);
+    justify-items: start;
+    min-height: 58px;
+    padding: 12px;
+    text-align: left;
+  }
+
+  .report-stepper strong {
+    font-size: 0.9rem;
+  }
+
+  .report-step-panel {
+    gap: 14px;
+  }
+
+  .report-step-panel .field-preview,
+  .report-file-field,
+  .toggle-row,
+  .report-submit-review,
+  .form-note {
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .field-preview label,
+  .tracking-card label,
+  .report-step-panel .field-preview label {
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .track-timeline li,
+  .status-timeline li {
+    gap: 12px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding-bottom: 22px;
+  }
+}
+
+@media (max-width: 420px) {
+  .public-shell > #main-content,
+  .main-content {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .hero-section,
+  .compact-page-hero,
+  .services-hero,
+  .notices-hero,
+  .track-hero,
+  .report-hero,
+  .home-action-panel,
+  .home-page .home-action-panel,
+  .report-intake-card,
+  .track-card,
+  .success-card,
+  .trust-fact-grid,
+  .submission-checklist,
+  .services-help-section,
+  .notices-check-section,
+  .track-lookup-panel,
+  .help-band,
+  .home-cta-banner {
+    padding: 16px;
+  }
+
+  .hero-copy h1,
+  .home-page .hero-copy h1,
+  .services-hero h1,
+  .notices-hero h1,
+  .track-hero h1,
+  .report-hero h1 {
+    font-size: clamp(1.9rem, 9.2vw, 2.35rem);
+    line-height: 1.14;
+  }
+
+  .hero-copy > p,
+  .home-page .hero-copy > p,
+  .services-hero-copy > p:not(.eyebrow),
+  .notices-hero-copy > p:not(.eyebrow),
+  .track-hero > div > p:not(.eyebrow),
+  .report-hero-copy > p:not(.eyebrow) {
+    font-size: 0.94rem;
+  }
+
+  .home-page .home-hero-media,
+  .home-hero-media {
+    aspect-ratio: 1 / 1;
+  }
+
+  .mobile-public-menu {
+    padding: 18px;
+    width: min(340px, calc(100vw - 20px));
+  }
+}
+
+@media (max-width: 720px) {
+  html[lang='ta'] .home-page .hero-copy h1,
+  html[lang='ta'] .hero-copy h1,
+  html[lang='ta'] .compact-page-hero h1,
+  html[lang='ta'] .services-hero h1,
+  html[lang='ta'] .notices-hero h1,
+  html[lang='ta'] .track-hero h1,
+  html[lang='ta'] .report-hero h1 {
+    font-size: clamp(1.55rem, 6.4vw, 2rem);
+    line-height: 1.34;
+    max-width: 100%;
+  }
+
+  html[lang='ta'] .services-hero h1 span,
+  html[lang='ta'] .track-hero h1 span {
+    white-space: normal;
+  }
+
+  html[lang='ta'] .home-page .hero-copy > p,
+  html[lang='ta'] .hero-copy > p,
+  html[lang='ta'] .services-hero-copy > p:not(.eyebrow),
+  html[lang='ta'] .notices-hero-copy > p:not(.eyebrow),
+  html[lang='ta'] .track-hero > div > p:not(.eyebrow),
+  html[lang='ta'] .report-hero-copy > p:not(.eyebrow) {
+    font-size: 0.94rem;
+    line-height: 1.72;
+  }
+}
+
+/* Mobile density optimization: compact without making controls cramped. */
+@media (max-width: 720px) {
+  :root {
+    --section-gap: 40px;
+  }
+
+  .public-shell {
+    --public-header-space: 82px;
+  }
+
+  .site-header {
+    padding: 8px 10px;
+  }
+
+  .topbar {
+    border-radius: 16px;
+    min-height: 56px;
+    padding: 8px 10px;
+  }
+
+  .brand-mark {
+    height: 36px;
+    width: 36px;
+  }
+
+  .brand-lockup strong {
+    font-size: 0.8rem;
+  }
+
+  .brand-kicker {
+    font-size: 0.52rem;
+  }
+
+  .mobile-menu-toggle {
+    height: 40px;
+    width: 42px;
+  }
+
+  .public-shell > #main-content,
+  .main-content {
+    padding: calc(var(--public-header-space) + 8px) 12px 48px;
+  }
+
+  .hero-section,
+  .compact-page-hero,
+  .services-hero,
+  .notices-hero,
+  .track-hero,
+  .report-hero {
+    border-radius: 16px;
+    gap: 16px;
+    padding: 18px 14px;
+  }
+
+  .home-page .civic-hero-section {
+    gap: 16px;
+    padding-top: 6px;
+  }
+
+  .hero-copy,
+  .home-page .hero-copy,
+  .services-hero-copy,
+  .notices-hero-copy,
+  .report-hero-copy,
+  .track-hero > div,
+  .section-heading,
+  .process-intro {
+    gap: 10px;
+  }
+
+  .hero-copy h1,
+  .home-page .hero-copy h1,
+  .services-hero h1,
+  .notices-hero h1,
+  .track-hero h1,
+  .report-hero h1 {
+    font-size: clamp(1.7rem, 7.2vw, 2.18rem);
+    line-height: 1.12;
+  }
+
+  .hero-copy > p,
+  .home-page .hero-copy > p,
+  .services-hero-copy > p:not(.eyebrow),
+  .notices-hero-copy > p:not(.eyebrow),
+  .track-hero > div > p:not(.eyebrow),
+  .report-hero-copy > p:not(.eyebrow),
+  .section-heading p:not(.eyebrow),
+  .process-intro p:not(.eyebrow) {
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+
+  .button,
+  .home-track-form button,
+  .track-form-row button,
+  .tracking-row button,
+  .mobile-menu-cta {
+    border-radius: 12px;
+    font-size: 0.82rem;
+    min-height: 42px;
+    padding: 9px 12px;
+  }
+
+  .hero-actions,
+  .home-page .hero-actions,
+  .services-hero-actions,
+  .notices-hero-actions,
+  .home-cta-banner > div {
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero-trust-row,
+  .home-page .hero-trust-row {
+    display: none;
+  }
+
+  .home-page .home-hero-media,
+  .home-hero-media {
+    aspect-ratio: 16 / 8.8;
+    border-radius: 14px;
+    max-height: 210px;
+  }
+
+  .home-page .home-hero-media figcaption,
+  .home-hero-media figcaption {
+    font-size: 0.68rem;
+    line-height: 1.3;
+    padding: 20px 10px 10px;
+  }
+
+  .home-page .home-action-panel-header {
+    display: none;
+  }
+
+  .home-action-panel,
+  .home-page .home-action-panel,
+  .report-intake-card,
+  .track-card,
+  .success-card,
+  .services-hero-card,
+  .notices-hero-card,
+  .track-hero-panel,
+  .report-hero-card,
+  .trust-fact-grid,
+  .submission-checklist,
+  .services-help-section,
+  .notices-check-section,
+  .track-lookup-panel,
+  .help-band,
+  .home-cta-banner {
+    border-radius: 14px;
+    padding: 12px;
+  }
+
+  .home-action-card,
+  .home-page .home-action-card,
+  .home-track-form,
+  .home-page .home-track-form,
+  .service-card,
+  .home-page .service-card,
+  .notice-grid article,
+  .home-page .notice-grid article,
+  .services-category-card,
+  .notice-card,
+  .track-status-grid article,
+  .notices-check-grid article,
+  .track-reference-demo,
+  .track-privacy-note,
+  .track-form-tip {
+    border-radius: 12px;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .home-action-card,
+  .home-page .home-action-card {
+    grid-template-columns: 34px minmax(0, 1fr);
+    min-height: 62px;
+  }
+
+  .home-action-card > span,
+  .home-page .home-action-card > span,
+  .service-card > span,
+  .home-page .service-card > span,
+  .services-category-heading > span,
+  .notice-card > span,
+  .notices-priority-panel > span,
+  .report-hero-card-icon,
+  .services-hero-card-icon,
+  .notices-hero-card-icon,
+  .track-hero-icon,
+  .success-icon {
+    border-radius: 10px;
+    height: 34px;
+    width: 34px;
+  }
+
+  .home-action-card strong,
+  .home-page .home-action-card strong,
+  .submission-checklist strong,
+  .home-page .submission-checklist strong,
+  .service-card h3,
+  .home-page .service-card h3,
+  .notice-grid strong,
+  .home-page .notice-grid strong,
+  .services-category-heading h3,
+  .notice-card strong,
+  .track-status-grid strong {
+    font-size: 0.86rem;
+    line-height: 1.24;
+  }
+
+  .home-action-card p,
+  .home-page .home-action-card p,
+  .home-track-form p,
+  .home-page .home-track-form p,
+  .service-card p,
+  .home-page .service-card p,
+  .notice-grid p,
+  .home-page .notice-grid p,
+  .services-category-heading p,
+  .services-category-card li,
+  .notice-card p,
+  .track-status-grid p,
+  .notices-check-grid li,
+  .report-hero-card p,
+  .services-hero-card p,
+  .notices-hero-card p,
+  .track-hero-panel p {
+    font-size: 0.76rem;
+    line-height: 1.38;
+  }
+
+  .home-page .service-card p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .home-page .citizen-category-grid,
+  .citizen-category-grid,
+  .home-page .trust-fact-grid,
+  .trust-fact-grid,
+  .home-page .submission-checklist ul,
+  .submission-checklist ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-page .citizen-category-grid,
+  .service-grid,
+  .notice-grid,
+  .services-boundary-grid,
+  .services-category-grid,
+  .notices-grid,
+  .notices-check-grid,
+  .track-status-grid,
+  .track-lookup-support {
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .home-page .service-card {
+    min-height: 118px;
+  }
+
+  .home-page .trust-fact-grid {
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .home-page .trust-fact-grid article,
+  .trust-fact-grid article {
+    min-height: 76px;
+    padding: 10px 8px;
+  }
+
+  .home-page .trust-fact-grid strong,
+  .trust-fact-grid strong {
+    font-size: 1.18rem;
+  }
+
+  .home-page .trust-fact-grid span,
+  .trust-fact-grid span {
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  .home-page .section-block,
+  .home-page .process-section,
+  .home-page .notice-section,
+  .section-block,
+  .process-section,
+  .notice-section,
+  .services-page .page-section,
+  .notices-page .page-section,
+  .track-status-guide,
+  .services-page .help-band,
+  .notices-page .help-band {
+    padding-top: 34px;
+  }
+
+  .home-page .section-heading h2,
+  .home-page .process-intro h2,
+  .home-page .home-cta-banner h2,
+  .section-heading h2,
+  .process-intro h2 {
+    font-size: clamp(1.22rem, 5vw, 1.55rem);
+    line-height: 1.16;
+  }
+
+  .home-page .section-heading p:not(.eyebrow),
+  .home-page .process-intro p:not(.eyebrow) {
+    font-size: 0.8rem;
+    line-height: 1.46;
+  }
+
+  .process-list,
+  .home-page .process-list {
+    gap: 8px;
+  }
+
+  .process-list li,
+  .home-page .process-list li {
+    border-radius: 12px;
+    gap: 8px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    padding: 10px;
+  }
+
+  .process-list span,
+  .home-page .process-list span {
+    height: 30px;
+    width: 30px;
+  }
+
+  .process-list strong,
+  .home-page .process-list strong {
+    font-size: 0.84rem;
+  }
+
+  .process-list p,
+  .home-page .process-list p {
+    font-size: 0.74rem;
+    line-height: 1.36;
+  }
+
+  .home-page .submission-checklist {
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .home-page .submission-checklist ul,
+  .submission-checklist ul {
+    gap: 8px;
+  }
+
+  .home-page .submission-checklist li,
+  .submission-checklist li {
+    min-height: 60px;
+    padding: 8px;
+  }
+
+  .home-page .submission-checklist li span,
+  .submission-checklist li span {
+    font-size: 0.7rem;
+    line-height: 1.24;
+  }
+
+  .home-page .home-cta-banner,
+  .home-cta-banner {
+    gap: 12px;
+    margin-top: 34px;
+  }
+
+  .home-track-form > div,
+  .home-page .home-track-form > div {
+    gap: 8px;
+    grid-template-columns: minmax(0, 1fr) 82px;
+  }
+
+  .home-track-form input,
+  .home-page .home-track-form input,
+  .track-form-row input,
+  .tracking-row input,
+  .report-step-panel .field-preview input,
+  .report-step-panel .field-preview textarea,
+  .report-select-trigger {
+    font-size: 0.88rem;
+    min-height: 40px;
+  }
+
+  .report-stepper {
+    gap: 6px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .report-stepper li {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: 54px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+
+  .report-stepper strong {
+    font-size: 0.7rem;
+  }
+
+  .report-step-panel {
+    gap: 10px;
+  }
+
+  .report-step-panel .field-preview,
+  .report-file-field,
+  .toggle-row,
+  .report-submit-review,
+  .form-note {
+    border-radius: 12px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-actions,
+  .home-page .hero-actions,
+  .services-hero-actions,
+  .notices-hero-actions,
+  .home-cta-banner > div {
+    grid-template-columns: 1fr;
+  }
+
+  .home-track-form > div,
+  .home-page .home-track-form > div,
+  .home-page .citizen-category-grid,
+  .citizen-category-grid,
+  .home-page .submission-checklist ul,
+  .submission-checklist ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Compact mobile footer: avoid a long stack of nested footer cards. */
+@media (max-width: 720px) {
+  .site-footer {
+    padding: 12px 8px 16px;
+  }
+
+  .site-footer-inner {
+    border-radius: 16px;
+    box-shadow: 0 12px 34px rgba(15, 78, 99, 0.1);
+  }
+
+  .site-footer-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 12px;
+    text-align: center;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+    gap: 8px;
+  }
+
+  .footer-brand-lockup {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .footer-brand-mark {
+    height: 30px;
+    width: 30px;
+  }
+
+  .footer-brand .brand-kicker {
+    font-size: 0.56rem;
+    line-height: 1.1;
+  }
+
+  .footer-brand strong {
+    font-size: 0.88rem;
+    line-height: 1.12;
+  }
+
+  .footer-brand p,
+  .footer-muted {
+    display: none;
+  }
+
+  .footer-column {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    gap: 6px;
+    padding: 0;
+    width: 100%;
+  }
+
+  .footer-heading {
+    font-size: 0.62rem;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+  }
+
+  .footer-column a {
+    border-radius: 9px;
+    font-size: 0.78rem;
+    min-height: 32px;
+    padding: 7px 8px;
+  }
+
+  .site-footer-bar {
+    gap: 2px;
+    padding: 10px 12px;
+  }
+
+  .site-footer-bar span:first-child {
+    font-size: 0.78rem;
+  }
+
+  .site-footer-bar span:last-child {
+    font-size: 0.66rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small mobile breathing room between major content sections. */
+@media (max-width: 720px) {
+  .home-page > section + section,
+  .home-page > section + .home-cta-banner,
+  .public-page > section + section,
+  .public-page > section + .help-band,
+  .public-page > .help-band {
+    margin-top: 14px;
+  }
+
+  .home-page .section-block,
+  .home-page .process-section,
+  .home-page .notice-section,
+  .section-block,
+  .process-section,
+  .notice-section,
+  .services-page .page-section,
+  .notices-page .page-section,
+  .track-status-guide {
+    padding-top: 24px;
+  }
+
+  .home-page .section-block {
+    margin-bottom: 18px;
+    padding-top: 32px;
+  }
+}
+
+/* Final home-page mobile optimization. */
+@media (max-width: 720px) {
+  .home-page {
+    gap: 0;
+  }
+
+  .home-page .civic-hero-section {
+    gap: 12px;
+    padding-top: 2px;
+  }
+
+  .home-page .hero-copy {
+    gap: 8px;
+    padding-inline: 4px;
+  }
+
+  .home-page .hero-copy h1 {
+    font-size: clamp(1.58rem, 6.8vw, 2rem);
+    line-height: 1.08;
+    max-width: 330px;
+  }
+
+  .home-page .hero-copy > p {
+    font-size: 0.8rem;
+    line-height: 1.42;
+    max-width: 330px;
+  }
+
+  .home-page .hero-actions {
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-page .hero-actions .button {
+    font-size: 0.76rem;
+    gap: 6px;
+    min-height: 38px;
+    padding: 8px 10px;
+  }
+
+  .home-page .home-hero-stack {
+    gap: 8px;
+  }
+
+  .home-page .home-hero-media {
+    aspect-ratio: 16 / 7.8;
+    max-height: 180px;
+  }
+
+  .home-page .home-action-panel {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .home-page .home-action-card,
+  .home-page .home-track-form {
+    padding: 9px;
+  }
+
+  .home-page .home-action-card {
+    grid-template-columns: 32px minmax(0, 1fr);
+    min-height: 56px;
+  }
+
+  .home-page .home-action-card > span {
+    height: 32px;
+    width: 32px;
+  }
+
+  .home-page .home-action-card strong {
+    font-size: 0.82rem;
+  }
+
+  .home-page .home-action-card p,
+  .home-page .home-track-form p {
+    font-size: 0.7rem;
+    line-height: 1.28;
+  }
+
+  .home-page .home-track-form {
+    gap: 7px;
+  }
+
+  .home-page .home-track-form label {
+    font-size: 0.74rem;
+  }
+
+  .home-page .home-track-form > div {
+    gap: 7px;
+    grid-template-columns: minmax(0, 1fr) 72px;
+  }
+
+  .home-page .home-track-form input,
+  .home-page .home-track-form button {
+    font-size: 0.76rem;
+    min-height: 36px;
+  }
+
+  .home-page .trust-fact-grid {
+    gap: 8px;
+    margin-top: 14px;
+    padding: 8px;
+  }
+
+  .home-page .trust-fact-grid article {
+    min-height: 66px;
+    padding: 9px 7px;
+  }
+
+  .home-page .trust-fact-grid strong {
+    font-size: 1.08rem;
+  }
+
+  .home-page .trust-fact-grid span {
+    font-size: 0.64rem;
+    line-height: 1.22;
+  }
+
+  .home-page > section + section,
+  .home-page > section + .home-cta-banner {
+    margin-top: 12px;
+  }
+
+  .home-page .section-block,
+  .home-page .process-section,
+  .home-page .notice-section {
+    padding-top: 28px;
+  }
+
+  .home-page .section-block {
+    margin-bottom: 14px;
+  }
+
+  .home-page .section-heading {
+    gap: 7px;
+  }
+
+  .home-page .section-heading h2,
+  .home-page .process-intro h2,
+  .home-page .home-cta-banner h2 {
+    font-size: clamp(1.12rem, 4.8vw, 1.38rem);
+    line-height: 1.14;
+    max-width: 320px;
+  }
+
+  .home-page .section-heading p:not(.eyebrow),
+  .home-page .process-intro p:not(.eyebrow) {
+    font-size: 0.76rem;
+    line-height: 1.42;
+    max-width: 330px;
+  }
+
+  .home-page .citizen-category-grid,
+  .home-page .notice-grid {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .home-page .service-card {
+    gap: 7px;
+    min-height: 112px;
+    padding: 9px 7px;
+  }
+
+  .home-page .service-card > span {
+    height: 30px;
+    width: 30px;
+  }
+
+  .home-page .service-card h3 {
+    font-size: 0.78rem;
+  }
+
+  .home-page .service-card p {
+    font-size: 0.66rem;
+    line-height: 1.26;
+    -webkit-line-clamp: 2;
+  }
+
+  .home-page .process-section {
+    gap: 12px;
+  }
+
+  .home-page .process-list {
+    gap: 7px;
+  }
+
+  .home-page .process-list li {
+    gap: 8px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    padding: 9px;
+  }
+
+  .home-page .process-list span {
+    font-size: 0.76rem;
+    height: 28px;
+    width: 28px;
+  }
+
+  .home-page .process-list strong {
+    font-size: 0.8rem;
+  }
+
+  .home-page .process-list p {
+    font-size: 0.7rem;
+    line-height: 1.32;
+  }
+
+  .home-page .notice-grid article {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .home-page .notice-card-heading {
+    gap: 8px;
+  }
+
+  .home-page .notice-card-heading span {
+    height: 30px;
+    width: 30px;
+  }
+
+  .home-page .notice-grid strong {
+    font-size: 0.82rem;
+  }
+
+  .home-page .notice-grid p {
+    font-size: 0.7rem;
+    line-height: 1.32;
+  }
+
+  .home-page .submission-checklist {
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px;
+  }
+
+  .home-page .submission-checklist strong {
+    font-size: 0.82rem;
+  }
+
+  .home-page .submission-checklist ul {
+    gap: 7px;
+  }
+
+  .home-page .submission-checklist li {
+    min-height: 54px;
+    padding: 7px;
+  }
+
+  .home-page .submission-checklist li svg {
+    height: 15px;
+    width: 15px;
+  }
+
+  .home-page .submission-checklist li span {
+    font-size: 0.66rem;
+    line-height: 1.2;
+  }
+
+  .home-page .home-cta-banner {
+    gap: 10px;
+    margin-top: 26px;
+    padding: 12px 10px;
+  }
+
+  .home-page .home-cta-banner > div {
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-page .home-guidance-section {
+    padding-top: 24px;
+  }
+
+  .home-page .home-guidance-section .section-heading {
+    gap: 6px;
+  }
+
+  .home-page .home-guidance-section .section-heading h2 {
+    max-width: 300px;
+  }
+
+  .home-page .home-guidance-section .notice-grid {
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .home-page .home-guidance-section .notice-grid article {
+    align-items: center;
+    display: grid;
+    gap: 8px 10px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: 10px 12px;
+    text-align: left;
+  }
+
+  .home-page .home-guidance-section .notice-card-heading {
+    display: contents;
+  }
+
+  .home-page .home-guidance-section .notice-card-heading span {
+    grid-row: 1 / span 2;
+    height: 34px;
+    width: 34px;
+  }
+
+  .home-page .home-guidance-section .notice-card-heading strong {
+    align-self: end;
+    font-size: 0.84rem;
+    line-height: 1.2;
+  }
+
+  .home-page .home-guidance-section .notice-grid p {
+    font-size: 0.7rem;
+    line-height: 1.32;
+    text-align: left;
+  }
+}
+
+@media (max-width: 380px) {
+  .home-page .hero-actions,
+  .home-page .home-cta-banner > div,
+  .home-page .home-track-form > div {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .citizen-category-grid,
+  .home-page .submission-checklist ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Clear separation between the home page's main mobile sections. */
+@media (max-width: 720px) {
+  .home-page > .trust-fact-grid,
+  .home-page > .section-block,
+  .home-page > .process-section,
+  .home-page > .notice-section,
+  .home-page > .home-cta-banner {
+    margin-top: 24px;
+  }
+
+  .home-page > .home-cta-banner {
+    margin-bottom: 6px;
+  }
+}
+
+/* Services page mobile optimization. */
+@media (max-width: 720px) {
+  .services-page > section + section,
+  .services-page > section + .help-band {
+    margin-top: 24px;
+  }
+
+  .services-hero {
+    gap: 14px;
+    padding: 18px 14px;
+  }
+
+  .services-hero-copy {
+    gap: 10px;
+  }
+
+  .services-hero h1 {
+    font-size: clamp(1.55rem, 6.6vw, 2rem);
+    line-height: 1.12;
+  }
+
+  .services-hero-copy > p:not(.eyebrow) {
+    font-size: 0.82rem;
+    line-height: 1.46;
+  }
+
+  .services-hero-actions {
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .services-hero-actions .button {
+    font-size: 0.76rem;
+    min-height: 38px;
+    padding: 8px 10px;
+  }
+
+  .services-hero-card {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .services-hero-card-icon {
+    height: 34px;
+    width: 34px;
+  }
+
+  .services-hero-card strong {
+    font-size: 0.88rem;
+    line-height: 1.24;
+  }
+
+  .services-hero-card p,
+  .services-hero-card li {
+    font-size: 0.74rem;
+    line-height: 1.34;
+  }
+
+  .services-hero-card ul {
+    gap: 7px;
+  }
+
+  .services-hero-card li {
+    gap: 8px;
+    grid-template-columns: 24px minmax(0, 1fr);
+    padding: 7px 8px;
+  }
+
+  .services-boundary-grid {
+    gap: 8px;
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  .services-boundary-grid article {
+    align-items: center;
+    gap: 8px 10px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    padding: 10px 12px;
+  }
+
+  .services-boundary-grid article > span {
+    height: 32px;
+    width: 32px;
+  }
+
+  .services-boundary-grid strong {
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+
+  .services-boundary-grid p {
+    font-size: 0.7rem;
+    line-height: 1.34;
+  }
+
+  .services-page .page-section {
+    padding-top: 28px;
+  }
+
+  .services-page .section-heading {
+    gap: 7px;
+  }
+
+  .services-page .section-heading h2,
+  .services-help-section h2 {
+    font-size: clamp(1.15rem, 5vw, 1.42rem);
+    line-height: 1.15;
+  }
+
+  .services-page .section-heading p:not(.eyebrow),
+  .services-help-section p:not(.eyebrow) {
+    font-size: 0.76rem;
+    line-height: 1.42;
+  }
+
+  .services-category-grid {
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .services-category-card {
+    gap: 9px;
+    padding: 10px;
+  }
+
+  .services-category-card::before {
+    height: 3px;
+  }
+
+  .services-category-heading {
+    gap: 9px;
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  .services-category-heading > span {
+    height: 32px;
+    width: 32px;
+  }
+
+  .services-category-heading h3 {
+    font-size: 0.84rem;
+    line-height: 1.2;
+  }
+
+  .services-category-heading p {
+    font-size: 0.68rem;
+    line-height: 1.24;
+  }
+
+  .services-category-card ul {
+    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .services-category-card li {
+    font-size: 0.68rem;
+    line-height: 1.2;
+    min-height: 30px;
+    padding: 6px 7px;
+  }
+
+  .services-category-card > p {
+    display: -webkit-box;
+    font-size: 0.7rem;
+    line-height: 1.34;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .services-help-section {
+    gap: 12px;
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .services-help-section > div {
+    gap: 7px;
+  }
+
+  .services-help-section ul {
+    gap: 7px;
+  }
+
+  .services-help-section li {
+    gap: 8px;
+    grid-template-columns: 20px minmax(0, 1fr);
+    min-height: 38px;
+    padding: 7px 8px;
+  }
+
+  .services-help-section li span {
+    font-size: 0.7rem;
+    line-height: 1.28;
+  }
+
+  .services-page .help-band {
+    gap: 10px;
+    margin-top: 24px;
+    padding: 12px;
+  }
+
+  .services-page .help-band strong {
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+
+  .services-page .help-band span {
+    font-size: 0.74rem;
+    line-height: 1.34;
+  }
+
+  .services-page .help-band .button {
+    font-size: 0.78rem;
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 380px) {
+  .services-hero-actions,
+  .services-category-card ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Services page extra mobile compaction. */
+@media (max-width: 720px) {
+  .services-page > section + section,
+  .services-page > section + .help-band {
+    margin-top: 18px;
+  }
+
+  .services-hero-card ul {
+    grid-template-columns: 1fr;
+  }
+
+  .services-hero-card li:nth-child(n+3) {
+    display: none;
+  }
+
+  .services-boundary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .services-boundary-grid article {
+    align-content: start;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: 112px;
+    padding: 9px 7px;
+    text-align: center;
+  }
+
+  .services-boundary-grid article > span {
+    height: 30px;
+    width: 30px;
+  }
+
+  .services-boundary-grid strong {
+    font-size: 0.74rem;
+  }
+
+  .services-boundary-grid p {
+    display: -webkit-box;
+    font-size: 0.64rem;
+    line-height: 1.24;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .services-page .page-section {
+    padding-top: 22px;
+  }
+
+  .services-category-grid {
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .services-category-card {
+    align-content: start;
+    gap: 7px;
+    min-height: 132px;
+    padding: 9px 7px;
+    text-align: center;
+  }
+
+  .services-category-heading {
+    gap: 6px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .services-category-heading > span {
+    height: 30px;
+    width: 30px;
+  }
+
+  .services-category-heading h3 {
+    font-size: 0.76rem;
+    line-height: 1.16;
+  }
+
+  .services-category-heading p {
+    display: none;
+  }
+
+  .services-category-card ul {
+    gap: 5px;
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  .services-category-card li {
+    font-size: 0.62rem;
+    line-height: 1.18;
+    min-height: 24px;
+    padding: 5px 6px;
+  }
+
+  .services-category-card li:nth-child(n+3) {
+    display: none;
+  }
+
+  .services-category-card > p {
+    display: none;
+  }
+
+  .services-help-section {
+    gap: 10px;
+  }
+
+  .services-help-section > div p:not(.eyebrow) {
+    display: none;
+  }
+
+  .services-help-section ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .services-help-section li {
+    align-content: start;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: 74px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+
+  .services-help-section li svg {
+    height: 18px;
+    width: 18px;
+  }
+
+  .services-help-section li span {
+    display: -webkit-box;
+    font-size: 0.64rem;
+    line-height: 1.22;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .services-page .help-band {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .services-boundary-grid,
+  .services-category-grid,
+  .services-help-section ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+

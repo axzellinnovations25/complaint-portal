@@ -5,6 +5,12 @@ type AdminLoginPageProps = {
   onLoginSuccess: () => void
 }
 
+const accessNotes = [
+  'Authorized staff only',
+  'Access matched to your duties',
+  'Activity reviewed by administrators',
+]
+
 export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -34,52 +40,82 @@ export function AdminLoginPage({ onLoginSuccess }: AdminLoginPageProps) {
   return (
     <main className="admin-auth-shell">
       <section className="admin-auth-card" aria-labelledby="admin-login-heading">
-        <div className="admin-auth-brand">
-          <span className="brand-mark" aria-hidden="true">
-            <img src="/logo.svg" alt="" />
-          </span>
-          <div>
+        <div className="admin-auth-hero">
+          <div className="admin-auth-brand">
+            <span className="admin-auth-logo" aria-hidden="true">
+              <img src="/logo.svg" alt="" />
+            </span>
+            <div>
+              <span>Smart Citizen Platform</span>
+              <strong>Complaint Administration</strong>
+            </div>
+          </div>
+
+          <div className="admin-auth-hero-copy">
             <p className="eyebrow">Restricted staff portal</p>
-            <h1 id="admin-login-heading">Officer sign in</h1>
+            <h1 id="admin-login-heading">Sign in to manage civic operations</h1>
+            <p>
+              Review complaints, coordinate departments, publish public updates, and monitor response deadlines
+              from the staff workspace.
+            </p>
+          </div>
+
+          <div className="admin-auth-note-panel">
+            <strong>Access policy</strong>
+            <ul>
+              {accessNotes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        <p className="admin-auth-copy">
-          This entry point is intentionally separate from the public complaint portal. Use an approved
-          Supabase Auth account with an active staff profile.
-        </p>
+        <div className="admin-auth-form-panel">
+          <div className="admin-auth-form-heading">
+            <p className="eyebrow">Officer access</p>
+            <h2>Welcome back</h2>
+            <p>Use your staff account to continue.</p>
+          </div>
 
-        <form className="admin-auth-form" onSubmit={handleSubmit}>
-          <label>
-            Email address
-            <input
-              autoComplete="email"
-              name="email"
-              onChange={(event) => setEmail(event.target.value)}
-              required
-              type="email"
-              value={email}
-            />
-          </label>
+          <form className="admin-auth-form" onSubmit={handleSubmit}>
+            <label>
+              Email address
+              <input
+                autoComplete="email"
+                name="email"
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="officer@pradeshiya.gov.lk"
+                required
+                type="email"
+                value={email}
+              />
+            </label>
 
-          <label>
-            Password
-            <input
-              autoComplete="current-password"
-              name="password"
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              type="password"
-              value={password}
-            />
-          </label>
+            <label>
+              Password
+              <input
+                autoComplete="current-password"
+                name="password"
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter your password"
+                required
+                type="password"
+                value={password}
+              />
+            </label>
 
-          {errorMessage && <p className="admin-auth-error">{errorMessage}</p>}
+            {errorMessage && <p className="admin-auth-error">{errorMessage}</p>}
 
-          <button className="button button-primary" disabled={isSubmitting} type="submit">
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
+            <button className="button button-primary admin-auth-submit" disabled={isSubmitting} type="submit">
+              {isSubmitting ? 'Signing in...' : 'Sign in securely'}
+            </button>
+          </form>
+
+          <div className="admin-auth-support">
+            <span>Need access?</span>
+            <strong>Contact the main administrator to activate your access.</strong>
+          </div>
+        </div>
       </section>
     </main>
   )

@@ -21,6 +21,7 @@ export type Database = {
           created_at?: string
         }
         Update: Partial<Database['public']['Tables']['profiles']['Insert']>
+        Relationships: []
       }
       complaints: {
         Row: {
@@ -31,9 +32,15 @@ export type Database = {
           status: string
           priority: string
           category_id: string | null
+          location_id: string | null
           department_id: string | null
           assigned_officer_id: string | null
           contact_number: string | null
+          public_status_note: string | null
+          internal_note: string | null
+          submitted_at: string
+          resolved_at: string | null
+          closed_at: string | null
           created_at: string
           updated_at: string
         }
@@ -45,13 +52,20 @@ export type Database = {
           status?: string
           priority?: string
           category_id?: string | null
+          location_id?: string | null
           department_id?: string | null
           assigned_officer_id?: string | null
           contact_number?: string | null
+          public_status_note?: string | null
+          internal_note?: string | null
+          submitted_at?: string
+          resolved_at?: string | null
+          closed_at?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: Partial<Database['public']['Tables']['complaints']['Insert']>
+        Relationships: []
       }
     }
     Views: Record<string, never>

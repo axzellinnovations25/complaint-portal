@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react'
 import { AdminDashboardPage } from '../../features/admin-dashboard/pages/AdminDashboardPage'
 import {
   AdminAccessDeniedPage,
+  AuditAdministrationPage,
+  CategoriesAdministrationPage,
   CommunicationAdministrationPage,
   ContentAdministrationPage,
   DepartmentsAdministrationPage,
+  LocationsAdministrationPage,
   ReportsAdministrationPage,
+  SettingsAdministrationPage,
+  UsersAdministrationPage,
 } from '../../features/admin-dashboard/pages/AdminSectionPages'
 import { ComplaintWorkspacePage } from '../../features/admin-complaints/pages/ComplaintWorkspacePage'
 import { AdminLoginPage } from '../../features/identity/pages/AdminLoginPage'
@@ -65,6 +70,18 @@ function renderAdminSection(section: AdminSectionDefinition, role: UserRole) {
     return <DepartmentsAdministrationPage />
   }
 
+  if (section.id === 'users') {
+    return <UsersAdministrationPage />
+  }
+
+  if (section.id === 'categories') {
+    return <CategoriesAdministrationPage />
+  }
+
+  if (section.id === 'locations') {
+    return <LocationsAdministrationPage />
+  }
+
   if (section.id === 'reports') {
     return <ReportsAdministrationPage />
   }
@@ -73,7 +90,15 @@ function renderAdminSection(section: AdminSectionDefinition, role: UserRole) {
     return <ContentAdministrationPage />
   }
 
-  return <CommunicationAdministrationPage />
+  if (section.id === 'communications') {
+    return <CommunicationAdministrationPage />
+  }
+
+  if (section.id === 'settings') {
+    return <SettingsAdministrationPage />
+  }
+
+  return <AuditAdministrationPage />
 }
 
 export function RouteRegistry() {
@@ -273,7 +298,6 @@ export function RouteRegistry() {
       <main>
         <AdminLayout
           currentPath={activeSection?.href ?? currentPath}
-          email={adminProfile.email}
           fullName={adminProfile.fullName}
           onNavigate={handleNavigate}
           onSignOut={handleAdminSignOut}

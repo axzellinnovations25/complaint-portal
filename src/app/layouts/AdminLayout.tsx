@@ -4,7 +4,6 @@ import { userRoleLabels } from '../../entities/user/model/roles'
 
 type AdminLayoutProps = PropsWithChildren<{
   currentPath: string
-  email: string
   fullName: string
   onNavigate: (href: string) => void
   onSignOut: () => void
@@ -15,13 +14,14 @@ type AdminLayoutProps = PropsWithChildren<{
 export function AdminLayout({
   children,
   currentPath,
-  email,
   fullName,
   onNavigate,
   onSignOut,
   role,
   sections,
 }: AdminLayoutProps) {
+  const activeSection = sections.find((section) => section.href === currentPath)
+
   const handleNavigate = (href: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
     onNavigate(href)
@@ -29,15 +29,29 @@ export function AdminLayout({
 
   return (
     <section className="admin-shell" aria-labelledby="admin-heading">
+      <header className="admin-topbar">
+        <div className="admin-topbar-brand">
+          <span aria-hidden="true">
+            <img src="/logo.svg" alt="" />
+          </span>
+          <div>
+            <strong>Complaint Administration</strong>
+            <small>{activeSection?.label ?? 'Administration'}</small>
+          </div>
+        </div>
+        <div className="admin-topbar-actions">
+          <div className="admin-topbar-user">
+            <span>{userRoleLabels[role]}</span>
+            <strong>{fullName}</strong>
+          </div>
+          <button className="button button-secondary admin-topbar-signout" onClick={onSignOut} type="button">
+            Sign out
+          </button>
+        </div>
+      </header>
+
       <aside className="admin-sidebar">
         <div className="admin-sidebar-card">
-          <p className="eyebrow">Officer workspace</p>
-          <h2 id="admin-heading">Administration</h2>
-          <div className="admin-user-card">
-            <strong>{fullName}</strong>
-            <span>{userRoleLabels[role]}</span>
-            <small>{email}</small>
-          </div>
           <nav className="admin-nav" aria-label="Administration sections">
             {sections.map((section) => (
               <a
@@ -47,16 +61,21 @@ export function AdminLayout({
                 onClick={handleNavigate(section.href)}
               >
                 <strong>{section.label}</strong>
-                <span>{section.description}</span>
               </a>
             ))}
           </nav>
-          <button className="button button-secondary admin-signout-button" onClick={onSignOut} type="button">
-            Sign out
-          </button>
         </div>
       </aside>
-      <div className="admin-content">{children}</div>
+      <div className="admin-content">
+        <header className="admin-content-header">
+          <div>
+            <p className="eyebrow">Administration</p>
+            <h1>{activeSection?.label ?? 'Administration'}</h1>
+            <p>{activeSection?.description ?? 'Manage the complaint portal from the staff workspace.'}</p>
+          </div>
+        </header>
+        {children}
+      </div>
     </section>
   )
 }

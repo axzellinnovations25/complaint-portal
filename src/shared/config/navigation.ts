@@ -47,8 +47,18 @@ export const systemModules = {
       owner: 'features/identity',
     },
     {
+      title: 'Access, settings, and audit',
+      description: 'Staff invitations, role governance, platform defaults, integration checks, and activity review.',
+      owner: 'features/settings',
+    },
+    {
+      title: 'Categories, SLA, and locations',
+      description: 'Complaint taxonomy, department routing, SLA targets, wards, villages, and service zones.',
+      owner: 'features/locations',
+    },
+    {
       title: 'SLA, reports, and audit',
-      description: 'SLA risk indicators, workload summaries, exports, and case history visibility.',
+      description: 'SLA risk indicators, workload summaries, exports, and performance visibility.',
       owner: 'features/reporting',
     },
     {

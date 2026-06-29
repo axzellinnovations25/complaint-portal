@@ -28,9 +28,14 @@ export type AdminSectionId =
   | 'dashboard'
   | 'complaints'
   | 'departments'
+  | 'users'
+  | 'categories'
+  | 'locations'
   | 'reports'
   | 'content'
   | 'communications'
+  | 'settings'
+  | 'audit'
 
 export type AdminSectionDefinition = {
   id: AdminSectionId
@@ -74,6 +79,27 @@ export const adminSections = [
     allowedRoles: ['super_admin', 'main_admin', 'department_head'],
   },
   {
+    id: 'users',
+    label: 'User access',
+    href: '/admin/users',
+    description: 'Invite staff, review roles, and suspend inactive accounts.',
+    allowedRoles: ['super_admin', 'main_admin'],
+  },
+  {
+    id: 'categories',
+    label: 'Categories and SLA',
+    href: '/admin/categories',
+    description: 'Configure complaint categories, routing, and response targets.',
+    allowedRoles: ['super_admin', 'main_admin', 'department_head'],
+  },
+  {
+    id: 'locations',
+    label: 'Locations',
+    href: '/admin/locations',
+    description: 'Maintain wards, GN divisions, villages, and service zones.',
+    allowedRoles: ['super_admin', 'main_admin', 'department_head'],
+  },
+  {
     id: 'reports',
     label: 'Reports',
     href: '/admin/reports',
@@ -93,6 +119,20 @@ export const adminSections = [
     href: '/admin/communications',
     description: 'Send status messages and review delivery logs.',
     allowedRoles: ['super_admin', 'main_admin', 'officer', 'content_admin'],
+  },
+  {
+    id: 'settings',
+    label: 'System settings',
+    href: '/admin/settings',
+    description: 'Reference formats, intake rules, SMS provider, and retention.',
+    allowedRoles: ['super_admin', 'main_admin'],
+  },
+  {
+    id: 'audit',
+    label: 'Audit log',
+    href: '/admin/audit',
+    description: 'Track staff activity, permission changes, and case history.',
+    allowedRoles: ['super_admin', 'main_admin', 'management_viewer'],
   },
 ] as const satisfies readonly AdminSectionDefinition[]
 

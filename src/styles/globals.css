@@ -2949,14 +2949,16 @@ html[lang='ta'] .track-form-row input {
 }
 
 .admin-officer-table .admin-table-row {
-  grid-template-columns: minmax(190px, 1fr) 130px 70px 110px;
+  grid-template-columns: minmax(190px, 1fr) minmax(150px, 0.75fr) 120px 90px;
 }
 
 .admin-department-table .admin-table-row {
   grid-template-columns: minmax(190px, 0.8fr) minmax(220px, 1fr) 90px 110px minmax(230px, 0.9fr);
 }
 
-.admin-department-edit-row input {
+.admin-department-edit-row input,
+.admin-officer-edit-row input,
+.admin-officer-edit-row select {
   background: #ffffff;
   border: 1px solid rgba(15, 23, 42, 0.12);
   border-radius: 8px;
@@ -2966,7 +2968,9 @@ html[lang='ta'] .track-form-row input {
   width: 100%;
 }
 
-.admin-department-edit-row input:focus {
+.admin-department-edit-row input:focus,
+.admin-officer-edit-row input:focus,
+.admin-officer-edit-row select:focus {
   border-color: var(--border-em);
   box-shadow: 0 0 0 3px var(--accent-dim);
   outline: none;
@@ -3009,6 +3013,10 @@ html[lang='ta'] .track-form-row input {
 .admin-location-table .admin-table-row,
 .admin-audit-table .admin-table-row {
   grid-template-columns: minmax(170px, 1fr) minmax(140px, 0.8fr) minmax(130px, 0.7fr) minmax(120px, 0.7fr) 110px;
+}
+
+.admin-user-table .admin-table-row {
+  grid-template-columns: minmax(170px, 1fr) minmax(130px, 0.65fr) minmax(150px, 0.75fr) 110px 90px minmax(220px, 0.85fr);
 }
 
 .admin-route-list,

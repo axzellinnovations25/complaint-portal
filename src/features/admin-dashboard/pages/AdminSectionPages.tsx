@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import type { AdminSectionDefinition, UserRole } from '../../../entities/user/model/roles'
-import { userRoleLabels } from '../../../entities/user/model/roles'
+import { userRoleLabels, userRoles } from '../../../entities/user/model/roles'
 import { supabase } from '../../../shared/lib/supabase/client'
 
 type AdminSectionPageProps = {
@@ -19,6 +19,12 @@ type DepartmentRow = {
 type DepartmentFormState = {
   description: string
   name: string
+}
+
+type ProfileFormState = {
+  departmentId: string
+  fullName: string
+  role: UserRole
 }
 
 type ProfileRow = {
@@ -231,7 +237,6 @@ function AdminPageHeader({
 async function loadDepartmentsPageData() {
   const [
     { data: departments, error: departmentsError },
-    { data: profiles, error: profilesError },
     { data: categories, error: categoriesError },
   ] = await Promise.all([
     supabase
@@ -239,19 +244,14 @@ async function loadDepartmentsPageData() {
       .select('id, name, description, is_active, created_at')
       .order('name', { ascending: true }),
     supabase
-      .from('profiles')
-      .select('id, full_name, role, department_id, is_active, created_at, departments(name)')
-      .order('full_name', { ascending: true }),
-    supabase
       .from('complaint_categories')
       .select('id, name_en, name_ta, expected_sla_hours, is_active, created_at, departments(name)')
       .order('name_en', { ascending: true }),
   ])
 
-  if (departmentsError || profilesError || categoriesError) {
+  if (departmentsError || categoriesError) {
     throw new Error(
       departmentsError?.message ??
-        profilesError?.message ??
         categoriesError?.message ??
         'Department data could not be loaded.',
     )
@@ -259,14 +259,13 @@ async function loadDepartmentsPageData() {
 
   return {
     departments: (departments ?? []) as DepartmentRow[],
-    profiles: (profiles ?? []) as ProfileRow[],
     categories: (categories ?? []) as CategoryRow[],
   }
 }
 
 export function DepartmentsAdministrationPage() {
   const { data, errorMessage, isLoading } = useData(
-    { departments: [] as DepartmentRow[], profiles: [] as ProfileRow[], categories: [] as CategoryRow[] },
+    { departments: [] as DepartmentRow[], categories: [] as CategoryRow[] },
     loadDepartmentsPageData,
   )
   const [actionMessage, setActionMessage] = useState('')
@@ -469,9 +468,9 @@ export function DepartmentsAdministrationPage() {
             </button>
           </>
         }
-        description="Manage active staff, role assignment, department ownership, and complaint routing rules."
+        description="Manage department master records, active state, ownership notes, and complaint routing structure."
         eyebrow="Identity administration"
-        title="Departments and officers"
+        title="Departments"
       />
 
       <DataError message={errorMessage} />
@@ -613,38 +612,7 @@ export function DepartmentsAdministrationPage() {
         </aside>
       </div>
 
-      <div className="admin-two-column">
-        <div className="admin-data-panel">
-          <div className="admin-panel-heading">
-            <strong>Officer directory</strong>
-            <span>{data.profiles.length} profile records</span>
-          </div>
-          {data.profiles.length > 0 ? (
-            <div className="admin-table admin-officer-table" role="table" aria-label="Officer directory">
-              <div className="admin-table-row admin-table-head" role="row">
-                <span>Officer</span>
-                <span>Department</span>
-                <span>Role</span>
-                <span>Status</span>
-              </div>
-              {data.profiles.map((profile) => (
-                <article className="admin-table-row" key={profile.id} role="row">
-                  <span>
-                    <strong>{profile.full_name}</strong>
-                    <small>{profile.id}</small>
-                  </span>
-                  <span>{profile.departments?.name ?? 'No department'}</span>
-                  <span>{userRoleLabels[profile.role]}</span>
-                  <StatusBadge label={profile.is_active ? 'Active' : 'Inactive'} />
-                </article>
-              ))}
-            </div>
-          ) : (
-            <EmptyState>{isLoading ? 'Loading staff profiles.' : 'No staff profiles found.'}</EmptyState>
-          )}
-        </div>
-
-        <div className="admin-data-panel">
+      <div className="admin-data-panel">
           <div className="admin-panel-heading">
             <strong>Category routing</strong>
             <span>Database rules</span>
@@ -664,31 +632,64 @@ export function DepartmentsAdministrationPage() {
           ) : (
             <EmptyState>{isLoading ? 'Loading category routing.' : 'No complaint categories found.'}</EmptyState>
           )}
-        </div>
       </div>
     </section>
   )
 }
 
 async function loadUsersPageData() {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('id, full_name, role, department_id, is_active, created_at, departments(name)')
-    .order('created_at', { ascending: false })
+  const [{ data: profiles, error: profilesError }, { data: departments, error: departmentsError }] =
+    await Promise.all([
+      supabase
+        .from('profiles')
+        .select('id, full_name, role, department_id, is_active, created_at, departments(name)')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('departments')
+        .select('id, name, description, is_active, created_at')
+        .order('name', { ascending: true }),
+    ])
 
-  if (error) {
-    throw new Error(error.message)
+  if (profilesError || departmentsError) {
+    throw new Error(profilesError?.message ?? departmentsError?.message ?? 'User access data could not be loaded.')
   }
 
-  return (data ?? []) as ProfileRow[]
+  return {
+    departments: (departments ?? []) as DepartmentRow[],
+    profiles: (profiles ?? []) as ProfileRow[],
+  }
 }
 
 export function UsersAdministrationPage() {
-  const { data: profiles, errorMessage, isLoading } = useData([] as ProfileRow[], loadUsersPageData)
+  const { data, errorMessage, isLoading } = useData(
+    { departments: [] as DepartmentRow[], profiles: [] as ProfileRow[] },
+    loadUsersPageData,
+  )
   const [showInactiveOnly, setShowInactiveOnly] = useState(false)
   const [actionMessage, setActionMessage] = useState('')
+  const [editingProfileId, setEditingProfileId] = useState<string | null>(null)
+  const [editProfileForm, setEditProfileForm] = useState<ProfileFormState>({
+    departmentId: '',
+    fullName: '',
+    role: 'officer',
+  })
+  const [isProfileSaving, setIsProfileSaving] = useState(false)
+  const [profileError, setProfileError] = useState('')
+  const [profiles, setProfiles] = useState<ProfileRow[]>([])
+
+  useEffect(() => {
+    setProfiles(data.profiles)
+  }, [data.profiles])
+
+  const sortedDepartments = useMemo(
+    () => [...data.departments].sort((first, second) => first.name.localeCompare(second.name)),
+    [data.departments],
+  )
   const visibleProfiles = useMemo(
-    () => (showInactiveOnly ? profiles.filter((profile) => !profile.is_active) : profiles),
+    () =>
+      [...(showInactiveOnly ? profiles.filter((profile) => !profile.is_active) : profiles)].sort((first, second) =>
+        first.full_name.localeCompare(second.full_name),
+      ),
     [profiles, showInactiveOnly],
   )
   const roleCounts = useMemo(
@@ -701,6 +702,124 @@ export function UsersAdministrationPage() {
       ),
     [profiles],
   )
+
+  const resetProfileForm = () => {
+    setEditProfileForm({ departmentId: '', fullName: '', role: 'officer' })
+    setEditingProfileId(null)
+  }
+
+  const getDepartmentName = (departmentId: string | null, fallback?: string) => {
+    if (!departmentId) {
+      return 'No department'
+    }
+
+    return sortedDepartments.find((department) => department.id === departmentId)?.name ?? fallback ?? 'No department'
+  }
+
+  const handleStartEditProfile = (profile: ProfileRow) => {
+    setProfileError('')
+    setActionMessage('')
+    setEditingProfileId(profile.id)
+    setEditProfileForm({
+      departmentId: profile.department_id ?? '',
+      fullName: profile.full_name,
+      role: profile.role,
+    })
+  }
+
+  const handleUpdateProfile = async (profileId: string) => {
+    const fullName = editProfileForm.fullName.trim()
+
+    if (!fullName) {
+      setProfileError('Staff name is required.')
+      return
+    }
+
+    setProfileError('')
+    setActionMessage('')
+    setIsProfileSaving(true)
+
+    const { data: updatedProfile, error } = await supabase
+      .from('profiles')
+      .update({
+        department_id: editProfileForm.departmentId || null,
+        full_name: fullName,
+        role: editProfileForm.role,
+      })
+      .eq('id', profileId)
+      .select('id, full_name, role, department_id, is_active, created_at')
+      .single()
+
+    setIsProfileSaving(false)
+
+    if (error) {
+      setProfileError(error.message)
+      return
+    }
+
+    const profile = updatedProfile as ProfileRow
+
+    setProfiles((currentProfiles) =>
+      currentProfiles.map((currentProfile) => (currentProfile.id === profileId ? profile : currentProfile)),
+    )
+    resetProfileForm()
+    setActionMessage(`Staff account "${profile.full_name}" updated.`)
+  }
+
+  const handleToggleProfile = async (profile: ProfileRow) => {
+    setProfileError('')
+    setActionMessage('')
+    setIsProfileSaving(true)
+
+    const { data: updatedProfile, error } = await supabase
+      .from('profiles')
+      .update({ is_active: !profile.is_active })
+      .eq('id', profile.id)
+      .select('id, full_name, role, department_id, is_active, created_at')
+      .single()
+
+    setIsProfileSaving(false)
+
+    if (error) {
+      setProfileError(error.message)
+      return
+    }
+
+    const changedProfile = updatedProfile as ProfileRow
+
+    setProfiles((currentProfiles) =>
+      currentProfiles.map((currentProfile) =>
+        currentProfile.id === profile.id ? changedProfile : currentProfile,
+      ),
+    )
+    setActionMessage(`Staff account "${changedProfile.full_name}" ${changedProfile.is_active ? 'reactivated' : 'deactivated'}.`)
+  }
+
+  const handleDeleteProfile = async (profile: ProfileRow) => {
+    const confirmed = window.confirm(
+      `Delete profile for "${profile.full_name}"? This removes the staff profile but does not delete the Supabase Auth account.`,
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    setProfileError('')
+    setActionMessage('')
+    setIsProfileSaving(true)
+
+    const { error } = await supabase.from('profiles').delete().eq('id', profile.id)
+
+    setIsProfileSaving(false)
+
+    if (error) {
+      setProfileError(`${error.message} Deactivate the account instead if records still reference this profile.`)
+      return
+    }
+
+    setProfiles((currentProfiles) => currentProfiles.filter((currentProfile) => currentProfile.id !== profile.id))
+    setActionMessage(`Staff profile "${profile.full_name}" deleted.`)
+  }
 
   return (
     <section className="admin-section-panel">
@@ -730,6 +849,7 @@ export function UsersAdministrationPage() {
       />
 
       <DataError message={errorMessage} />
+      <DataError message={profileError} />
       <ActionNotice message={actionMessage} />
 
       <div className="admin-two-column admin-two-column-wide">
@@ -746,19 +866,115 @@ export function UsersAdministrationPage() {
                 <span>Department</span>
                 <span>Created</span>
                 <span>Status</span>
+                <span>Actions</span>
               </div>
-              {visibleProfiles.map((profile) => (
-                <article className="admin-table-row" key={profile.id} role="row">
-                  <span>
-                    <strong>{profile.full_name}</strong>
-                    <small>{profile.id}</small>
-                  </span>
-                  <span>{userRoleLabels[profile.role]}</span>
-                  <span>{profile.departments?.name ?? 'No department'}</span>
-                  <span>{formatDate(profile.created_at)}</span>
-                  <StatusBadge label={profile.is_active ? 'Active' : 'Inactive'} />
-                </article>
-              ))}
+              {visibleProfiles.map((profile) =>
+                editingProfileId === profile.id ? (
+                  <form
+                    className="admin-table-row admin-officer-edit-row"
+                    key={profile.id}
+                    onSubmit={(event) => {
+                      event.preventDefault()
+                      void handleUpdateProfile(profile.id)
+                    }}
+                    role="row"
+                  >
+                    <span>
+                      <input
+                        aria-label="Staff full name"
+                        onChange={(event) =>
+                          setEditProfileForm((currentForm) => ({ ...currentForm, fullName: event.target.value }))
+                        }
+                        value={editProfileForm.fullName}
+                      />
+                    </span>
+                    <span>
+                      <select
+                        aria-label="Staff role"
+                        onChange={(event) =>
+                          setEditProfileForm((currentForm) => ({
+                            ...currentForm,
+                            role: event.target.value as UserRole,
+                          }))
+                        }
+                        value={editProfileForm.role}
+                      >
+                        {userRoles.map((role) => (
+                          <option key={role} value={role}>
+                            {userRoleLabels[role]}
+                          </option>
+                        ))}
+                      </select>
+                    </span>
+                    <span>
+                      <select
+                        aria-label="Staff department"
+                        onChange={(event) =>
+                          setEditProfileForm((currentForm) => ({
+                            ...currentForm,
+                            departmentId: event.target.value,
+                          }))
+                        }
+                        value={editProfileForm.departmentId}
+                      >
+                        <option value="">No department</option>
+                        {sortedDepartments.map((department) => (
+                          <option key={department.id} value={department.id}>
+                            {department.name}
+                          </option>
+                        ))}
+                      </select>
+                    </span>
+                    <span>{formatDate(profile.created_at)}</span>
+                    <StatusBadge label={profile.is_active ? 'Active' : 'Inactive'} />
+                    <span className="admin-row-actions">
+                      <button className="case-link-button" disabled={isProfileSaving} type="submit">
+                        Save
+                      </button>
+                      <button className="case-link-button" onClick={resetProfileForm} type="button">
+                        Cancel
+                      </button>
+                    </span>
+                  </form>
+                ) : (
+                  <article className="admin-table-row" key={profile.id} role="row">
+                    <span>
+                      <strong>{profile.full_name}</strong>
+                      <small>{profile.id}</small>
+                    </span>
+                    <span>{userRoleLabels[profile.role]}</span>
+                    <span>{getDepartmentName(profile.department_id, profile.departments?.name)}</span>
+                    <span>{formatDate(profile.created_at)}</span>
+                    <StatusBadge label={profile.is_active ? 'Active' : 'Inactive'} />
+                    <span className="admin-row-actions">
+                      <button
+                        className="case-link-button"
+                        disabled={isProfileSaving}
+                        onClick={() => handleStartEditProfile(profile)}
+                        type="button"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="case-link-button"
+                        disabled={isProfileSaving}
+                        onClick={() => void handleToggleProfile(profile)}
+                        type="button"
+                      >
+                        {profile.is_active ? 'Deactivate' : 'Reactivate'}
+                      </button>
+                      <button
+                        className="case-link-button case-link-danger"
+                        disabled={isProfileSaving}
+                        onClick={() => void handleDeleteProfile(profile)}
+                        type="button"
+                      >
+                        Delete
+                      </button>
+                    </span>
+                  </article>
+                ),
+              )}
             </div>
           ) : (
             <EmptyState>{isLoading ? 'Loading staff accounts.' : 'No staff profiles match this view.'}</EmptyState>

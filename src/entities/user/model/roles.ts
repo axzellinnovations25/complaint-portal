@@ -73,9 +73,9 @@ export const adminSections = [
   },
   {
     id: 'departments',
-    label: 'Departments and officers',
+    label: 'Departments',
     href: '/admin/departments',
-    description: 'Manage teams, officer access, and department ownership.',
+    description: 'Manage teams, department records, and ownership.',
     allowedRoles: ['super_admin', 'main_admin', 'department_head'],
   },
   {

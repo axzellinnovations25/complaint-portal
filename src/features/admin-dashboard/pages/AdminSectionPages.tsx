@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import type { AdminSectionDefinition, UserRole } from '../../../entities/user/model/roles'
 import { userRoleLabels } from '../../../entities/user/model/roles'
 import { supabase } from '../../../shared/lib/supabase/client'
@@ -12,7 +12,13 @@ type DepartmentRow = {
   id: string
   name: string
   description: string | null
+  is_active: boolean
   created_at: string
+}
+
+type DepartmentFormState = {
+  description: string
+  name: string
 }
 
 type ProfileRow = {
@@ -223,7 +229,15 @@ function AdminPageHeader({
 }
 
 async function loadDepartmentsPageData() {
-  const [{ data: profiles, error: profilesError }, { data: categories, error: categoriesError }] = await Promise.all([
+  const [
+    { data: departments, error: departmentsError },
+    { data: profiles, error: profilesError },
+    { data: categories, error: categoriesError },
+  ] = await Promise.all([
+    supabase
+      .from('departments')
+      .select('id, name, description, is_active, created_at')
+      .order('name', { ascending: true }),
     supabase
       .from('profiles')
       .select('id, full_name, role, department_id, is_active, created_at, departments(name)')
@@ -234,19 +248,190 @@ async function loadDepartmentsPageData() {
       .order('name_en', { ascending: true }),
   ])
 
-  if (profilesError || categoriesError) {
-    throw new Error(profilesError?.message ?? categoriesError?.message ?? 'Department data could not be loaded.')
+  if (departmentsError || profilesError || categoriesError) {
+    throw new Error(
+      departmentsError?.message ??
+        profilesError?.message ??
+        categoriesError?.message ??
+        'Department data could not be loaded.',
+    )
   }
 
   return {
+    departments: (departments ?? []) as DepartmentRow[],
     profiles: (profiles ?? []) as ProfileRow[],
     categories: (categories ?? []) as CategoryRow[],
   }
 }
 
 export function DepartmentsAdministrationPage() {
-  const { data, errorMessage, isLoading } = useData({ profiles: [] as ProfileRow[], categories: [] as CategoryRow[] }, loadDepartmentsPageData)
+  const { data, errorMessage, isLoading } = useData(
+    { departments: [] as DepartmentRow[], profiles: [] as ProfileRow[], categories: [] as CategoryRow[] },
+    loadDepartmentsPageData,
+  )
   const [actionMessage, setActionMessage] = useState('')
+  const [departmentError, setDepartmentError] = useState('')
+  const [departments, setDepartments] = useState<DepartmentRow[]>([])
+  const [departmentForm, setDepartmentForm] = useState<DepartmentFormState>({ description: '', name: '' })
+  const [editDepartmentForm, setEditDepartmentForm] = useState<DepartmentFormState>({ description: '', name: '' })
+  const [editingDepartmentId, setEditingDepartmentId] = useState<string | null>(null)
+  const [isDepartmentSaving, setIsDepartmentSaving] = useState(false)
+  const createDepartmentRef = useRef<HTMLFormElement>(null)
+
+  useEffect(() => {
+    setDepartments(data.departments)
+  }, [data.departments])
+
+  const sortedDepartments = useMemo(
+    () => [...departments].sort((first, second) => first.name.localeCompare(second.name)),
+    [departments],
+  )
+
+  const resetDepartmentForms = () => {
+    setDepartmentForm({ description: '', name: '' })
+    setEditDepartmentForm({ description: '', name: '' })
+    setEditingDepartmentId(null)
+  }
+
+  const handleCreateDepartment = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const name = departmentForm.name.trim()
+
+    if (!name) {
+      setDepartmentError('Department name is required.')
+      return
+    }
+
+    setDepartmentError('')
+    setActionMessage('')
+    setIsDepartmentSaving(true)
+
+    const { data: createdDepartment, error } = await supabase
+      .from('departments')
+      .insert({
+        description: departmentForm.description.trim() || null,
+        is_active: true,
+        name,
+      })
+      .select('id, name, description, is_active, created_at')
+      .single()
+
+    setIsDepartmentSaving(false)
+
+    if (error) {
+      setDepartmentError(error.message)
+      return
+    }
+
+    setDepartments((currentDepartments) => [...currentDepartments, createdDepartment as DepartmentRow])
+    resetDepartmentForms()
+    setActionMessage(`Department "${createdDepartment.name}" created.`)
+  }
+
+  const handleStartEditDepartment = (department: DepartmentRow) => {
+    setDepartmentError('')
+    setActionMessage('')
+    setEditingDepartmentId(department.id)
+    setEditDepartmentForm({
+      description: department.description ?? '',
+      name: department.name,
+    })
+  }
+
+  const handleUpdateDepartment = async (departmentId: string) => {
+    const name = editDepartmentForm.name.trim()
+
+    if (!name) {
+      setDepartmentError('Department name is required.')
+      return
+    }
+
+    setDepartmentError('')
+    setActionMessage('')
+    setIsDepartmentSaving(true)
+
+    const { data: updatedDepartment, error } = await supabase
+      .from('departments')
+      .update({
+        description: editDepartmentForm.description.trim() || null,
+        name,
+      })
+      .eq('id', departmentId)
+      .select('id, name, description, is_active, created_at')
+      .single()
+
+    setIsDepartmentSaving(false)
+
+    if (error) {
+      setDepartmentError(error.message)
+      return
+    }
+
+    setDepartments((currentDepartments) =>
+      currentDepartments.map((department) =>
+        department.id === departmentId ? (updatedDepartment as DepartmentRow) : department,
+      ),
+    )
+    resetDepartmentForms()
+    setActionMessage(`Department "${updatedDepartment.name}" updated.`)
+  }
+
+  const handleToggleDepartment = async (department: DepartmentRow) => {
+    setDepartmentError('')
+    setActionMessage('')
+    setIsDepartmentSaving(true)
+
+    const { data: updatedDepartment, error } = await supabase
+      .from('departments')
+      .update({ is_active: !department.is_active })
+      .eq('id', department.id)
+      .select('id, name, description, is_active, created_at')
+      .single()
+
+    setIsDepartmentSaving(false)
+
+    if (error) {
+      setDepartmentError(error.message)
+      return
+    }
+
+    setDepartments((currentDepartments) =>
+      currentDepartments.map((currentDepartment) =>
+        currentDepartment.id === department.id ? (updatedDepartment as DepartmentRow) : currentDepartment,
+      ),
+    )
+    setActionMessage(
+      `Department "${updatedDepartment.name}" ${updatedDepartment.is_active ? 'reactivated' : 'deactivated'}.`,
+    )
+  }
+
+  const handleDeleteDepartment = async (department: DepartmentRow) => {
+    const confirmed = window.confirm(
+      `Delete "${department.name}"? This only succeeds when no staff, categories, or complaints reference this department.`,
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    setDepartmentError('')
+    setActionMessage('')
+    setIsDepartmentSaving(true)
+
+    const { error } = await supabase.from('departments').delete().eq('id', department.id)
+
+    setIsDepartmentSaving(false)
+
+    if (error) {
+      setDepartmentError(`${error.message} Deactivate the department instead if records still reference it.`)
+      return
+    }
+
+    setDepartments((currentDepartments) =>
+      currentDepartments.filter((currentDepartment) => currentDepartment.id !== department.id),
+    )
+    setActionMessage(`Department "${department.name}" deleted.`)
+  }
 
   return (
     <section className="admin-section-panel">
@@ -255,29 +440,32 @@ export function DepartmentsAdministrationPage() {
           <>
             <button
               className="button button-secondary"
-              disabled={data.profiles.length === 0}
+              disabled={sortedDepartments.length === 0}
               onClick={() =>
                 downloadCsv(
-                  `department-officers-${new Date().toISOString().slice(0, 10)}.csv`,
-                  data.profiles.map((profile) => ({
-                    id: profile.id,
-                    full_name: profile.full_name,
-                    department: profile.departments?.name ?? 'No department',
-                    role: userRoleLabels[profile.role],
-                    is_active: profile.is_active,
+                  `departments-${new Date().toISOString().slice(0, 10)}.csv`,
+                  sortedDepartments.map((department) => ({
+                    created_at: department.created_at,
+                    description: department.description,
+                    id: department.id,
+                    is_active: department.is_active,
+                    name: department.name,
                   })),
                 )
               }
               type="button"
             >
-              Export users
+              Export departments
             </button>
             <button
               className="button button-primary"
-              onClick={() => setActionMessage('Officer invitations need a secure Supabase Auth admin endpoint before accounts can be created from this browser page.')}
+              onClick={() => {
+                createDepartmentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                createDepartmentRef.current?.querySelector('input')?.focus()
+              }}
               type="button"
             >
-              Invite officer
+              New department
             </button>
           </>
         }
@@ -287,7 +475,143 @@ export function DepartmentsAdministrationPage() {
       />
 
       <DataError message={errorMessage} />
+      <DataError message={departmentError} />
       <ActionNotice message={actionMessage} />
+
+      <div className="admin-two-column admin-two-column-wide">
+        <div className="admin-data-panel">
+          <div className="admin-panel-heading">
+            <strong>Department directory</strong>
+            <span>{sortedDepartments.length} department records</span>
+          </div>
+          {sortedDepartments.length > 0 ? (
+            <div className="admin-table admin-department-table" role="table" aria-label="Department directory">
+              <div className="admin-table-row admin-table-head" role="row">
+                <span>Department</span>
+                <span>Description</span>
+                <span>Status</span>
+                <span>Created</span>
+                <span>Actions</span>
+              </div>
+              {sortedDepartments.map((department) =>
+                editingDepartmentId === department.id ? (
+                  <form
+                    className="admin-table-row admin-department-edit-row"
+                    key={department.id}
+                    onSubmit={(event) => {
+                      event.preventDefault()
+                      void handleUpdateDepartment(department.id)
+                    }}
+                    role="row"
+                  >
+                    <span>
+                      <input
+                        aria-label="Department name"
+                        onChange={(event) =>
+                          setEditDepartmentForm((currentForm) => ({ ...currentForm, name: event.target.value }))
+                        }
+                        value={editDepartmentForm.name}
+                      />
+                    </span>
+                    <span>
+                      <input
+                        aria-label="Department description"
+                        onChange={(event) =>
+                          setEditDepartmentForm((currentForm) => ({
+                            ...currentForm,
+                            description: event.target.value,
+                          }))
+                        }
+                        value={editDepartmentForm.description}
+                      />
+                    </span>
+                    <StatusBadge label={department.is_active ? 'Active' : 'Inactive'} />
+                    <span>{formatDate(department.created_at)}</span>
+                    <span className="admin-row-actions">
+                      <button className="case-link-button" disabled={isDepartmentSaving} type="submit">
+                        Save
+                      </button>
+                      <button className="case-link-button" onClick={resetDepartmentForms} type="button">
+                        Cancel
+                      </button>
+                    </span>
+                  </form>
+                ) : (
+                  <article className="admin-table-row" key={department.id} role="row">
+                    <span>
+                      <strong>{department.name}</strong>
+                      <small>{department.id}</small>
+                    </span>
+                    <span>{department.description ?? 'No description'}</span>
+                    <StatusBadge label={department.is_active ? 'Active' : 'Inactive'} />
+                    <span>{formatDate(department.created_at)}</span>
+                    <span className="admin-row-actions">
+                      <button
+                        className="case-link-button"
+                        disabled={isDepartmentSaving}
+                        onClick={() => handleStartEditDepartment(department)}
+                        type="button"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="case-link-button"
+                        disabled={isDepartmentSaving}
+                        onClick={() => void handleToggleDepartment(department)}
+                        type="button"
+                      >
+                        {department.is_active ? 'Deactivate' : 'Reactivate'}
+                      </button>
+                      <button
+                        className="case-link-button case-link-danger"
+                        disabled={isDepartmentSaving}
+                        onClick={() => void handleDeleteDepartment(department)}
+                        type="button"
+                      >
+                        Delete
+                      </button>
+                    </span>
+                  </article>
+                ),
+              )}
+            </div>
+          ) : (
+            <EmptyState>{isLoading ? 'Loading departments.' : 'No departments found.'}</EmptyState>
+          )}
+        </div>
+
+        <aside className="admin-data-panel">
+          <div className="admin-panel-heading">
+            <strong>Create department</strong>
+            <span>Department master data</span>
+          </div>
+          <form className="admin-form-preview" onSubmit={handleCreateDepartment} ref={createDepartmentRef}>
+            <label>
+              Department name
+              <input
+                onChange={(event) =>
+                  setDepartmentForm((currentForm) => ({ ...currentForm, name: event.target.value }))
+                }
+                placeholder="Example: Public Health"
+                value={departmentForm.name}
+              />
+            </label>
+            <label>
+              Description
+              <textarea
+                onChange={(event) =>
+                  setDepartmentForm((currentForm) => ({ ...currentForm, description: event.target.value }))
+                }
+                placeholder="What this department owns or handles"
+                value={departmentForm.description}
+              />
+            </label>
+            <button className="button button-primary" disabled={isDepartmentSaving} type="submit">
+              {isDepartmentSaving ? 'Saving...' : 'Create department'}
+            </button>
+          </form>
+        </aside>
+      </div>
 
       <div className="admin-two-column">
         <div className="admin-data-panel">
@@ -469,7 +793,7 @@ export function UsersAdministrationPage() {
 
 async function loadCategoriesPageData() {
   const [{ data: departments, error: departmentsError }, { data: categories, error: categoriesError }] = await Promise.all([
-    supabase.from('departments').select('id, name, description, created_at').order('name', { ascending: true }),
+    supabase.from('departments').select('id, name, description, is_active, created_at').order('name', { ascending: true }),
     supabase
       .from('complaint_categories')
       .select('id, name_en, name_ta, expected_sla_hours, is_active, created_at, departments(name)')
@@ -566,7 +890,7 @@ export function CategoriesAdministrationPage() {
                     <strong>{department.name}</strong>
                     <span>{department.description ?? 'No description'}</span>
                   </div>
-                  <StatusBadge label="Active" />
+                  <StatusBadge label={department.is_active ? 'Active' : 'Inactive'} />
                 </article>
               ))}
             </div>

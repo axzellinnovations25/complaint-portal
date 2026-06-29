@@ -2952,6 +2952,48 @@ html[lang='ta'] .track-form-row input {
   grid-template-columns: minmax(190px, 1fr) 130px 70px 110px;
 }
 
+.admin-department-table .admin-table-row {
+  grid-template-columns: minmax(190px, 0.8fr) minmax(220px, 1fr) 90px 110px minmax(230px, 0.9fr);
+}
+
+.admin-department-edit-row input {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  color: #111827;
+  min-height: 36px;
+  padding: 0 10px;
+  width: 100%;
+}
+
+.admin-department-edit-row input:focus {
+  border-color: var(--border-em);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+  outline: none;
+}
+
+.admin-table-row .admin-row-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.admin-table-row .admin-row-actions .case-link-button {
+  font-size: 0.76rem;
+  min-height: 32px;
+  padding: 0 9px;
+}
+
+.case-link-danger {
+  color: var(--rose-500);
+}
+
+.case-link-danger:hover {
+  border-color: rgba(225, 29, 72, 0.28);
+  color: var(--rose-500);
+}
+
 .admin-performance-table .admin-table-row,
 .admin-content-table .admin-table-row,
 .admin-sms-table .admin-table-row {
@@ -11355,6 +11397,7 @@ html[lang='ta'] .track-form-tip p {
   }
 
   .admin-officer-table .admin-table-row,
+  .admin-department-table .admin-table-row,
   .admin-performance-table .admin-table-row,
   .admin-content-table .admin-table-row,
   .admin-sms-table .admin-table-row,

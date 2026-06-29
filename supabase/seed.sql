@@ -1,17 +1,18 @@
 -- Development staff accounts for local testing only.
 -- Run with `supabase db reset` or execute manually against a non-production database.
 
-insert into public.departments (id, name, description)
+insert into public.departments (id, name, description, is_active)
 values
-  ('10000000-0000-0000-0000-000000000001', 'Secretariat', 'Platform administration and citizen service coordination.'),
-  ('10000000-0000-0000-0000-000000000002', 'Public Health', 'Drainage, sanitation, waste, and public health complaints.'),
-  ('10000000-0000-0000-0000-000000000003', 'Roads', 'Road damage, access, and maintenance complaints.'),
-  ('10000000-0000-0000-0000-000000000004', 'Electrical', 'Street lighting and electrical maintenance complaints.'),
-  ('10000000-0000-0000-0000-000000000005', 'Public Relations', 'Public notices, service guidance, and citizen communication.')
+  ('10000000-0000-0000-0000-000000000001', 'Secretariat', 'Platform administration and citizen service coordination.', true),
+  ('10000000-0000-0000-0000-000000000002', 'Public Health', 'Drainage, sanitation, waste, and public health complaints.', true),
+  ('10000000-0000-0000-0000-000000000003', 'Roads', 'Road damage, access, and maintenance complaints.', true),
+  ('10000000-0000-0000-0000-000000000004', 'Electrical', 'Street lighting and electrical maintenance complaints.', true),
+  ('10000000-0000-0000-0000-000000000005', 'Public Relations', 'Public notices, service guidance, and citizen communication.', true)
 on conflict (id) do update
 set
   name = excluded.name,
-  description = excluded.description;
+  description = excluded.description,
+  is_active = excluded.is_active;
 
 insert into auth.users (
   instance_id,

@@ -13,6 +13,18 @@ const workloadSignals = [
   { label: 'Electrical', value: '9 open', note: 'Field visit pending' },
 ]
 
+const activityItems = [
+  { label: 'PS-2026-0003 escalated to Public Health', time: '12 minutes ago', tone: 'Urgent' },
+  { label: 'Roads team resolved PS-2026-0007', time: '36 minutes ago', tone: 'Resolved' },
+  { label: 'New evidence uploaded for PS-2026-0001', time: '1 hour ago', tone: 'Review' },
+]
+
+const priorityBands = [
+  { label: 'Urgent', value: 7 },
+  { label: 'High', value: 18 },
+  { label: 'Normal', value: 41 },
+]
+
 export function AdminDashboardPage() {
   return (
     <section className="dashboard-panel">
@@ -36,6 +48,42 @@ export function AdminDashboardPage() {
             <p>{signal.note}</p>
           </article>
         ))}
+      </div>
+
+      <div className="admin-two-column">
+        <section className="admin-data-panel" aria-labelledby="activity-heading">
+          <div className="admin-panel-heading">
+            <strong id="activity-heading">Live activity</strong>
+            <span>Latest operational updates</span>
+          </div>
+          <div className="admin-route-list">
+            {activityItems.map((item) => (
+              <article key={item.label}>
+                <div>
+                  <strong>{item.label}</strong>
+                  <span>{item.time}</span>
+                </div>
+                <span className={`admin-status-badge admin-status-${item.tone.toLowerCase()}`}>{item.tone}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="admin-data-panel" aria-labelledby="priority-heading">
+          <div className="admin-panel-heading">
+            <strong id="priority-heading">Priority mix</strong>
+            <span>Open complaints</span>
+          </div>
+          <div className="admin-progress-list">
+            {priorityBands.map((band) => (
+              <article key={band.label}>
+                <span>{band.label}</span>
+                <strong>{band.value}</strong>
+                <meter min="0" max="50" value={band.value}>{band.value}</meter>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </section>
   )

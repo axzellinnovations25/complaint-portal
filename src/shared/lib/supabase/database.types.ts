@@ -3,6 +3,25 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          id: string
+          full_name: string
+          role: Database['public']['Enums']['user_role']
+          department_id: string | null
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id: string
+          full_name: string
+          role?: Database['public']['Enums']['user_role']
+          department_id?: string | null
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['profiles']['Insert']>
+      }
       complaints: {
         Row: {
           id: string
@@ -37,7 +56,29 @@ export type Database = {
     }
     Views: Record<string, never>
     Functions: Record<string, never>
-    Enums: Record<string, never>
+    Enums: {
+      complaint_status:
+        | 'submitted'
+        | 'under_review'
+        | 'accepted'
+        | 'rejected'
+        | 'assigned'
+        | 'in_progress'
+        | 'on_hold'
+        | 'resolved'
+        | 'reopened'
+        | 'closed'
+      user_role:
+        | 'super_admin'
+        | 'main_admin'
+        | 'management_viewer'
+        | 'department_head'
+        | 'officer'
+        | 'field_officer'
+        | 'content_admin'
+        | 'knowledge_admin'
+        | 'viewer'
+    }
     CompositeTypes: Record<string, never>
   }
 }

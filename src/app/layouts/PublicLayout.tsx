@@ -141,9 +141,6 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
               <button type="button" aria-pressed={language === 'ta'} onClick={() => setLanguage('ta')}>தமிழ்</button>
             </div>
             <a className="nav-cta" href="/submit" onClick={handleNavigate('/submit')}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
               {copy.reportIssue}
             </a>
           </div>
@@ -192,9 +189,6 @@ export function PublicLayout({ children, currentPath, navigation, onNavigate }: 
           </div>
 
           <a className="mobile-menu-cta" href="/submit" onClick={handleNavigate('/submit')}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
             {copy.reportIssue}
           </a>
         </aside>

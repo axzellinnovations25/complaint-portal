@@ -28,14 +28,21 @@ const homeCopy = {
     referenceHelp: 'Enter the complaint reference number.',
     serviceEyebrow: 'What you can report',
     serviceTitle: 'Choose the closest civic service category.',
+    serviceTitleLines: ['Choose the closest civic', 'service category.'],
     serviceBody:
       'Citizens do not need to know the exact department. Pick the closest issue type, describe the location clearly, and officers can refine the category during review.',
+    serviceBodyLines: [
+      'Citizens do not need to know the exact department.',
+      'Pick the closest issue type and describe the location clearly.',
+      'Officers can refine the category during review.',
+    ],
     processEyebrow: 'How it works',
     processTitle: 'A clear path from report to resolution.',
     processBody:
       'Every complaint should move through visible stages, so citizens can understand what happened after submission and officers have an auditable service record.',
     guidanceEyebrow: 'Before you submit',
     guidanceTitle: 'A complete complaint is easier to resolve.',
+    guidanceTitleLines: ['A complete complaint', 'is easier to resolve.'],
     checklistEyebrow: 'Useful details',
     checklistTitle: 'Prepare these before submitting',
     ctaLabel: 'Primary call to action',
@@ -121,32 +128,39 @@ const homeCopy = {
   },
   ta: {
     heroEyebrow: 'அதிகாரப்பூர்வ குடிமக்கள் முறைப்பாட்டு மையம்',
-    heroTitle: 'பொது சேவை குறைகளை பதிவு செய்து முன்னேற்றத்தைக் கண்காணிக்கவும்.',
-    heroTitleLines: ['பொது சேவை குறைகளை', 'பதிவு செய்து முன்னேற்றத்தைக்', 'கண்காணிக்கவும்.'],
+    heroTitle: 'பொதுச் சேவைக் குறைகளைப் பதிவு செய்து, முன்னேற்றத்தைக் கண்காணிக்கவும்.',
+    heroTitleLines: ['பொதுச் சேவைக் குறைகளைப்', 'பதிவு செய்து,', 'முன்னேற்றத்தைக் கண்காணிக்கவும்.'],
     heroBody:
       'வீதி, வடிகால், கழிவு மேலாண்மை, தெருவிளக்கு போன்ற பிரதேச சபை சேவை குறைகளை அலுவலகத்திற்கு நேரில் வராமல் பதிவு செய்து, வழங்கப்படும் குறிப்பு எண்ணின் மூலம் முன்னேற்ற நிலையை அறியலாம்.',
     submitComplaint: 'முறைப்பாடு பதிவு',
     trackReference: 'குறிப்பு எண்ணைத் தேடவும்',
     trustRow: ['அடையாளம் வெளிப்படுத்தாத பதிவு', 'விருப்ப SMS புதுப்பிப்புகள்', 'கையடக்கச் சாதன அணுகல்'],
     imageAlt: 'இலங்கையில் அமைந்துள்ள குடிமக்கள் சேவை அலுவலகக் கட்டிடம்',
-    imageCaption: 'பொது சேவை கோரிக்கைகள் பரிசீலனைக்காக பதிவு செய்யப்படும்.',
+    imageCaption: 'பொதுச் சேவை கோரிக்கைகள் பரிசீலனைக்காக பதிவு செய்யப்படும்.',
     quickAccess: 'விரைவு அணுகல்',
     startHere: 'இங்கிருந்து தொடங்கவும்',
-    reportIssue: 'உங்கள் பகுதியில் காணப்படும் பொது சேவை குறையை பதிவு செய்யவும்.',
+    reportIssue: 'உங்கள் பகுதியில் காணப்படும் பொதுச் சேவை குறையை பதிவு செய்யவும்.',
     trackLabel: 'குறிப்பு எண்',
     trackButton: 'தேடவும்',
     referencePlaceholder: 'PS-2026-00124',
     referenceHelp: 'முறைப்பாட்டிற்கான குறிப்பு எண்ணை இங்கு உள்ளிடவும்.',
     serviceEyebrow: 'பதிவு செய்யக்கூடிய சேவைகள்',
-    serviceTitle: 'பிரச்சினைக்கு மிக அருகான சேவை வகையைத் தேர்ந்தெடுக்கவும்.',
+    serviceTitle: 'பிரச்சினைக்கு மிகப் பொருத்தமான சேவை வகையைத் தேர்ந்தெடுக்கவும்.',
+    serviceTitleLines: ['பிரச்சினைக்கு மிகப் பொருத்தமான சேவை', 'வகையைத் தேர்ந்தெடுக்கவும்.'],
     serviceBody:
-      'சரியான துறையை முன்கூட்டியே அறிந்திருக்க வேண்டிய அவசியமில்லை. பிரச்சினைக்கு மிக அருகான சேவை வகையைத் தேர்ந்தெடுத்து, இட விவரத்தைத் தெளிவாக வழங்கினால், பரிசீலனையின் பின்னர் அது உரிய அணிக்கு ஒதுக்கப்படும்.',
+      'சரியான துறையை முன்கூட்டியே அறிந்திருக்க வேண்டிய அவசியமில்லை. பிரச்சினைக்கு மிகப் பொருத்தமான சேவை வகையைத் தேர்ந்தெடுத்து, இட விவரத்தைத் தெளிவாக வழங்கினால், பரிசீலனையின் பின்னர் அது உரிய அணிக்கு ஒதுக்கப்படும்.',
+    serviceBodyLines: [
+      'சரியான துறையை முன்கூட்டியே அறிந்திருக்க வேண்டிய அவசியமில்லை.',
+      'பிரச்சினைக்கு மிகப் பொருத்தமான சேவை வகையைத் தேர்ந்தெடுத்து,',
+      'இட விவரத்தைத் தெளிவாக வழங்கினால், பரிசீலனையின் பின்னர் அது உரிய அணிக்கு ஒதுக்கப்படும்.',
+    ],
     processEyebrow: 'செயல்முறை',
     processTitle: 'முறைப்பாட்டிலிருந்து தீர்வு வரை வெளிப்படையான செயல்முறை.',
     processBody:
       'முறைப்பாடு எந்த நிலையில் உள்ளது என்பதை குடிமக்கள் அறியலாம்; ஒவ்வொரு நடவடிக்கைக்கும் அலுவலர்களுக்கான தெளிவான பதிவும் இருக்கும்.',
     guidanceEyebrow: 'பதிவிற்கு முன்',
     guidanceTitle: 'முழுமையான முறைப்பாடு விரைவான நடவடிக்கைக்கு உதவும்.',
+    guidanceTitleLines: ['முழுமையான முறைப்பாடு', 'விரைவான நடவடிக்கைக்கு உதவும்.'],
     checklistEyebrow: 'தேவையான விவரங்கள்',
     checklistTitle: 'பதிவு செய்வதற்கு முன் இவ்விவரங்களைத் தயாராக வைத்திருக்கவும்',
     ctaLabel: 'முக்கிய செயல் அழைப்பு',
@@ -408,10 +422,14 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
       </section>
 
       <section className="section-block" aria-labelledby="services-title">
-        <div className="section-heading">
+        <div className="section-heading service-section-heading">
           <p className="eyebrow">{copy.serviceEyebrow}</p>
-          <h2 id="services-title">{copy.serviceTitle}</h2>
-          <p>{copy.serviceBody}</p>
+          <h2 id="services-title">
+            {copy.serviceTitleLines.map((line) => <span key={line}>{line}</span>)}
+          </h2>
+          <p className="service-body-lines">
+            {copy.serviceBodyLines.map((line) => <span key={line}>{line}</span>)}
+          </p>
         </div>
 
         <div className="service-grid citizen-category-grid">
@@ -451,7 +469,9 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
       <section className="notice-section home-guidance-section" aria-labelledby="guidance-title">
         <div className="section-heading">
           <p className="eyebrow">{copy.guidanceEyebrow}</p>
-          <h2 id="guidance-title">{copy.guidanceTitle}</h2>
+          <h2 id="guidance-title">
+            {copy.guidanceTitleLines.map((line) => <span key={line}>{line}</span>)}
+          </h2>
         </div>
 
         <div className="notice-grid">
@@ -476,8 +496,10 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
           <ul>
             {copy.details.map((detail) => (
               <li key={detail}>
-                <HomeIcon name="check" />
-                <span>{detail}</span>
+                <span className="checklist-icon" aria-hidden="true">
+                  <HomeIcon name="check" />
+                </span>
+                <span className="checklist-label">{detail}</span>
               </li>
             ))}
           </ul>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Noto+Serif+Tamil:wght@500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 /* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
@@ -94,7 +94,9 @@ button, input, select, textarea {
   font: inherit;
 }
 
-button { cursor: pointer; }
+button { cursor: pointer; touch-action: manipulation; }
+
+a { touch-action: manipulation; }
 
 main { min-height: 100vh; }
 
@@ -132,9 +134,14 @@ html[lang='ta'] textarea {
   font-family: 'Noto Sans Tamil', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
+/* Noto Sans Tamil for all headings — standard for Tamil civic/government products */
 html[lang='ta'] h1,
 html[lang='ta'] h2,
-html[lang='ta'] h3,
+html[lang='ta'] h3 {
+  font-family: 'Noto Sans Tamil', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+}
+
 html[lang='ta'] .brand-mark,
 html[lang='ta'] .brand-lockup strong,
 html[lang='ta'] .footer-brand strong,
@@ -158,8 +165,13 @@ html[lang='ta'] .report-hero h1 {
   line-height: 1.18;
 }
 
-html[lang='ta'] h2,
+html[lang='ta'] h2 {
+  font-size: 1.72rem;
+  line-height: 1.28;
+}
+
 html[lang='ta'] h3 {
+  font-size: 1.08rem;
   line-height: 1.28;
 }
 
@@ -846,6 +858,11 @@ html[lang='ta'] .track-form-row input {
   padding-top: clamp(68px, 9vw, 118px);
 }
 
+.home-page .section-block {
+  display: grid;
+  row-gap: 40px;
+}
+
 .home-page .process-section {
   align-items: center;
 }
@@ -853,6 +870,29 @@ html[lang='ta'] .track-form-row input {
 .home-page .process-intro {
   align-self: center;
   max-width: 520px;
+}
+
+@media (min-width: 761px) {
+  .home-page .process-intro {
+    justify-items: start;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+    text-align: left;
+  }
+
+  .home-page .process-intro h2 {
+    font-size: 1.75rem;
+  }
+
+  .home-page .process-intro p:not(.eyebrow) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .home-page .process-intro .eyebrow {
+    justify-content: flex-start;
+  }
 }
 
 .home-page .home-cta-banner {
@@ -1205,8 +1245,8 @@ html[lang='ta'] .track-form-row input {
 /* ─── Process Section ────────────────────────────────────────────────────── */
 .process-section {
   display: grid;
-  gap: 40px;
-  grid-template-columns: minmax(0, 0.85fr) minmax(340px, 1.15fr);
+  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 1.1fr);
   align-items: start;
 }
 
@@ -1708,7 +1748,7 @@ html[lang='ta'] .track-form-row input {
   color: var(--text);
   min-height: 50px;
   padding: 0 16px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   transition: all 0.2s;
 }
 
@@ -2020,7 +2060,7 @@ html[lang='ta'] .track-form-row input {
 .footer-brand p,
 .footer-muted {
   color: var(--text-soft);
-  font-size: 0.9rem;
+  font-size: 0.94rem;
   line-height: 1.65;
 }
 
@@ -3647,7 +3687,7 @@ html[lang='ta'] .track-form-row input {
 }
 
 .home-hero-media::after {
-  background: linear-gradient(180deg, transparent 48%, rgba(15, 23, 42, 0.68) 100%);
+  background: linear-gradient(180deg, transparent 38%, rgba(15, 23, 42, 0.82) 100%);
   content: '';
   inset: 0;
   pointer-events: none;
@@ -3798,8 +3838,9 @@ html[lang='ta'] .track-form-row input {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   color: var(--text);
+  font-size: 1rem;
   font-weight: 650;
-  min-height: 42px;
+  min-height: 44px;
   min-width: 0;
   padding: 0 14px;
 }
@@ -3816,7 +3857,7 @@ html[lang='ta'] .track-form-row input {
   border-radius: var(--radius-md);
   color: #fff;
   font-weight: 800;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 16px;
 }
 
@@ -3843,7 +3884,8 @@ html[lang='ta'] .track-form-row input {
   display: grid;
   gap: 8px;
   min-height: 112px;
-  align-content: center;
+  align-content: start;
+  align-self: stretch;
   padding: 22px 24px;
   position: relative;
   overflow: hidden;
@@ -4684,7 +4726,7 @@ html[lang='ta'] .track-form-row input {
   font-weight: 800;
   gap: 12px;
   grid-template-columns: minmax(0, 1fr) 34px;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0;
   text-align: left;
   width: 100%;
@@ -7114,14 +7156,14 @@ html[lang='ta'] .track-form-row input {
   .home-track-form button,
   .track-form-row button {
     font-size: 0.84rem;
-    min-height: 40px;
+    min-height: 44px;
     padding: 8px 14px;
   }
 
   .public-shell > #main-content,
   .main-content {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
     padding-top: calc(var(--public-header-space) + 6px);
   }
 
@@ -7169,13 +7211,13 @@ html[lang='ta'] .track-form-row input {
 
   .mobile-menu-nav a {
     font-size: 0.88rem;
-    min-height: 42px;
+    min-height: 44px;
     padding: 10px 12px;
   }
 
   .mobile-menu-language button,
   .mobile-menu-cta {
-    min-height: 40px;
+    min-height: 44px;
   }
 
   .hero-section,
@@ -7354,9 +7396,15 @@ html[lang='ta'] .track-form-row input {
   .home-track-form input,
   .track-form-row input,
   .tracking-row input {
-    font-size: 0.88rem;
-    min-height: 40px;
+    font-size: 1rem;
+    min-height: 44px;
     padding: 0 12px;
+  }
+
+  .field-preview input,
+  .field-preview select,
+  .field-preview textarea {
+    font-size: 1rem;
   }
 
   .trust-fact-grid {
@@ -7979,9 +8027,9 @@ html[lang='ta'] .track-form-row input {
   }
 
   .home-page .home-cta-banner .button {
-    font-size: 0.76rem;
-    min-height: 36px;
-    padding: 8px 10px;
+    font-size: 0.82rem;
+    min-height: 44px;
+    padding: 10px;
   }
 }
 
@@ -8106,8 +8154,8 @@ html[lang='ta'] .track-form-row input {
     font-size: 0.82rem;
     font-weight: 800;
     justify-content: center;
-    min-height: 38px;
-    padding: 9px 10px;
+    min-height: 44px;
+    padding: 10px;
     width: 100%;
   }
 
@@ -9347,8 +9395,8 @@ html[lang='ta'] .track-form-tip p {
   .tracking-row button,
   .mobile-menu-cta {
     border-radius: 12px;
-    font-size: 0.82rem;
-    min-height: 42px;
+    font-size: 0.86rem;
+    min-height: 44px;
     padding: 9px 12px;
   }
 
@@ -9639,8 +9687,8 @@ html[lang='ta'] .track-form-tip p {
   .report-step-panel .field-preview input,
   .report-step-panel .field-preview textarea,
   .report-select-trigger {
-    font-size: 0.88rem;
-    min-height: 40px;
+    font-size: 1rem;
+    min-height: 44px;
   }
 
   .report-stepper {
@@ -9852,10 +9900,10 @@ html[lang='ta'] .track-form-tip p {
   }
 
   .home-page .hero-actions .button {
-    font-size: 0.76rem;
+    font-size: 0.82rem;
     gap: 6px;
-    min-height: 38px;
-    padding: 8px 10px;
+    min-height: 44px;
+    padding: 10px;
   }
 
   .home-page .home-hero-stack {
@@ -9912,8 +9960,8 @@ html[lang='ta'] .track-form-tip p {
 
   .home-page .home-track-form input,
   .home-page .home-track-form button {
-    font-size: 0.76rem;
-    min-height: 36px;
+    font-size: 1rem;
+    min-height: 44px;
   }
 
   .home-page .trust-fact-grid {
@@ -10229,9 +10277,9 @@ html[lang='ta'] .home-page #guidance-title {
   }
 
   .services-hero-actions .button {
-    font-size: 0.76rem;
-    min-height: 38px;
-    padding: 8px 10px;
+    font-size: 0.82rem;
+    min-height: 44px;
+    padding: 10px;
   }
 
   .services-hero-card {
@@ -10412,8 +10460,8 @@ html[lang='ta'] .home-page #guidance-title {
   }
 
   .services-page .help-band .button {
-    font-size: 0.78rem;
-    min-height: 40px;
+    font-size: 0.82rem;
+    min-height: 44px;
   }
 }
 
@@ -10620,9 +10668,9 @@ html[lang='ta'] .home-page #guidance-title {
   }
 
   .notices-hero-actions .button {
-    font-size: 0.76rem;
-    min-height: 38px;
-    padding: 8px 10px;
+    font-size: 0.82rem;
+    min-height: 44px;
+    padding: 10px;
   }
 
   .report-hero-card,
@@ -10773,8 +10821,8 @@ html[lang='ta'] .home-page #guidance-title {
   .report-step-panel .field-preview input,
   .report-step-panel .field-preview textarea,
   .report-select-trigger {
-    font-size: 0.84rem;
-    min-height: 38px;
+    font-size: 1rem;
+    min-height: 44px;
   }
 
   .report-step-panel .field-preview textarea {
@@ -10786,7 +10834,7 @@ html[lang='ta'] .home-page #guidance-title {
   }
 
   .report-step-actions .button {
-    min-height: 40px;
+    min-height: 44px;
   }
 
   .track-lookup-panel {
@@ -10819,7 +10867,7 @@ html[lang='ta'] .home-page #guidance-title {
 
   .track-form-row input,
   .track-form-row button {
-    min-height: 40px;
+    min-height: 44px;
   }
 
   .track-lookup-support {
@@ -11029,13 +11077,13 @@ html[lang='ta'] .home-page #guidance-title {
   }
 
   .mobile-menu-toggle {
-    height: 38px;
-    width: 40px;
+    height: 44px;
+    width: 44px;
   }
 
   .public-shell > #main-content,
   .main-content {
-    padding: calc(var(--public-header-space) + 6px) 10px 42px;
+    padding: calc(var(--public-header-space) + 6px) 12px 42px;
   }
 
   .home-page > .trust-fact-grid,
@@ -11095,9 +11143,9 @@ html[lang='ta'] .home-page #guidance-title {
   .tracking-row button,
   .mobile-menu-cta {
     border-radius: 10px;
-    font-size: 0.76rem;
-    min-height: 38px;
-    padding: 8px 10px;
+    font-size: 0.82rem;
+    min-height: 44px;
+    padding: 10px;
   }
 
   .home-action-panel,
@@ -11201,8 +11249,8 @@ html[lang='ta'] .home-page #guidance-title {
 @media (max-width: 380px) {
   .public-shell > #main-content,
   .main-content {
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .home-page .hero-actions,
@@ -11250,9 +11298,9 @@ html[lang='ta'] .home-page #guidance-title {
   }
 
   .notices-hero-actions .button {
-    font-size: 0.72rem;
-    min-height: 36px;
-    padding: 7px 8px;
+    font-size: 0.82rem;
+    min-height: 44px;
+    padding: 10px 8px;
   }
 
   .notices-hero-card {
@@ -11431,8 +11479,8 @@ html[lang='ta'] .home-page #guidance-title {
   }
 
   .notices-page .help-band .button {
-    font-size: 0.72rem;
-    min-height: 36px;
+    font-size: 0.82rem;
+    min-height: 44px;
   }
 }
 
@@ -11608,6 +11656,26 @@ html[lang='ta'] .home-page #guidance-title {
   }
 }
 
+/* ─── Tamil desktop refinements ─────────────────────────────────────────── */
+@media (min-width: 761px) {
+  /* CTA banner: reduce h2 so long Tamil sentence fits in 2 lines, not 3 */
+  html[lang='ta'] .home-page .home-cta-banner h2 {
+    font-size: clamp(1.45rem, 1.8vw, 1.7rem);
+    line-height: 1.3;
+  }
+
+  /* Services section intro paragraphs: tighter max-width prevents wall-of-text */
+  html[lang='ta'] .home-page .service-section-heading p:not(.eyebrow) {
+    max-width: 720px;
+  }
+
+  /* Process intro: reduce h2 size so long Tamil sentence stays within 3 lines */
+  html[lang='ta'] .home-page .process-intro h2 {
+    font-size: clamp(1.45rem, 1.8vw, 1.75rem);
+    line-height: 1.28;
+  }
+}
+
 /* ─── Tamil mobile responsive fixes ──────────────────────────────────────── */
 @media (max-width: 760px) {
   /* Services title: undo desktop-only nowrap so long Tamil spans wrap */
@@ -11710,3 +11778,771 @@ html[lang='ta'] .home-page #guidance-title {
   }
 }
 
+/* ─── Tamil mobile typography: definitive overrides ─────────────────────────
+   Noto Sans Tamil glyphs render visually ~12% larger at the same em value
+   than Inter/Outfit. Vowel diacritics extend far above/below the baseline,
+   making line-height: 1.78 produce text blocks ~18% taller than English.
+   These rules correct size, line-height, and flex alignment for Tamil only.
+   Placed last so they win the cascade regardless of earlier block order.
+──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  /* Hero headings: pull back from English clamp — Tamil glyphs fill more space */
+  html[lang='ta'] .hero-copy h1,
+  html[lang='ta'] .home-page .hero-copy h1,
+  html[lang='ta'] .notices-hero h1,
+  html[lang='ta'] .track-hero h1,
+  html[lang='ta'] .report-hero h1 {
+    font-size: clamp(1.28rem, 5.4vw, 1.66rem);
+    line-height: 1.3;
+  }
+
+  /* Services hero h1 is a much longer sentence than other pages — needs its own
+     smaller clamp so it doesn't dominate the entire hero on mobile */
+  html[lang='ta'] .services-hero h1 {
+    font-size: clamp(1.02rem, 4.1vw, 1.24rem);
+    line-height: 1.28;
+  }
+
+  /* Services body copy: tighten line-height — 1.72 produces very tall text blocks */
+  html[lang='ta'] .services-hero-copy > p:not(.eyebrow) {
+    font-size: 0.8rem;
+    line-height: 1.52;
+  }
+
+  /* Section h2: English gets clamp(1.45rem...) — Tamil needs less visual mass */
+  html[lang='ta'] h2 {
+    font-size: clamp(1.06rem, 4.2vw, 1.3rem);
+    line-height: 1.36;
+  }
+
+  /* Hero body copy: 1.78 line-height (Tamil global) → readable but compact */
+  html[lang='ta'] .hero-copy > p,
+  html[lang='ta'] .home-page .hero-copy > p,
+  html[lang='ta'] .services-hero-copy > p:not(.eyebrow),
+  html[lang='ta'] .notices-hero-copy > p:not(.eyebrow),
+  html[lang='ta'] .track-hero > div > p:not(.eyebrow),
+  html[lang='ta'] .report-hero-copy > p:not(.eyebrow),
+  html[lang='ta'] .section-heading p:not(.eyebrow),
+  html[lang='ta'] .compact-page-hero p:not(.eyebrow),
+  html[lang='ta'] .process-intro p:not(.eyebrow) {
+    line-height: 1.58;
+  }
+
+  /* Card / small-body text: pull line-height from 1.55 → tighter */
+  html[lang='ta'] .service-card p,
+  html[lang='ta'] .home-action-card p,
+  html[lang='ta'] .services-category-card p,
+  html[lang='ta'] .notice-card p,
+  html[lang='ta'] .notices-check-grid li,
+  html[lang='ta'] .submission-checklist li,
+  html[lang='ta'] .report-select-help,
+  html[lang='ta'] .report-select-menu span {
+    line-height: 1.42;
+  }
+
+  /* Card headings: explicit size to counteract visual inflation */
+  html[lang='ta'] .home-action-card strong,
+  html[lang='ta'] .service-card h3,
+  html[lang='ta'] .services-category-heading h3,
+  html[lang='ta'] .notice-card strong {
+    font-size: 0.88rem;
+    line-height: 1.28;
+  }
+
+  /* Hero card supporting text: reduce from Tamil global 1.78 */
+  html[lang='ta'] .report-hero-card p,
+  html[lang='ta'] .services-hero-card p,
+  html[lang='ta'] .notices-hero-card p,
+  html[lang='ta'] .track-hero-panel p {
+    line-height: 1.48;
+  }
+
+  /* Eyebrow: align decorative ::before line with Tamil ascenders */
+  html[lang='ta'] .eyebrow {
+    align-items: baseline;
+    line-height: 1.3;
+  }
+
+  /* Buttons: reinforce 44px — Tamil global rule (0,2,1) beats general (0,1,0)
+     but explicit declaration here ensures it survives any later additions */
+  html[lang='ta'] .button,
+  html[lang='ta'] .home-track-form button,
+  html[lang='ta'] .track-form-row button,
+  html[lang='ta'] .tracking-row button,
+  html[lang='ta'] .mobile-menu-cta {
+    min-height: 44px;
+  }
+
+  /* Trust-fact grid headings: Outfit has no Tamil glyphs, so the browser falls
+     back to the system Tamil font which renders visually larger than Latin at
+     the same em. Force Noto Sans Tamil and reduce size to match Latin visually. */
+  html[lang='ta'] .trust-fact-grid strong,
+  html[lang='ta'] .home-page .trust-fact-grid strong {
+    font-family: 'Noto Sans Tamil', ui-sans-serif, sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.22;
+  }
+
+  html[lang='ta'] .trust-fact-grid span,
+  html[lang='ta'] .home-page .trust-fact-grid span {
+    font-size: 0.64rem;
+    line-height: 1.38;
+  }
+}
+
+@media (max-width: 720px) {
+  .trust-fact-grid {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Extra-small screens: Tamil headings need another step down */
+  html[lang='ta'] .hero-copy h1,
+  html[lang='ta'] .home-page .hero-copy h1,
+  html[lang='ta'] .notices-hero h1,
+  html[lang='ta'] .track-hero h1,
+  html[lang='ta'] .report-hero h1 {
+    font-size: clamp(1.14rem, 5vw, 1.42rem);
+  }
+
+  html[lang='ta'] .services-hero h1 {
+    font-size: clamp(0.94rem, 3.8vw, 1.1rem);
+  }
+
+  html[lang='ta'] h2 {
+    font-size: clamp(0.96rem, 3.8vw, 1.16rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .home-page > .trust-fact-grid,
+  .home-page > .section-block,
+  .home-page > .process-section,
+  .home-page > .notice-section,
+  .home-page > .home-cta-banner {
+    margin-top: 28px;
+  }
+}
+
+/* ─── Tamil services page mobile overrides ───────────────────────────────────
+   Tamil text for each section is 30–60% longer than English. Every heading,
+   description, bullet, and tip needs a font-size step-down so content fits
+   without overflow, truncation, or excessive line wrapping.
+──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+
+  /* Hero copy: switch from centered to left-aligned for Tamil — long sentences
+     look broken when centered on a narrow mobile screen */
+  html[lang='ta'] .services-hero-copy {
+    justify-items: start;
+    text-align: left;
+  }
+
+  html[lang='ta'] .services-hero .eyebrow {
+    justify-content: flex-start;
+  }
+
+  /* Hero action buttons: stack vertically so long Tamil labels don't wrap
+     inside a half-width button */
+  html[lang='ta'] .services-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  html[lang='ta'] .services-hero-actions .button {
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Services hero card: left-align content for Tamil long bullet text */
+  html[lang='ta'] .services-hero-card {
+    justify-items: start;
+    text-align: left;
+  }
+
+  html[lang='ta'] .services-hero-card strong {
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+
+  html[lang='ta'] .services-hero-card p,
+  html[lang='ta'] .services-hero-card li {
+    font-size: 0.66rem;
+    line-height: 1.42;
+  }
+
+  /* Boundary guidance cards: force 1-column stack and horizontal article layout */
+  html[lang='ta'] .services-boundary-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  html[lang='ta'] .services-boundary-grid article {
+    align-items: center;
+    gap: 10px 12px;
+    grid-template-columns: 36px minmax(0, 1fr);
+    justify-items: start;
+    min-height: unset;
+    padding: 12px;
+    text-align: left;
+  }
+
+  html[lang='ta'] .services-boundary-grid article > span {
+    align-self: start;
+    height: 36px;
+    width: 36px;
+  }
+
+  html[lang='ta'] .services-boundary-grid strong {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  html[lang='ta'] .services-boundary-grid p {
+    font-size: 0.7rem;
+    line-height: 1.46;
+  }
+
+  /* Section intro text ─────────────────────────────────────────── */
+  html[lang='ta'] .services-page .section-heading p:not(.eyebrow),
+  html[lang='ta'] .services-help-section p:not(.eyebrow) {
+    font-size: 0.68rem;
+    line-height: 1.48;
+  }
+
+  /* Category card headings ─────────────────────────────────────── */
+  html[lang='ta'] .services-category-heading h3 {
+    font-size: 0.74rem;
+    line-height: 1.26;
+  }
+
+  html[lang='ta'] .services-category-heading p {
+    font-size: 0.6rem;
+    line-height: 1.28;
+  }
+
+  /* Category card examples list ────────────────────────────────── */
+  html[lang='ta'] .services-category-card li {
+    font-size: 0.62rem;
+    line-height: 1.32;
+  }
+
+  /* Category card detail paragraph — allow 3 lines instead of 2 */
+  html[lang='ta'] .services-category-card > p {
+    font-size: 0.64rem;
+    line-height: 1.38;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  /* Help/tips section ──────────────────────────────────────────── */
+  html[lang='ta'] .services-help-section li span {
+    font-size: 0.64rem;
+    line-height: 1.42;
+  }
+
+  /* Help-band CTA ──────────────────────────────────────────────── */
+  html[lang='ta'] .services-page .help-band strong {
+    font-size: 0.82rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .services-page .help-band span {
+    font-size: 0.64rem;
+    line-height: 1.42;
+  }
+
+  /* Section gaps: Tamil content is taller so breathe a bit more */
+  html[lang='ta'] .services-page > section + section,
+  html[lang='ta'] .services-page > section + .help-band {
+    margin-top: 28px;
+  }
+}
+
+/* ─── Notices page: English mobile improvements ──────────────────────────────
+   General layout fixes that improve both languages. Notice card text should
+   not be hard-clamped at 3 lines — civic guidance is important to read in full.
+──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  /* Section spacing: give notices page more breathing room */
+  .notices-page > section + section,
+  .notices-page > section + .help-band {
+    margin-top: 24px;
+  }
+
+  /* Check section: left-align on mobile — centered text + long checklist items = broken */
+  .notices-check-section {
+    justify-items: stretch;
+    text-align: left;
+  }
+
+  /* Notice cards: switch from centered vertical to horizontal left-aligned layout.
+     Icon on left, text on right — far more readable on a narrow mobile screen. */
+  .notice-card {
+    align-content: unset;
+    align-items: start;
+    gap: 10px 12px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    justify-items: start;
+    min-height: unset;
+    padding: 11px 12px;
+    text-align: left;
+  }
+
+  .notice-card > span {
+    align-self: start;
+    height: 32px;
+    width: 32px;
+  }
+
+  .notice-card strong {
+    font-size: 0.8rem;
+    line-height: 1.22;
+  }
+
+  /* Expand clamp from 3 → 4 lines: notice guidance is civic info, not decorative */
+  .notice-card p {
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    font-size: 0.7rem;
+    line-height: 1.38;
+  }
+
+  /* Priority panel: expand clamp — emergency notice must be fully readable */
+  .notices-priority-panel p:not(.eyebrow) {
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+  /* Check section list items: slightly more readable */
+  .notices-check-grid li {
+    font-size: 0.72rem;
+    line-height: 1.32;
+  }
+
+  /* Help-band button: reinforce touch target */
+  .notices-page .help-band .button {
+    min-height: 44px;
+  }
+}
+
+/* ─── Notices page: Tamil mobile overrides ───────────────────────────────────
+   Tamil text is 40–70% longer in every section. Headings need step-downs,
+   notice cards need 1-column layout, and hero actions must stack vertically.
+──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+
+  /* Hero copy: left-align for Tamil long sentences */
+  html[lang='ta'] .notices-hero-copy {
+    justify-items: start;
+    text-align: left;
+  }
+
+  html[lang='ta'] .notices-hero .eyebrow {
+    justify-content: flex-start;
+  }
+
+  /* Hero h1: very long sentence — needs aggressive reduction */
+  html[lang='ta'] .notices-hero h1 {
+    font-size: clamp(1.06rem, 4.3vw, 1.3rem);
+    line-height: 1.3;
+  }
+
+  /* Hero body: tighten line-height */
+  html[lang='ta'] .notices-hero-copy > p:not(.eyebrow) {
+    font-size: 0.78rem;
+    line-height: 1.52;
+  }
+
+  /* Hero action buttons: stack so "முறைப்பாடு பதிவு செய்யவும்" gets full width */
+  html[lang='ta'] .notices-hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  html[lang='ta'] .notices-hero-actions .button {
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Hero card: left-align for Tamil bullet list */
+  html[lang='ta'] .notices-hero-card {
+    justify-items: start;
+    text-align: left;
+  }
+
+  html[lang='ta'] .notices-hero-card strong {
+    font-size: 0.76rem;
+    line-height: 1.3;
+  }
+
+  html[lang='ta'] .notices-hero-card p,
+  html[lang='ta'] .notices-hero-card li {
+    font-size: 0.64rem;
+    line-height: 1.44;
+  }
+
+  /* Priority panel: Tamil boundary statement is very long */
+  html[lang='ta'] .notices-priority-panel h2 {
+    font-size: 0.9rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .notices-priority-panel p:not(.eyebrow) {
+    font-size: 0.68rem;
+    line-height: 1.46;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+  }
+
+  /* Section headings: Tamil h2 already reduced globally, reinforce here */
+  html[lang='ta'] .notices-page .section-heading h2,
+  html[lang='ta'] .notices-check-section h2 {
+    font-size: clamp(0.98rem, 4vw, 1.18rem);
+    line-height: 1.3;
+  }
+
+  html[lang='ta'] .notices-page .section-heading p:not(.eyebrow),
+  html[lang='ta'] .notices-check-section p:not(.eyebrow) {
+    font-size: 0.68rem;
+    line-height: 1.48;
+  }
+
+  /* Notice cards: 1-column for Tamil — 2-column is too narrow for long titles */
+  html[lang='ta'] .notices-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  html[lang='ta'] .notice-card strong {
+    font-size: 0.76rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .notice-card p {
+    font-size: 0.66rem;
+    line-height: 1.44;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+  }
+
+  /* Check section: force 1-column stacked layout for Tamil.
+     Base CSS uses repeat(2,1fr) and Tamil sentences are too long for half-width.
+     The html[lang='ta'] prefix gives (0,2,0) specificity — beats (0,1,0). */
+  html[lang='ta'] .notices-check-section {
+    justify-items: stretch;
+    text-align: left;
+  }
+
+  html[lang='ta'] .notices-check-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  html[lang='ta'] .notices-check-grid article {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  html[lang='ta'] .notices-check-grid strong {
+    font-size: 0.8rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .notices-check-grid ul {
+    gap: 8px;
+  }
+
+  /* List items: remove any implicit overflow clip and ensure text wraps freely */
+  html[lang='ta'] .notices-check-grid li {
+    font-size: 0.68rem;
+    line-height: 1.48;
+    overflow: visible;
+  }
+
+  html[lang='ta'] .notices-check-grid li span {
+    display: block;
+    overflow: visible;
+    white-space: normal;
+  }
+
+  /* Help-band */
+  html[lang='ta'] .notices-page .help-band strong {
+    font-size: 0.82rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .notices-page .help-band span {
+    font-size: 0.64rem;
+    line-height: 1.44;
+  }
+
+  /* Section spacing */
+  html[lang='ta'] .notices-page > section + section,
+  html[lang='ta'] .notices-page > section + .help-band {
+    margin-top: 28px;
+  }
+}
+
+/* ─── Report / Submit complaint page: English mobile improvements ─────────────
+   The base mobile block (line ~10630) covers most layout fixes. These additions
+   address items that were missed: 3rd hero bullet hidden by the shared rule,
+   reference number font-size overflow, success card layout, and touch targets.
+──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  /* The shared .report-hero-card li:nth-child(n+3) rule hides bullets ≥3.
+     The report page has exactly 3 bullets — show all of them. */
+  .report-hero-card li:nth-child(n+3) {
+    display: grid;
+  }
+
+  /* Reference card number: clamp(1.6rem,2.2rem,2.6rem) is far too large on mobile */
+  .reference-card strong,
+  .report-success-card .reference-card strong {
+    font-size: clamp(1.28rem, 5.2vw, 1.7rem);
+    letter-spacing: 0.03em;
+  }
+
+  /* Success next steps: 2-column is cramped on mobile — stack to 1 */
+  .report-success-next {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .report-success-next > div {
+    justify-items: start;
+    min-height: unset;
+    padding: 12px;
+    text-align: left;
+  }
+
+  /* Success action buttons: fill available width on mobile */
+  .report-success-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .report-success-actions .button {
+    justify-content: center;
+    min-height: 44px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Success card: shrink padding */
+  .report-success-card {
+    padding: 16px;
+  }
+
+  .report-success-copy {
+    gap: 8px;
+  }
+
+  /* File selector button: ensure 44px touch target */
+  .file-field input::file-selector-button {
+    min-height: 44px;
+  }
+
+  /* Section spacing: give report page consistent breathing room */
+  .report-page > section + section {
+    margin-top: 24px;
+  }
+}
+
+/* ─── Report page: Tamil mobile overrides ────────────────────────────────────
+   Tamil text is 40–80% longer than English in form labels, dropdown options,
+   and body copy. Every element that can overflow needs an explicit size/layout
+   step-down. Placed last so html[lang='ta'] specificity (0,2,X) wins.
+──────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+
+  /* Hero copy: left-align — centered Tamil long sentences look broken on narrow screens */
+  html[lang='ta'] .report-hero-copy {
+    justify-items: start;
+    text-align: left;
+  }
+
+  html[lang='ta'] .report-hero .eyebrow {
+    justify-content: flex-start;
+  }
+
+  /* Hero body copy */
+  html[lang='ta'] .report-hero-copy > p:not(.eyebrow) {
+    font-size: 0.78rem;
+    line-height: 1.52;
+  }
+
+  /* Hero card: left-align for Tamil bullet list */
+  html[lang='ta'] .report-hero-card {
+    justify-items: start;
+    text-align: left;
+  }
+
+  html[lang='ta'] .report-hero-card strong {
+    font-size: 0.76rem;
+    line-height: 1.3;
+  }
+
+  html[lang='ta'] .report-hero-card p,
+  html[lang='ta'] .report-hero-card li {
+    font-size: 0.64rem;
+    line-height: 1.44;
+  }
+
+  /* Boundary note: Tamil danger statement is very long — expand clamp */
+  html[lang='ta'] .report-boundary-note h2 {
+    font-size: 0.9rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .report-boundary-note p:not(.eyebrow) {
+    font-size: 0.64rem;
+    line-height: 1.46;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+  }
+
+  /* Form head: Tamil "முறைப்பாட்டைப் பூர்த்தி செய்யவும்" needs smaller size */
+  html[lang='ta'] .report-form-head h2 {
+    font-size: 0.96rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .report-form-head p {
+    font-size: 0.64rem;
+    line-height: 1.46;
+  }
+
+  /* Stepper: Tamil step labels "பிரச்சினை / தொடர்பு / பதிவு" need smaller text */
+  html[lang='ta'] .report-stepper strong {
+    font-size: 0.58rem;
+    line-height: 1.24;
+  }
+
+  /* Field labels: Tamil labels wrap — allow wrapping and shrink slightly */
+  html[lang='ta'] .report-step-panel .field-preview label {
+    font-size: 0.6rem;
+    line-height: 1.36;
+    white-space: normal;
+  }
+
+  /* Select trigger: Tamil option names are long — allow text to wrap */
+  html[lang='ta'] .report-select-trigger {
+    height: auto;
+    min-height: 44px;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    white-space: normal;
+  }
+
+  /* Select menu option labels and descriptions */
+  html[lang='ta'] .report-select-menu button strong {
+    font-size: 0.74rem;
+    line-height: 1.32;
+  }
+
+  html[lang='ta'] .report-select-menu button span {
+    font-size: 0.6rem;
+    line-height: 1.44;
+  }
+
+  /* Contact grid: 2-column is fine for English (short "Name"/"Phone") but Tamil
+     labels "பெயர்" / "தொலைபேசி எண்" need full width to avoid truncation */
+  html[lang='ta'] .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Anonymous toggle row: Tamil text is ~3× longer — allow vertical expansion */
+  html[lang='ta'] .report-toggle-row strong {
+    font-size: 0.78rem;
+    line-height: 1.32;
+  }
+
+  html[lang='ta'] .report-toggle-row small {
+    font-size: 0.62rem;
+    line-height: 1.44;
+  }
+
+  /* Submit review card: Tamil "பரிசீலனைக்கு தயாராக உள்ளது" text */
+  html[lang='ta'] .report-submit-review strong {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  html[lang='ta'] .report-submit-review p {
+    font-size: 0.64rem;
+    line-height: 1.48;
+  }
+
+  /* Form note (step 3 danger reminder) */
+  html[lang='ta'] .report-form-note {
+    font-size: 0.62rem;
+    line-height: 1.5;
+  }
+
+  /* Success card: left-align for Tamil — centered Tamil text wraps awkwardly */
+  html[lang='ta'] .report-success-card {
+    justify-items: start;
+    text-align: left;
+  }
+
+  html[lang='ta'] .report-success-copy {
+    justify-items: start;
+  }
+
+  html[lang='ta'] .report-success-copy .eyebrow {
+    justify-content: flex-start;
+  }
+
+  html[lang='ta'] .report-success-copy h2 {
+    font-size: 0.9rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .report-success-copy p {
+    font-size: 0.68rem;
+    line-height: 1.46;
+  }
+
+  /* Reference card label: very small Tamil uppercase */
+  html[lang='ta'] .reference-card span {
+    font-size: 0.54rem;
+    letter-spacing: 0.06em;
+  }
+
+  html[lang='ta'] .report-success-card .reference-card {
+    justify-items: start;
+    text-align: left;
+    width: 100%;
+  }
+
+  html[lang='ta'] .reference-card p {
+    font-size: 0.64rem;
+    line-height: 1.46;
+  }
+
+  /* Success next steps */
+  html[lang='ta'] .report-success-next strong {
+    font-size: 0.78rem;
+    line-height: 1.28;
+  }
+
+  html[lang='ta'] .report-success-next span {
+    font-size: 0.62rem;
+    line-height: 1.46;
+  }
+
+  /* Success buttons: full-width, centered label */
+  html[lang='ta'] .report-success-actions .button {
+    justify-content: center;
+  }
+
+  /* Section spacing */
+  html[lang='ta'] .report-page > section + section {
+    margin-top: 28px;
+  }
+}

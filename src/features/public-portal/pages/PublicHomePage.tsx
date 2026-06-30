@@ -160,7 +160,7 @@ const homeCopy = {
       'முறைப்பாடு எந்த நிலையில் உள்ளது என்பதை குடிமக்கள் அறியலாம்; ஒவ்வொரு நடவடிக்கைக்கும் அலுவலர்களுக்கான தெளிவான பதிவும் இருக்கும்.',
     guidanceEyebrow: 'பதிவிற்கு முன்',
     guidanceTitle: 'முழுமையான முறைப்பாடு விரைவான நடவடிக்கைக்கு உதவும்.',
-    guidanceTitleLines: ['முழுமையான முறைப்பாடு', 'விரைவான நடவடிக்கைக்கு உதவும்.'],
+    guidanceTitleLines: ['முழுமையான முறைப்பாடு விரைவான', 'நடவடிக்கைக்கு உதவும்.'],
     checklistEyebrow: 'தேவையான விவரங்கள்',
     checklistTitle: 'பதிவு செய்வதற்கு முன் இவ்விவரங்களைத் தயாராக வைத்திருக்கவும்',
     ctaLabel: 'முக்கிய செயல் அழைப்பு',
@@ -242,7 +242,7 @@ const homeCopy = {
         body: 'பெயர் குறிப்பிடாமல் முறைப்பாடு பதிவு செய்யலாம்; SMS நிலை புதுப்பிப்புகள் தேவையெனில் மட்டும் தொலைபேசி எண்ணைச் சேர்க்கவும்.',
       },
     ] as Array<{ icon: IconName; title: string; body: string }>,
-    details: ['இடம் அல்லது அருகிலுள்ள அடையாளம்', 'பிரச்சினை மற்றும் அறியப்பட்ட நேரம்', 'படம் அல்லது ஆவணம்', 'SMS தேவைப்பட்டால் தொலைபேசி எண்'],
+    details: ['இடம் அல்லது அருகிலுள்ள அடையாளம்', 'பிரச்சினை மற்றும்\nஅறியப்பட்ட நேரம்', 'படம் அல்லது ஆவணம்', 'SMS தேவைப்பட்டால் தொலைபேசி எண்'],
   },
 }
 
@@ -499,7 +499,7 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
                 <span className="checklist-icon" aria-hidden="true">
                   <HomeIcon name="check" />
                 </span>
-                <span className="checklist-label">{detail}</span>
+                <span className="checklist-label" style={{ whiteSpace: 'pre-line' }}>{detail}</span>
               </li>
             ))}
           </ul>

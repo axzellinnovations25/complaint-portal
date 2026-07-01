@@ -324,6 +324,14 @@ export function ComplaintWorkspacePage() {
       return
     }
 
+    // database.types.ts is hand-maintained and doesn't declare the complaints -> complaint_categories
+    // relationship, so supabase-js can't infer the embedded select's shape. Cast to the known shape here,
+    // matching the same pattern already used for the main workspace query's result below.
+    const updated = data as unknown as Pick<
+      ComplaintQueueItem,
+      'assigned_officer_id' | 'category_id' | 'complaint_categories' | 'internal_note' | 'resolved_at' | 'status' | 'updated_at'
+    >
+
     const assignedOfficer = officers.find((officer) => officer.id === assignedOfficerId)
 
     setComplaints((currentComplaints) =>
@@ -331,14 +339,14 @@ export function ComplaintWorkspacePage() {
         complaint.id === selectedComplaint.id
           ? {
               ...complaint,
-              assigned_officer_id: data.assigned_officer_id,
-              category_id: data.category_id,
-              complaint_categories: data.complaint_categories,
-              internal_note: data.internal_note,
+              assigned_officer_id: updated.assigned_officer_id,
+              category_id: updated.category_id,
+              complaint_categories: updated.complaint_categories,
+              internal_note: updated.internal_note,
               profiles: assignedOfficer ? { full_name: assignedOfficer.full_name } : null,
-              resolved_at: data.resolved_at,
-              status: data.status as ComplaintStatus,
-              updated_at: data.updated_at,
+              resolved_at: updated.resolved_at,
+              status: updated.status,
+              updated_at: updated.updated_at,
             }
           : complaint,
       ),

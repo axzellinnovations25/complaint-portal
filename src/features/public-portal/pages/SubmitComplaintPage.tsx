@@ -1,4 +1,5 @@
 import { useEffect, useId, useState, type FormEvent } from 'react'
+import { supabase } from '../../../shared/lib/supabase/client'
 import { usePublicLanguage, type PublicLanguage } from '../../../shared/i18n/PublicLanguageContext'
 
 type ReportIconName =
@@ -206,6 +207,12 @@ function getInitialLocationId() {
   return new URLSearchParams(window.location.search).get('locationId') ?? ''
 }
 
+function generateComplaintReference() {
+  const year = new Date().getFullYear()
+  const suffix = crypto.randomUUID().replace(/-/g, '').slice(0, 8).toUpperCase()
+  return `CP-${year}-${suffix}`
+}
+
 function ReportIcon({ name }: { name: ReportIconName }) {
   const common = {
     fill: 'none',
@@ -369,6 +376,8 @@ export function SubmitComplaintPage() {
   const categoryOptions = getCategoryOptions(language)
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [submittedReference, setSubmittedReference] = useState('')
+  const [submitError, setSubmitError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [category, setCategory] = useState(getInitialCategory)
   const [categoryError, setCategoryError] = useState('')
@@ -386,14 +395,43 @@ export function SubmitComplaintPage() {
     })
   }, [initialLocationId])
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (currentStep < 3) {
       goToNextStep(event.currentTarget)
       return
     }
 
-    setSubmittedReference('PS-2026-00124')
+    const formData = new FormData(event.currentTarget)
+    const referenceNo = generateComplaintReference()
+    const selectedCategory = categoryOptions.find((option) => option.value === category)
+    const locationNote = String(formData.get('location') ?? '').trim()
+    const details = String(formData.get('description') ?? '').trim()
+    const phone = String(formData.get('phone') ?? '').trim()
+    const locationId = String(formData.get('locationId') ?? '').trim()
+    const description = locationNote ? `Location note: ${locationNote}\n\n${details}` : details
+
+    setSubmitError('')
+    setIsSubmitting(true)
+
+    const { error } = await supabase.from('complaints').insert({
+      contact_number: isAnonymous || !phone ? null : phone,
+      description,
+      location_id: locationId || null,
+      priority: urgency,
+      reference_no: referenceNo,
+      status: 'submitted',
+      title: selectedCategory?.label ?? category,
+    })
+
+    setIsSubmitting(false)
+
+    if (error) {
+      setSubmitError(error.message)
+      return
+    }
+
+    setSubmittedReference(referenceNo)
   }
 
   const goToNextStep = (form: HTMLFormElement | null) => {
@@ -648,6 +686,8 @@ export function SubmitComplaintPage() {
                 </div>
               </div>
 
+              {submitError ? <p className="admin-auth-error">{submitError}</p> : null}
+
               <p className="form-note report-form-note">
                 {copy.formNote}
               </p>
@@ -666,8 +706,8 @@ export function SubmitComplaintPage() {
                   <ReportIcon name="arrow" />
                 </button>
               ) : (
-                <button className="button button-primary" type="submit">
-                  {copy.submitTitle}
+                <button className="button button-primary" disabled={isSubmitting} type="submit">
+                  {isSubmitting ? 'Submitting...' : copy.submitTitle}
                   <ReportIcon name="arrow" />
                 </button>
               )}

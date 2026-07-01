@@ -2400,6 +2400,35 @@ html[lang='ta'] .track-form-row input {
   color: #ffffff;
 }
 
+.queue-location-filter {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.queue-location-filter span {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.queue-location-filter select {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text);
+  font-weight: 700;
+  min-height: 38px;
+  padding: 0 14px;
+}
+
+.queue-location-filter select:focus {
+  border-color: var(--primary-600);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+  outline: none;
+}
+
 .case-table {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -3114,6 +3143,130 @@ html[lang='ta'] .track-form-row input {
   max-width: 440px;
 }
 
+.admin-case-modal-panel {
+  max-width: 720px;
+  padding: 0;
+  width: min(100%, 720px);
+}
+
+.case-modal-form {
+  display: grid;
+  gap: 0;
+}
+
+.case-modal-header {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 20px 24px;
+}
+
+.case-modal-header h3 {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.25;
+  margin: 2px 0 0;
+}
+
+.case-modal-body {
+  display: grid;
+  gap: 14px;
+  padding: 20px 24px;
+}
+
+.case-modal-section-title {
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  margin: 4px 0 -2px;
+  text-transform: uppercase;
+}
+
+.case-modal-fields {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.case-modal-field {
+  display: grid;
+  gap: 6px;
+}
+
+.case-modal-field-wide {
+  grid-column: 1 / -1;
+}
+
+.case-modal-label {
+  color: var(--text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.case-modal-value {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.case-modal-value-block {
+  font-weight: 500;
+  line-height: 1.6;
+  min-height: unset;
+  padding: 11px 12px;
+  white-space: pre-wrap;
+}
+
+.case-modal-fields select,
+.case-modal-fields textarea {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  min-height: 42px;
+  padding: 0 12px;
+  width: 100%;
+}
+
+.case-modal-fields textarea {
+  line-height: 1.5;
+  min-height: 96px;
+  padding: 11px 12px;
+  resize: vertical;
+}
+
+.case-modal-fields select:focus,
+.case-modal-fields textarea:focus {
+  border-color: var(--border-em);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+  outline: none;
+}
+
+.admin-case-modal-panel .admin-modal-actions {
+  border-top: 1px solid var(--border-light);
+  margin: 0;
+  padding: 16px 24px;
+}
+
+@media (max-width: 640px) {
+  .case-modal-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
 .admin-qr-modal-panel .admin-qr-preview {
   justify-items: center;
 }
@@ -3643,7 +3796,8 @@ html[lang='ta'] .track-form-row input {
 
 .dashboard-timestamp,
 .filter-chip,
-.case-link-button {
+.case-link-button,
+.queue-location-filter select {
   border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 750;
@@ -3655,7 +3809,8 @@ html[lang='ta'] .track-form-row input {
   padding: 8px 11px;
 }
 
-.filter-chip {
+.filter-chip,
+.queue-location-filter select {
   min-height: 34px;
   padding: 0 12px;
 }

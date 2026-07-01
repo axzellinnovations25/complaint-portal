@@ -283,7 +283,7 @@ export function DepartmentsAdministrationPage() {
   const [editDepartmentForm, setEditDepartmentForm] = useState<DepartmentFormState>({ description: '', name: '' })
   const [editingDepartmentId, setEditingDepartmentId] = useState<string | null>(null)
   const [isDepartmentSaving, setIsDepartmentSaving] = useState(false)
-  const createDepartmentRef = useRef<HTMLFormElement>(null)
+  const [showCreateDepartmentDialog, setShowCreateDepartmentDialog] = useState(false)
 
   useEffect(() => {
     setDepartments(data.departments)
@@ -332,6 +332,7 @@ export function DepartmentsAdministrationPage() {
 
     setDepartments((currentDepartments) => [...currentDepartments, createdDepartment as DepartmentRow])
     resetDepartmentForms()
+    setShowCreateDepartmentDialog(false)
     setActionMessage(`Department "${createdDepartment.name}" created.`)
   }
 
@@ -467,8 +468,8 @@ export function DepartmentsAdministrationPage() {
             <button
               className="button button-primary"
               onClick={() => {
-                createDepartmentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                createDepartmentRef.current?.querySelector('input')?.focus()
+                setDepartmentError('')
+                setShowCreateDepartmentDialog(true)
               }}
               type="button"
             >
@@ -485,8 +486,7 @@ export function DepartmentsAdministrationPage() {
       <DataError message={departmentError} />
       <ActionNotice message={actionMessage} />
 
-      <div className="admin-two-column admin-two-column-wide">
-        <div className="admin-data-panel">
+      <div className="admin-data-panel">
           <div className="admin-panel-heading">
             <strong>Department directory</strong>
             <span>{sortedDepartments.length} department records</span>
@@ -585,40 +585,75 @@ export function DepartmentsAdministrationPage() {
           ) : (
             <EmptyState>{isLoading ? 'Loading departments.' : 'No departments found.'}</EmptyState>
           )}
-        </div>
-
-        <aside className="admin-data-panel">
-          <div className="admin-panel-heading">
-            <strong>Create department</strong>
-            <span>Department master data</span>
-          </div>
-          <form className="admin-form-preview" onSubmit={handleCreateDepartment} ref={createDepartmentRef}>
-            <label>
-              Department name
-              <input
-                onChange={(event) =>
-                  setDepartmentForm((currentForm) => ({ ...currentForm, name: event.target.value }))
-                }
-                placeholder="Example: Public Health"
-                value={departmentForm.name}
-              />
-            </label>
-            <label>
-              Description
-              <textarea
-                onChange={(event) =>
-                  setDepartmentForm((currentForm) => ({ ...currentForm, description: event.target.value }))
-                }
-                placeholder="What this department owns or handles"
-                value={departmentForm.description}
-              />
-            </label>
-            <button className="button button-primary" disabled={isDepartmentSaving} type="submit">
-              {isDepartmentSaving ? 'Saving...' : 'Create department'}
-            </button>
-          </form>
-        </aside>
       </div>
+
+      {showCreateDepartmentDialog ? (
+        <div className="admin-modal-backdrop" role="presentation">
+          <section
+            aria-labelledby="create-department-title"
+            aria-modal="true"
+            className="admin-modal-panel"
+            role="dialog"
+          >
+            <div className="admin-modal-header">
+              <div>
+                <p className="eyebrow">Department administration</p>
+                <h3 id="create-department-title">Create department</h3>
+              </div>
+              <button
+                className="case-link-button"
+                disabled={isDepartmentSaving}
+                onClick={() => {
+                  resetDepartmentForms()
+                  setShowCreateDepartmentDialog(false)
+                }}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <form className="admin-form-preview" onSubmit={handleCreateDepartment}>
+              <label>
+                Department name
+                <input
+                  autoFocus
+                  onChange={(event) =>
+                    setDepartmentForm((currentForm) => ({ ...currentForm, name: event.target.value }))
+                  }
+                  placeholder="Example: Public Health"
+                  value={departmentForm.name}
+                />
+              </label>
+              <label>
+                Description
+                <textarea
+                  onChange={(event) =>
+                    setDepartmentForm((currentForm) => ({ ...currentForm, description: event.target.value }))
+                  }
+                  placeholder="What this department owns or handles"
+                  value={departmentForm.description}
+                />
+              </label>
+              <div className="admin-modal-actions">
+                <button
+                  className="button button-secondary"
+                  disabled={isDepartmentSaving}
+                  onClick={() => {
+                    resetDepartmentForms()
+                    setShowCreateDepartmentDialog(false)
+                  }}
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button className="button button-primary" disabled={isDepartmentSaving} type="submit">
+                  {isDepartmentSaving ? 'Saving...' : 'Create department'}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      ) : null}
 
       <div className="admin-data-panel">
           <div className="admin-panel-heading">

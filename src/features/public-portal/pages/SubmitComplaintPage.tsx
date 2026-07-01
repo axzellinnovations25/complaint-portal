@@ -17,55 +17,22 @@ type ReportIconName =
   | 'trash'
   | 'water'
 
-const complaintCategories: Array<{
-  value: string
-  label: Record<PublicLanguage, string>
-  helper: Record<PublicLanguage, string>
-  icon: ReportIconName
-}> = [
-  {
-    value: 'Roads and access',
-    label: { en: 'Roads and access', ta: 'வீதிகள் மற்றும் அணுகல் பாதைகள்' },
-    helper: { en: 'Potholes, blocked access, culverts, road signs', ta: 'வீதி குழிகள், தடைப்பட்ட அணுகல், கல்வர்ட்கள், வீதி பலகைகள்' },
-    icon: 'road',
-  },
-  {
-    value: 'Drainage and water flow',
-    label: { en: 'Drainage and water flow', ta: 'வடிகால் மற்றும் நீரோட்டம்' },
-    helper: { en: 'Blocked drains, stagnant water, flood points', ta: 'அடைந்த வடிகால்கள், தேங்கிய நீர், வெள்ளம் ஏற்படும் இடங்கள்' },
-    icon: 'water',
-  },
-  {
-    value: 'Waste and public health',
-    label: { en: 'Waste and public health', ta: 'கழிவு மற்றும் பொது சுகாதாரம்' },
-    helper: { en: 'Illegal dumping, missed collection, sanitation risks', ta: 'சட்டவிரோத கழிவு கொட்டுதல், சேகரிப்பு தவறுதல், சுகாதார அபாயங்கள்' },
-    icon: 'trash',
-  },
-  {
-    value: 'Street lighting and safety',
-    label: { en: 'Street lighting and safety', ta: 'தெருவிளக்குகள் மற்றும் பாதுகாப்பு' },
-    helper: { en: 'Broken lamps, exposed wires, unsafe dark areas', ta: 'செயலிழந்த விளக்குகள், வெளிப்பட்ட மின்கம்பிகள், இருண்ட இடங்கள்' },
-    icon: 'light',
-  },
-  {
-    value: 'Public property',
-    label: { en: 'Public property', ta: 'பொது சொத்துகள் மற்றும் வசதிகள்' },
-    helper: { en: 'Parks, markets, halls, libraries, cemeteries', ta: 'பூங்காக்கள், சந்தைகள், மண்டபங்கள், நூலகங்கள், மயானங்கள்' },
-    icon: 'building',
-  },
-  {
-    value: 'Service feedback',
-    label: { en: 'Service feedback', ta: 'சேவை தொடர்பான கருத்து' },
-    helper: { en: 'General civic service feedback or reassignment requests', ta: 'பொதுச் சேவை கருத்து அல்லது உரிய அணிக்கு மாற்ற வேண்டுகோள்' },
-    icon: 'file',
-  },
-]
+type ComplaintCategory = {
+  id: string
+  name_en: string
+  name_ta: string
+  department_id: string | null
+  expected_sla_hours: number
+}
 
-function getCategoryOptions(language: PublicLanguage) {
-  return complaintCategories.map((category) => ({
-    description: category.helper[language],
-    label: category.label[language],
-    value: category.value,
+function getCategoryOptions(categories: ComplaintCategory[], language: PublicLanguage) {
+  return categories.map((category) => ({
+    description:
+      language === 'ta'
+        ? `எதிர்பார்க்கப்படும் பதில் நேரம்: ${category.expected_sla_hours} மணிநேரம்`
+        : `Typical response target: ${category.expected_sla_hours}h`,
+    label: language === 'ta' ? category.name_ta : category.name_en,
+    value: category.id,
   }))
 }
 
@@ -116,6 +83,7 @@ const submitCopy = {
     steps: ['Issue', 'Follow-up', 'Submit'],
     category: 'Category',
     categoryPlaceholder: 'Select a service area',
+    categoryLoading: 'Loading service areas...',
     urgency: 'Urgency',
     urgencyHelp: 'Choose the closest level. Officers can adjust it after review.',
     urgencyPlaceholder: 'Select urgency',
@@ -172,6 +140,7 @@ const submitCopy = {
     steps: ['பிரச்சினை', 'தொடர்பு', 'பதிவு'],
     category: 'சேவை வகை',
     categoryPlaceholder: 'பொருத்தமான சேவை பகுதியைத் தேர்ந்தெடுக்கவும்',
+    categoryLoading: 'சேவை பகுதிகள் ஏற்றப்படுகின்றன...',
     urgency: 'அவசர நிலை',
     urgencyHelp: 'மிகப் பொருத்தமான நிலையைத் தேர்வு செய்யவும். பரிசீலனையின் பின்னர் அலுவலர்கள் மாற்றலாம்.',
     urgencyPlaceholder: 'அவசர நிலையைத் தேர்ந்தெடுக்கவும்',
@@ -197,10 +166,20 @@ const submitCopy = {
   },
 }
 
-function getInitialCategory() {
-  const category = new URLSearchParams(window.location.search).get('category')
-  const availableCategories = new Set(complaintCategories.map((item) => item.value))
-  return category && availableCategories.has(category) ? category : ''
+function getInitialCategoryParam() {
+  return new URLSearchParams(window.location.search).get('category') ?? ''
+}
+
+function resolveCategoryParam(categories: ComplaintCategory[], param: string) {
+  if (!param) {
+    return ''
+  }
+
+  const lowerParam = param.toLowerCase()
+  const match = categories.find(
+    (category) => category.id === param || category.name_en.toLowerCase() === lowerParam || category.name_ta.toLowerCase() === lowerParam,
+  )
+  return match?.id ?? ''
 }
 
 function getInitialLocationId() {
@@ -373,17 +352,59 @@ function ReportDropdown({
 export function SubmitComplaintPage() {
   const language = usePublicLanguage()
   const copy = submitCopy[language]
-  const categoryOptions = getCategoryOptions(language)
+  const [categories, setCategories] = useState<ComplaintCategory[]>([])
+  const [categoriesLoading, setCategoriesLoading] = useState(true)
+  const categoryOptions = getCategoryOptions(categories, language)
   const [isAnonymous, setIsAnonymous] = useState(false)
   const [submittedReference, setSubmittedReference] = useState('')
   const [submitError, setSubmitError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
-  const [category, setCategory] = useState(getInitialCategory)
+  const [initialCategoryParam] = useState(getInitialCategoryParam)
+  const [category, setCategory] = useState('')
   const [categoryError, setCategoryError] = useState('')
   const [urgency, setUrgency] = useState('normal')
   const [initialLocationId] = useState(getInitialLocationId)
   const referenceHintId = useId()
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from('complaint_categories')
+        .select('id, name_en, name_ta, department_id, expected_sla_hours')
+        .eq('is_active', true)
+        .order('name_en')
+
+      if (!isMounted) {
+        return
+      }
+
+      if (!error && data) {
+        setCategories(data as ComplaintCategory[])
+      }
+
+      setCategoriesLoading(false)
+    }
+
+    void loadCategories()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!initialCategoryParam || category) {
+      return
+    }
+
+    const resolved = resolveCategoryParam(categories, initialCategoryParam)
+    if (resolved) {
+      setCategory(resolved)
+    }
+  }, [category, categories, initialCategoryParam])
 
   useEffect(() => {
     if (!initialLocationId) {
@@ -404,7 +425,7 @@ export function SubmitComplaintPage() {
 
     const formData = new FormData(event.currentTarget)
     const referenceNo = generateComplaintReference()
-    const selectedCategory = categoryOptions.find((option) => option.value === category)
+    const selectedCategory = categories.find((item) => item.id === category)
     const locationNote = String(formData.get('location') ?? '').trim()
     const details = String(formData.get('description') ?? '').trim()
     const phone = String(formData.get('phone') ?? '').trim()
@@ -415,13 +436,15 @@ export function SubmitComplaintPage() {
     setIsSubmitting(true)
 
     const { error } = await supabase.from('complaints').insert({
+      category_id: selectedCategory?.id ?? null,
       contact_number: isAnonymous || !phone ? null : phone,
+      department_id: selectedCategory?.department_id ?? null,
       description,
       location_id: locationId || null,
       priority: urgency,
       reference_no: referenceNo,
       status: 'submitted',
-      title: selectedCategory?.label ?? category,
+      title: selectedCategory?.name_en ?? category,
     })
 
     setIsSubmitting(false)
@@ -574,7 +597,7 @@ export function SubmitComplaintPage() {
                   setCategoryError('')
                 }}
                 options={categoryOptions}
-                placeholder={copy.categoryPlaceholder}
+                placeholder={categoriesLoading ? copy.categoryLoading : copy.categoryPlaceholder}
                 value={category}
               />
 

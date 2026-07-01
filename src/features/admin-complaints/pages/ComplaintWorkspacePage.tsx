@@ -17,9 +17,10 @@ type ComplaintQueueItem = {
   submitted_at: string
   updated_at: string
   resolved_at: string | null
+  category_id: string | null
   departments: { name: string } | null
   complaint_categories: { name_en: string; expected_sla_hours: number } | null
-  locations: { ward: string | null; village: string | null; gn_division: string | null } | null
+  locations: { id: string; ward: string | null; village: string | null; gn_division: string | null } | null
   profiles: { full_name: string } | null
 }
 
@@ -27,6 +28,11 @@ type OfficerOption = {
   id: string
   full_name: string
   role: string
+}
+
+type CategoryOption = {
+  id: string
+  name_en: string
 }
 
 type QueueFilter = 'open' | 'new' | 'due' | 'unassigned'
@@ -130,14 +136,18 @@ function matchesFilter(complaint: ComplaintQueueItem, filter: QueueFilter) {
 export function ComplaintWorkspacePage() {
   const [complaints, setComplaints] = useState<ComplaintQueueItem[]>([])
   const [officers, setOfficers] = useState<OfficerOption[]>([])
+  const [categories, setCategories] = useState<CategoryOption[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeFilter, setActiveFilter] = useState<QueueFilter>('open')
+  const [locationFilter, setLocationFilter] = useState('all')
   const [assignedOfficerId, setAssignedOfficerId] = useState('')
+  const [categoryId, setCategoryId] = useState('')
   const [selectedStatus, setSelectedStatus] = useState<ComplaintStatus>('submitted')
   const [internalNote, setInternalNote] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [saveState, setSaveState] = useState<SaveState>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
   const actionPanelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -147,27 +157,33 @@ export function ComplaintWorkspacePage() {
       setIsLoading(true)
       setErrorMessage('')
 
-      const [{ data: complaintData, error: complaintError }, { data: officerData, error: officerError }] =
-        await Promise.all([
-          supabase
-            .from('complaints')
-            .select(
-              'id, reference_no, title, description, status, priority, contact_number, public_status_note, internal_note, assigned_officer_id, submitted_at, updated_at, resolved_at, departments(name), complaint_categories(name_en, expected_sla_hours), locations(ward, village, gn_division), profiles(full_name)',
-            )
-            .order('updated_at', { ascending: false }),
-          supabase
-            .from('profiles')
-            .select('id, full_name, role')
-            .eq('is_active', true)
-            .in('role', ['department_head', 'officer', 'field_officer']),
-        ])
+      const [
+        { data: complaintData, error: complaintError },
+        { data: officerData, error: officerError },
+        { data: categoryData, error: categoryError },
+      ] = await Promise.all([
+        supabase
+          .from('complaints')
+          .select(
+            'id, reference_no, title, description, status, priority, contact_number, public_status_note, internal_note, assigned_officer_id, category_id, submitted_at, updated_at, resolved_at, departments(name), complaint_categories(name_en, expected_sla_hours), locations(id, ward, village, gn_division), profiles(full_name)',
+          )
+          .order('updated_at', { ascending: false }),
+        supabase
+          .from('profiles')
+          .select('id, full_name, role')
+          .eq('is_active', true)
+          .in('role', ['department_head', 'officer', 'field_officer']),
+        supabase.from('complaint_categories').select('id, name_en').order('name_en'),
+      ])
 
       if (!isMounted) {
         return
       }
 
-      if (complaintError || officerError) {
-        setErrorMessage(complaintError?.message ?? officerError?.message ?? 'Complaint workspace could not be loaded.')
+      if (complaintError || officerError || categoryError) {
+        setErrorMessage(
+          complaintError?.message ?? officerError?.message ?? categoryError?.message ?? 'Complaint workspace could not be loaded.',
+        )
         setIsLoading(false)
         return
       }
@@ -175,6 +191,7 @@ export function ComplaintWorkspacePage() {
       const loadedComplaints = (complaintData ?? []) as ComplaintQueueItem[]
       setComplaints(loadedComplaints)
       setOfficers((officerData ?? []) as OfficerOption[])
+      setCategories((categoryData ?? []) as CategoryOption[])
       setSelectedId((currentSelectedId) => currentSelectedId ?? loadedComplaints[0]?.id ?? null)
       setIsLoading(false)
     }
@@ -190,20 +207,37 @@ export function ComplaintWorkspacePage() {
     () => complaints.find((complaint) => complaint.id === selectedId) ?? null,
     [complaints, selectedId],
   )
+  const locationOptions = useMemo(() => {
+    const seen = new Map<string, string>()
+
+    for (const complaint of complaints) {
+      if (complaint.locations) {
+        seen.set(complaint.locations.id, formatLocation(complaint.locations))
+      }
+    }
+
+    return Array.from(seen, ([id, label]) => ({ id, label })).sort((a, b) => a.label.localeCompare(b.label))
+  }, [complaints])
+
   const filteredComplaints = useMemo(
-    () => complaints.filter((complaint) => matchesFilter(complaint, activeFilter)),
-    [activeFilter, complaints],
+    () =>
+      complaints
+        .filter((complaint) => matchesFilter(complaint, activeFilter))
+        .filter((complaint) => locationFilter === 'all' || complaint.locations?.id === locationFilter),
+    [activeFilter, complaints, locationFilter],
   )
 
   useEffect(() => {
     if (!selectedComplaint) {
       setAssignedOfficerId('')
+      setCategoryId('')
       setSelectedStatus('submitted')
       setInternalNote('')
       return
     }
 
     setAssignedOfficerId(selectedComplaint.assigned_officer_id ?? '')
+    setCategoryId(selectedComplaint.category_id ?? '')
     setSelectedStatus(selectedComplaint.status)
     setInternalNote(selectedComplaint.internal_note ?? '')
     setSaveState('idle')
@@ -238,9 +272,26 @@ export function ComplaintWorkspacePage() {
   }
 
   const handleFocusAction = () => {
-    actionPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    actionPanelRef.current?.querySelector('select')?.focus()
+    setIsDetailOpen(true)
+    window.requestAnimationFrame(() => {
+      actionPanelRef.current?.querySelector('select')?.focus()
+    })
   }
+
+  useEffect(() => {
+    if (!isDetailOpen) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsDetailOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isDetailOpen])
 
   const handleSave = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -257,13 +308,14 @@ export function ComplaintWorkspacePage() {
       .from('complaints')
       .update({
         assigned_officer_id: assignedOfficerId || null,
+        category_id: categoryId || null,
         internal_note: internalNote.trim() || null,
         resolved_at: selectedStatus === 'resolved' ? selectedComplaint.resolved_at ?? now : selectedComplaint.resolved_at,
         status: selectedStatus,
         updated_at: now,
       })
       .eq('id', selectedComplaint.id)
-      .select('id, status, assigned_officer_id, internal_note, updated_at, resolved_at')
+      .select('id, status, assigned_officer_id, category_id, internal_note, updated_at, resolved_at, complaint_categories(name_en, expected_sla_hours)')
       .single()
 
     if (error) {
@@ -280,6 +332,8 @@ export function ComplaintWorkspacePage() {
           ? {
               ...complaint,
               assigned_officer_id: data.assigned_officer_id,
+              category_id: data.category_id,
+              complaint_categories: data.complaint_categories,
               internal_note: data.internal_note,
               profiles: assignedOfficer ? { full_name: assignedOfficer.full_name } : null,
               resolved_at: data.resolved_at,
@@ -321,6 +375,16 @@ export function ComplaintWorkspacePage() {
             {filter.label}
           </button>
         ))}
+
+        <label className="queue-location-filter">
+          <span>Location</span>
+          <select value={locationFilter} onChange={(event) => setLocationFilter(event.target.value)}>
+            <option value="all">All locations</option>
+            {locationOptions.map((location) => (
+              <option key={location.id} value={location.id}>{location.label}</option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div className="case-table" role="table" aria-label="Complaint workspace">
@@ -349,7 +413,16 @@ export function ComplaintWorkspacePage() {
               </span>
               <span className={`status-pill status-pill-${complaint.status.replace('_', '-')}`}>{complaintStatusLabels[complaint.status]}</span>
               <span className={sla === 'Overdue' ? 'sla-badge sla-badge-risk' : 'sla-badge'}>{sla}</span>
-              <button className="case-link-button" onClick={() => setSelectedId(complaint.id)} type="button">Open</button>
+              <button
+                className="case-link-button"
+                onClick={() => {
+                  setSelectedId(complaint.id)
+                  setIsDetailOpen(true)
+                }}
+                type="button"
+              >
+                Open
+              </button>
             </article>
           )
         })}
@@ -359,76 +432,124 @@ export function ComplaintWorkspacePage() {
         <p className="admin-empty-state">{isLoading ? 'Loading complaints.' : 'No complaints match this filter.'}</p>
       )}
 
-      <div className="admin-two-column admin-two-column-wide">
-        <section className="admin-data-panel" aria-labelledby="case-detail-heading">
-          <div className="admin-panel-heading">
-            <strong id="case-detail-heading">Selected case summary</strong>
-            <span>{selectedComplaint?.reference_no ?? 'No case selected'}</span>
-          </div>
-          {selectedComplaint ? (
-            <>
-              <div className="case-detail-grid">
-                <article>
-                  <span>Category</span>
-                  <strong>{selectedComplaint.complaint_categories?.name_en ?? 'Not categorized'}</strong>
-                </article>
-                <article>
-                  <span>Citizen contact</span>
-                  <strong>{formatContact(selectedComplaint.contact_number)}</strong>
-                </article>
-                <article>
-                  <span>Assigned team</span>
-                  <strong>{selectedComplaint.departments?.name ?? 'Unassigned'}</strong>
-                </article>
-                <article>
-                  <span>Assigned officer</span>
-                  <strong>{selectedComplaint.profiles?.full_name ?? 'Not assigned'}</strong>
-                </article>
+      {isDetailOpen && selectedComplaint ? (
+        <div className="admin-modal-backdrop" onClick={() => setIsDetailOpen(false)} role="presentation">
+          <section
+            aria-labelledby="case-detail-heading"
+            aria-modal="true"
+            className="admin-modal-panel admin-case-modal-panel"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <form className="case-modal-form" onSubmit={handleSave}>
+              <div className="case-modal-header">
+                <div>
+                  <p className="eyebrow">{selectedComplaint.reference_no}</p>
+                  <h3 id="case-detail-heading">{selectedComplaint.title}</h3>
+                </div>
+                <span className={`status-pill status-pill-${selectedComplaint.status.replace('_', '-')}`}>
+                  {complaintStatusLabels[selectedComplaint.status]}
+                </span>
               </div>
-              <p className="admin-section-copy">{selectedComplaint.description}</p>
-            </>
-          ) : (
-            <p className="admin-empty-state">Select a complaint to view details.</p>
-          )}
-        </section>
 
-        <aside className="admin-data-panel" aria-labelledby="case-action-heading" ref={actionPanelRef}>
-          <div className="admin-panel-heading">
-            <strong id="case-action-heading">Case action</strong>
-            <span>Officer update</span>
-          </div>
-          {selectedComplaint ? (
-            <form className="admin-form-preview" onSubmit={handleSave}>
-              <label>
-                Assign officer
-                <select value={assignedOfficerId} onChange={(event) => setAssignedOfficerId(event.target.value)}>
-                  <option value="">Select officer</option>
-                  {officers.map((officer) => (
-                    <option key={officer.id} value={officer.id}>{officer.full_name} - {officer.role}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Status
-                <select value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value as ComplaintStatus)}>
-                  {complaintStatuses.map((value) => (
-                    <option key={value} value={value}>{complaintStatusLabels[value]}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Internal note
-                <textarea value={internalNote} onChange={(event) => setInternalNote(event.target.value)} />
-              </label>
-              <button className="button button-primary" disabled={saveState === 'saving'} type="submit">
-                {saveState === 'saving' ? 'Saving...' : 'Save update'}
-              </button>
+              <div className="case-modal-body">
+                <p className="case-modal-section-title">Case details</p>
+                <div className="case-modal-fields">
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">Priority</span>
+                    <span className="case-modal-value">{priorityLabels[selectedComplaint.priority]}</span>
+                  </div>
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">SLA</span>
+                    <span className="case-modal-value">{getSlaLabel(selectedComplaint)}</span>
+                  </div>
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">Category</span>
+                    <span className="case-modal-value">{selectedComplaint.complaint_categories?.name_en ?? 'Not categorized'}</span>
+                  </div>
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">Location</span>
+                    <span className="case-modal-value">{formatLocation(selectedComplaint.locations)}</span>
+                  </div>
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">Citizen contact</span>
+                    <span className="case-modal-value">{formatContact(selectedComplaint.contact_number)}</span>
+                  </div>
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">Assigned team</span>
+                    <span className="case-modal-value">{selectedComplaint.departments?.name ?? 'Unassigned'}</span>
+                  </div>
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">Submitted</span>
+                    <span className="case-modal-value">{formatDate(selectedComplaint.submitted_at)}</span>
+                  </div>
+                  <div className="case-modal-field">
+                    <span className="case-modal-label">{selectedComplaint.resolved_at ? 'Resolved' : 'Last updated'}</span>
+                    <span className="case-modal-value">
+                      {formatDate(selectedComplaint.resolved_at ?? selectedComplaint.updated_at)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="case-modal-field case-modal-field-wide">
+                  <span className="case-modal-label">Description</span>
+                  <p className="case-modal-value case-modal-value-block">{selectedComplaint.description}</p>
+                </div>
+
+                {selectedComplaint.public_status_note ? (
+                  <div className="case-modal-field case-modal-field-wide">
+                    <span className="case-modal-label">Public status note</span>
+                    <p className="case-modal-value case-modal-value-block">{selectedComplaint.public_status_note}</p>
+                  </div>
+                ) : null}
+
+                <p className="case-modal-section-title">Officer update</p>
+                <div className="case-modal-fields" ref={actionPanelRef}>
+                  <label className="case-modal-field">
+                    <span className="case-modal-label">Category</span>
+                    <select value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>
+                      <option value="">Not categorized</option>
+                      {categories.map((option) => (
+                        <option key={option.id} value={option.id}>{option.name_en}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="case-modal-field">
+                    <span className="case-modal-label">Assign officer</span>
+                    <select value={assignedOfficerId} onChange={(event) => setAssignedOfficerId(event.target.value)}>
+                      <option value="">Select officer</option>
+                      {officers.map((officer) => (
+                        <option key={officer.id} value={officer.id}>{officer.full_name} - {officer.role}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="case-modal-field">
+                    <span className="case-modal-label">Status</span>
+                    <select value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value as ComplaintStatus)}>
+                      {complaintStatuses.map((value) => (
+                        <option key={value} value={value}>{complaintStatusLabels[value]}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="case-modal-field case-modal-field-wide">
+                    <span className="case-modal-label">Internal note</span>
+                    <textarea value={internalNote} onChange={(event) => setInternalNote(event.target.value)} />
+                  </label>
+                </div>
+              </div>
+
+              <div className="admin-modal-actions">
+                <button className="button button-secondary" onClick={() => setIsDetailOpen(false)} type="button">
+                  Close
+                </button>
+                <button className="button button-primary" disabled={saveState === 'saving'} type="submit">
+                  {saveState === 'saving' ? 'Saving...' : 'Save update'}
+                </button>
+              </div>
             </form>
-          ) : (
-            <p className="admin-empty-state">No complaint selected.</p>
-          )}
-        </aside>
-      </div>
+          </section>
+        </div>
+      ) : null}
     </section>
   )
 }

@@ -115,9 +115,11 @@ export function RouteRegistry() {
 
   useEffect(() => {
     let isMounted = true
+    let lastCheckedUserId: string | null = null
 
     const loadAdminProfile = async (session: Session | null) => {
       if (!session) {
+        lastCheckedUserId = null
         if (isMounted) {
           setAdminProfile(null)
           setAdminAuthStatus('signed-out')
@@ -125,6 +127,16 @@ export function RouteRegistry() {
         }
         return
       }
+
+      // Supabase re-emits auth state (SIGNED_IN, TOKEN_REFRESHED, cross-tab storage sync, tab
+      // focus revalidation, ...) for a session whose user hasn't actually changed. Skip
+      // re-checking entirely in that case so switching tabs and back doesn't flash the
+      // "checking access" gate over an already-authorized view.
+      if (session.user.id === lastCheckedUserId) {
+        return
+      }
+
+      lastCheckedUserId = session.user.id
 
       if (isMounted) {
         setAdminAuthStatus('checking')
@@ -142,6 +154,7 @@ export function RouteRegistry() {
       }
 
       if (error) {
+        lastCheckedUserId = null
         setAdminProfile(null)
         setAdminAuthStatus('denied')
         setAdminAuthMessage('Your account is signed in, but the staff profile could not be read.')
@@ -149,6 +162,7 @@ export function RouteRegistry() {
       }
 
       if (!profile) {
+        lastCheckedUserId = null
         setAdminProfile(null)
         setAdminAuthStatus('denied')
         setAdminAuthMessage('Your account does not have an officer profile.')
@@ -156,6 +170,7 @@ export function RouteRegistry() {
       }
 
       if (!profile.is_active) {
+        lastCheckedUserId = null
         setAdminProfile(null)
         setAdminAuthStatus('denied')
         setAdminAuthMessage('Your officer profile is inactive.')
@@ -165,6 +180,7 @@ export function RouteRegistry() {
       const visibleSections = getAdminSectionsForRole(profile.role)
 
       if (visibleSections.length === 0) {
+        lastCheckedUserId = null
         setAdminProfile(null)
         setAdminAuthStatus('denied')
         setAdminAuthMessage('Your role does not include administration access.')

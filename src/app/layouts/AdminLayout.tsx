@@ -67,13 +67,6 @@ export function AdminLayout({
         </div>
       </aside>
       <div className="admin-content">
-        <header className="admin-content-header">
-          <div>
-            <p className="eyebrow">Administration</p>
-            <h1>{activeSection?.label ?? 'Administration'}</h1>
-            <p>{activeSection?.description ?? 'Manage the complaint portal from the staff workspace.'}</p>
-          </div>
-        </header>
         {children}
       </div>
     </section>

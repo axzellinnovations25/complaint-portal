@@ -563,7 +563,7 @@ export function SubmitComplaintPage() {
               ))}
             </ol>
 
-            <fieldset className="report-step-panel" disabled={currentStep !== 1} hidden={currentStep !== 1}>
+            <fieldset className="report-step-panel" hidden={currentStep !== 1}>
               <ReportDropdown
                 error={categoryError}
                 id="complaint-category"
@@ -619,7 +619,7 @@ export function SubmitComplaintPage() {
               </div>
             </fieldset>
 
-            <fieldset className="report-step-panel" disabled={currentStep !== 2} hidden={currentStep !== 2}>
+            <fieldset className="report-step-panel" hidden={currentStep !== 2}>
               <div className="field-preview file-field report-file-field">
                 <label htmlFor="complaint-evidence">{copy.evidence}</label>
                 <input
@@ -669,7 +669,7 @@ export function SubmitComplaintPage() {
               )}
             </fieldset>
 
-            <fieldset className="report-step-panel" disabled={currentStep !== 3} hidden={currentStep !== 3}>
+            <fieldset className="report-step-panel" hidden={currentStep !== 3}>
               <div className="form-section-title">
                 <span aria-hidden="true">3</span>
                 <div>

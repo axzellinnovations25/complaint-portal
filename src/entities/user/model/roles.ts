@@ -96,7 +96,7 @@ export const adminSections = [
     id: 'locations',
     label: 'Locations',
     href: '/admin/locations',
-    description: 'Maintain wards, GN divisions, villages, and service zones.',
+    description: 'Maintain location names, GN divisions, villages, and service zones.',
     allowedRoles: ['super_admin', 'main_admin', 'department_head'],
   },
   {

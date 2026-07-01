@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import * as QRCode from 'qrcode'
 import type { AdminSectionDefinition, UserRole } from '../../../entities/user/model/roles'
 import { userRoleLabels, userRoles } from '../../../entities/user/model/roles'
 import { supabase } from '../../../shared/lib/supabase/client'
@@ -52,9 +53,24 @@ type LocationRow = {
   ward: string | null
   village: string | null
   gn_division: string | null
-  latitude: number | null
-  longitude: number | null
+  qr_payload: string | null
+  qr_code_data_url: string | null
   created_at: string
+}
+
+type LocationFormState = {
+  gnDivision: string
+  village: string
+  ward: string
+}
+
+type LocationPayload = {
+  id?: string
+  gn_division: string | null
+  qr_code_data_url?: string
+  qr_payload?: string
+  village: string | null
+  ward: string | null
 }
 
 type ComplaintReportRow = {
@@ -187,14 +203,6 @@ function formatDateTime(value: string) {
     hour: '2-digit',
     minute: '2-digit',
   })
-}
-
-function formatCoordinates(location: LocationRow) {
-  if (location.latitude === null || location.longitude === null) {
-    return 'Not mapped'
-  }
-
-  return `${location.latitude}, ${location.longitude}`
 }
 
 function StatusBadge({ label }: { label: string }) {
@@ -1122,7 +1130,7 @@ export function CategoriesAdministrationPage() {
 async function loadLocationsPageData() {
   const { data, error } = await supabase
     .from('locations')
-    .select('id, ward, village, gn_division, latitude, longitude, created_at')
+    .select('id, ward, village, gn_division, qr_payload, qr_code_data_url, created_at')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -1133,8 +1141,223 @@ async function loadLocationsPageData() {
 }
 
 export function LocationsAdministrationPage() {
-  const { data: locations, errorMessage, isLoading } = useData([] as LocationRow[], loadLocationsPageData)
+  const { data: loadedLocations, errorMessage, isLoading } = useData([] as LocationRow[], loadLocationsPageData)
+  const [locations, setLocations] = useState([] as LocationRow[])
   const [actionMessage, setActionMessage] = useState('')
+  const [locationError, setLocationError] = useState('')
+  const [isLocationSaving, setIsLocationSaving] = useState(false)
+  const [editingLocationId, setEditingLocationId] = useState<string | null>(null)
+  const [showCreateLocationDialog, setShowCreateLocationDialog] = useState(false)
+  const [selectedQrLocation, setSelectedQrLocation] = useState<LocationRow | null>(null)
+  const [locationForm, setLocationForm] = useState<LocationFormState>({
+    gnDivision: '',
+    village: '',
+    ward: '',
+  })
+  const [editLocationForm, setEditLocationForm] = useState<LocationFormState>({
+    gnDivision: '',
+    village: '',
+    ward: '',
+  })
+
+  useEffect(() => {
+    setLocations(loadedLocations)
+  }, [loadedLocations])
+
+  const resetLocationForms = () => {
+    setLocationForm({
+      gnDivision: '',
+      village: '',
+      ward: '',
+    })
+    setEditLocationForm({
+      gnDivision: '',
+      village: '',
+      ward: '',
+    })
+    setEditingLocationId(null)
+  }
+
+  const buildLocationPayload = (form: LocationFormState): { payload: LocationPayload } | { error: string } => {
+    const payload = {
+      gn_division: form.gnDivision.trim() || null,
+      village: form.village.trim() || null,
+      ward: form.ward.trim() || null,
+    }
+
+    if (!payload.ward && !payload.village && !payload.gn_division) {
+      return { error: 'Add at least a name, village, or GN division.' }
+    }
+
+    return { payload }
+  }
+
+  const getLocationName = (location: Pick<LocationRow, 'gn_division' | 'village' | 'ward'>) =>
+    location.ward ?? location.village ?? location.gn_division ?? 'this location'
+
+  const buildLocationQrPayload = (locationId: string) => {
+    const submitUrl = new URL('/submit', 'https://complaint-portals.netlify.app')
+    submitUrl.searchParams.set('locationId', locationId)
+
+    return submitUrl.toString()
+  }
+
+  const handleDownloadLocationQr = (location: LocationRow) => {
+    if (!location.qr_code_data_url) {
+      setLocationError('This location does not have a stored QR code yet.')
+      return
+    }
+
+    const filenameBase = getLocationName(location)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'location'
+    const anchor = document.createElement('a')
+    anchor.href = location.qr_code_data_url
+    anchor.download = `${filenameBase}-qr.png`
+    anchor.click()
+  }
+
+  const handleCreateLocation = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const locationPayload = buildLocationPayload(locationForm)
+
+    if ('error' in locationPayload) {
+      setLocationError(locationPayload.error)
+      return
+    }
+
+    setLocationError('')
+    setActionMessage('')
+    setIsLocationSaving(true)
+
+    try {
+      const locationId = crypto.randomUUID()
+      const qrPayload = buildLocationQrPayload(locationId)
+      const qrCodeDataUrl = await QRCode.toDataURL(qrPayload, {
+        errorCorrectionLevel: 'M',
+        margin: 2,
+        scale: 8,
+      })
+
+      const { data: createdLocation, error } = await supabase
+        .from('locations')
+        .insert({
+          ...locationPayload.payload,
+          id: locationId,
+          qr_code_data_url: qrCodeDataUrl,
+          qr_payload: qrPayload,
+        })
+        .select('id, ward, village, gn_division, qr_payload, qr_code_data_url, created_at')
+        .single()
+
+      if (error) {
+        setLocationError(error.message)
+        return
+      }
+
+      setLocations((currentLocations) => [createdLocation as LocationRow, ...currentLocations])
+      resetLocationForms()
+      setShowCreateLocationDialog(false)
+      setSelectedQrLocation(createdLocation as LocationRow)
+      setActionMessage(`Location "${getLocationName(createdLocation)}" created with a QR code.`)
+    } catch (error) {
+      setLocationError(error instanceof Error ? error.message : 'QR code could not be generated.')
+    } finally {
+      setIsLocationSaving(false)
+    }
+  }
+
+  const handleStartEditLocation = (location: LocationRow) => {
+    setLocationError('')
+    setActionMessage('')
+    setEditingLocationId(location.id)
+    setEditLocationForm({
+      gnDivision: location.gn_division ?? '',
+      village: location.village ?? '',
+      ward: location.ward ?? '',
+    })
+  }
+
+  const handleUpdateLocation = async (locationId: string) => {
+    const locationPayload = buildLocationPayload(editLocationForm)
+
+    if ('error' in locationPayload) {
+      setLocationError(locationPayload.error)
+      return
+    }
+
+    setLocationError('')
+    setActionMessage('')
+    setIsLocationSaving(true)
+
+    try {
+      const qrPayload = buildLocationQrPayload(locationId)
+      const qrCodeDataUrl = await QRCode.toDataURL(qrPayload, {
+        errorCorrectionLevel: 'M',
+        margin: 2,
+        scale: 8,
+      })
+
+      const { data: updatedLocation, error } = await supabase
+        .from('locations')
+        .update({
+          ...locationPayload.payload,
+          qr_code_data_url: qrCodeDataUrl,
+          qr_payload: qrPayload,
+        })
+        .eq('id', locationId)
+        .select('id, ward, village, gn_division, qr_payload, qr_code_data_url, created_at')
+        .single()
+
+      if (error) {
+        setLocationError(error.message)
+        return
+      }
+
+      setLocations((currentLocations) =>
+        currentLocations.map((location) => (location.id === locationId ? (updatedLocation as LocationRow) : location)),
+      )
+      resetLocationForms()
+      setSelectedQrLocation((currentLocation) =>
+        currentLocation?.id === locationId ? (updatedLocation as LocationRow) : currentLocation,
+      )
+      setActionMessage(`Location "${getLocationName(updatedLocation)}" updated with a QR code.`)
+    } catch (error) {
+      setLocationError(error instanceof Error ? error.message : 'QR code could not be generated.')
+    } finally {
+      setIsLocationSaving(false)
+    }
+  }
+
+  const handleDeleteLocation = async (location: LocationRow) => {
+    const locationName = getLocationName(location)
+    const confirmed = window.confirm(
+      `Delete "${locationName}"? This only succeeds when no complaints reference this location.`,
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    setLocationError('')
+    setActionMessage('')
+    setIsLocationSaving(true)
+
+    const { error } = await supabase.from('locations').delete().eq('id', location.id)
+
+    setIsLocationSaving(false)
+
+    if (error) {
+      setLocationError(`${error.message} Keep the location if complaints still reference it.`)
+      return
+    }
+
+    setLocations((currentLocations) => currentLocations.filter((currentLocation) => currentLocation.id !== location.id))
+    setSelectedQrLocation((currentLocation) => (currentLocation?.id === location.id ? null : currentLocation))
+    setActionMessage(`Location "${locationName}" deleted.`)
+  }
 
   return (
     <section className="admin-section-panel">
@@ -1143,14 +1366,32 @@ export function LocationsAdministrationPage() {
           <>
             <button
               className="button button-secondary"
-              onClick={() => setActionMessage('Location CSV upload needs file parsing and row validation before bulk writes are enabled.')}
+              disabled={locations.length === 0}
+              onClick={() =>
+                downloadCsv(
+                  `locations-${new Date().toISOString().slice(0, 10)}.csv`,
+                  locations.map((location) => ({
+                    created_at: location.created_at,
+                    gn_division: location.gn_division,
+                    id: location.id,
+                    qr_payload: location.qr_payload,
+                    village: location.village,
+                    ward: location.ward,
+                  })),
+                )
+              }
               type="button"
             >
-              Upload CSV
+              Export CSV
             </button>
             <button
               className="button button-primary"
-              onClick={() => setActionMessage('Location create/edit is not backed by a form yet; existing live records are shown below.')}
+              onClick={() => {
+                setLocationError('')
+                setActionMessage('')
+                resetLocationForms()
+                setShowCreateLocationDialog(true)
+              }}
               type="button"
             >
               Add location
@@ -1159,40 +1400,251 @@ export function LocationsAdministrationPage() {
         }
         description="Maintain the geographic master data used for intake, assignment, reporting, and field work."
         eyebrow="Location administration"
-        title="Wards, villages, and service zones"
+        title="Locations, villages, and service zones"
       />
 
       <DataError message={errorMessage} />
+      <DataError message={locationError} />
       <ActionNotice message={actionMessage} />
 
-      <div className="admin-data-panel">
-        <div className="admin-panel-heading">
-          <strong>Location master</strong>
-          <span>{locations.length} records</span>
-        </div>
-        {locations.length > 0 ? (
-          <div className="admin-table admin-location-table" role="table" aria-label="Location master data">
-            <div className="admin-table-row admin-table-head" role="row">
-              <span>Ward</span>
-              <span>Village</span>
-              <span>GN division</span>
-              <span>Coordinates</span>
-              <span>Created</span>
-            </div>
-            {locations.map((location) => (
-              <article className="admin-table-row" key={location.id} role="row">
-                <span><strong>{location.ward ?? 'No ward'}</strong></span>
-                <span>{location.village ?? 'No village'}</span>
-                <span>{location.gn_division ?? 'No GN division'}</span>
-                <span>{formatCoordinates(location)}</span>
-                <span>{formatDate(location.created_at)}</span>
-              </article>
-            ))}
+      <div className="admin-two-column admin-two-column-wide">
+        <div className="admin-data-panel">
+          <div className="admin-panel-heading">
+            <strong>Location master</strong>
+            <span>{locations.length} records</span>
           </div>
-        ) : (
-          <EmptyState>{isLoading ? 'Loading locations.' : 'No locations found.'}</EmptyState>
-        )}
+          {locations.length > 0 ? (
+            <div className="admin-table admin-location-table" role="table" aria-label="Location master data">
+              <div className="admin-table-row admin-table-head" role="row">
+                <span>Name</span>
+                <span>Village</span>
+                <span>GN division</span>
+                <span>Created</span>
+                <span>Actions</span>
+              </div>
+              {locations.map((location) =>
+                editingLocationId === location.id ? (
+                  <form
+                    className="admin-table-row admin-location-edit-row"
+                    key={location.id}
+                    onSubmit={(event) => {
+                      event.preventDefault()
+                      void handleUpdateLocation(location.id)
+                    }}
+                    role="row"
+                  >
+                    <span>
+                      <input
+                        aria-label="Location name"
+                        onChange={(event) =>
+                          setEditLocationForm((currentForm) => ({ ...currentForm, ward: event.target.value }))
+                        }
+                        value={editLocationForm.ward}
+                      />
+                    </span>
+                    <span>
+                      <input
+                        aria-label="Village"
+                        onChange={(event) =>
+                          setEditLocationForm((currentForm) => ({ ...currentForm, village: event.target.value }))
+                        }
+                        value={editLocationForm.village}
+                      />
+                    </span>
+                    <span>
+                      <input
+                        aria-label="GN division"
+                        onChange={(event) =>
+                          setEditLocationForm((currentForm) => ({ ...currentForm, gnDivision: event.target.value }))
+                        }
+                        value={editLocationForm.gnDivision}
+                      />
+                    </span>
+                    <span>{formatDate(location.created_at)}</span>
+                    <span className="admin-row-actions">
+                      <button className="case-link-button" disabled={isLocationSaving} type="submit">
+                        Save
+                      </button>
+                      <button className="case-link-button" onClick={resetLocationForms} type="button">
+                        Cancel
+                      </button>
+                    </span>
+                  </form>
+                ) : (
+                  <article className="admin-table-row" key={location.id} role="row">
+                    <span>
+                      <strong>{location.ward ?? 'No name'}</strong>
+                      <small>{location.id}</small>
+                    </span>
+                    <span>{location.village ?? 'No village'}</span>
+                    <span>{location.gn_division ?? 'No GN division'}</span>
+                    <span>{formatDate(location.created_at)}</span>
+                    <span className="admin-row-actions">
+                      <button
+                        className="case-link-button"
+                        disabled={isLocationSaving || !location.qr_code_data_url}
+                        onClick={() => setSelectedQrLocation(location)}
+                        type="button"
+                      >
+                        Show QR
+                      </button>
+                      <button
+                        className="case-link-button"
+                        disabled={isLocationSaving}
+                        onClick={() => handleStartEditLocation(location)}
+                        type="button"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="case-link-button case-link-danger"
+                        disabled={isLocationSaving}
+                        onClick={() => void handleDeleteLocation(location)}
+                        type="button"
+                      >
+                        Delete
+                      </button>
+                    </span>
+                  </article>
+                ),
+              )}
+            </div>
+          ) : (
+            <EmptyState>{isLoading ? 'Loading locations.' : 'No locations found.'}</EmptyState>
+          )}
+        </div>
+
+        <aside className="admin-data-panel">
+          <div className="admin-panel-heading">
+            <strong>Location QR</strong>
+            <span>Created location codes</span>
+          </div>
+          <EmptyState>Select Show QR from a location row to open its code.</EmptyState>
+        </aside>
       </div>
+
+      {selectedQrLocation ? (
+        <div className="admin-modal-backdrop" role="presentation">
+          <section
+            aria-labelledby="location-qr-title"
+            aria-modal="true"
+            className="admin-modal-panel admin-qr-modal-panel"
+            role="dialog"
+          >
+            <div className="admin-modal-header">
+              <div>
+                <p className="eyebrow">Location QR</p>
+                <h3 id="location-qr-title">{getLocationName(selectedQrLocation)}</h3>
+              </div>
+              <button className="case-link-button" onClick={() => setSelectedQrLocation(null)} type="button">
+                Close
+              </button>
+            </div>
+            {selectedQrLocation.qr_code_data_url ? (
+              <div className="admin-qr-preview" aria-live="polite">
+                <img
+                  alt={`QR code for ${getLocationName(selectedQrLocation)}`}
+                  src={selectedQrLocation.qr_code_data_url}
+                />
+                <span>{selectedQrLocation.qr_payload}</span>
+              </div>
+            ) : (
+              <EmptyState>This location does not have a stored QR code yet.</EmptyState>
+            )}
+            <div className="admin-modal-actions">
+              <button className="button button-secondary" onClick={() => setSelectedQrLocation(null)} type="button">
+                Close
+              </button>
+              <button
+                className="button button-primary"
+                disabled={!selectedQrLocation.qr_code_data_url}
+                onClick={() => handleDownloadLocationQr(selectedQrLocation)}
+                type="button"
+              >
+                Download QR
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+
+      {showCreateLocationDialog ? (
+        <div className="admin-modal-backdrop" role="presentation">
+          <section
+            aria-labelledby="create-location-title"
+            aria-modal="true"
+            className="admin-modal-panel"
+            role="dialog"
+          >
+            <div className="admin-modal-header">
+              <div>
+                <p className="eyebrow">Location administration</p>
+                <h3 id="create-location-title">Create location</h3>
+              </div>
+              <button
+                className="case-link-button"
+                disabled={isLocationSaving}
+                onClick={() => {
+                  resetLocationForms()
+                  setShowCreateLocationDialog(false)
+                }}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <form className="admin-form-preview" onSubmit={handleCreateLocation}>
+              <label>
+                Name
+                <input
+                  autoFocus
+                  onChange={(event) =>
+                    setLocationForm((currentForm) => ({ ...currentForm, ward: event.target.value }))
+                  }
+                  placeholder="Example: Central Market"
+                  value={locationForm.ward}
+                />
+              </label>
+              <label>
+                Village
+                <input
+                  onChange={(event) =>
+                    setLocationForm((currentForm) => ({ ...currentForm, village: event.target.value }))
+                  }
+                  placeholder="Example: Kallady"
+                  value={locationForm.village}
+                />
+              </label>
+              <label>
+                GN division
+                <input
+                  onChange={(event) =>
+                    setLocationForm((currentForm) => ({ ...currentForm, gnDivision: event.target.value }))
+                  }
+                  placeholder="Example: 176A"
+                  value={locationForm.gnDivision}
+                />
+              </label>
+              <div className="admin-modal-actions">
+                <button
+                  className="button button-secondary"
+                  disabled={isLocationSaving}
+                  onClick={() => {
+                    resetLocationForms()
+                    setShowCreateLocationDialog(false)
+                  }}
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button className="button button-primary" disabled={isLocationSaving} type="submit">
+                  {isLocationSaving ? 'Saving...' : 'Create location'}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      ) : null}
     </section>
   )
 }

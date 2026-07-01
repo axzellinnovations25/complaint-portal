@@ -41,6 +41,32 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['profiles']['Insert']>
         Relationships: []
       }
+      locations: {
+        Row: {
+          id: string
+          ward: string | null
+          village: string | null
+          gn_division: string | null
+          latitude: number | null
+          longitude: number | null
+          qr_payload: string | null
+          qr_code_data_url: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          ward?: string | null
+          village?: string | null
+          gn_division?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          qr_payload?: string | null
+          qr_code_data_url?: string | null
+          created_at?: string
+        }
+        Update: Partial<Database['public']['Tables']['locations']['Insert']>
+        Relationships: []
+      }
       complaints: {
         Row: {
           id: string

@@ -53,7 +53,7 @@ export const systemModules = {
     },
     {
       title: 'Categories, SLA, and locations',
-      description: 'Complaint taxonomy, department routing, SLA targets, wards, villages, and service zones.',
+      description: 'Complaint taxonomy, department routing, SLA targets, location names, villages, and service zones.',
       owner: 'features/locations',
     },
     {

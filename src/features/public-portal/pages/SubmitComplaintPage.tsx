@@ -202,6 +202,10 @@ function getInitialCategory() {
   return category && availableCategories.has(category) ? category : ''
 }
 
+function getInitialLocationId() {
+  return new URLSearchParams(window.location.search).get('locationId') ?? ''
+}
+
 function ReportIcon({ name }: { name: ReportIconName }) {
   const common = {
     fill: 'none',
@@ -369,6 +373,7 @@ export function SubmitComplaintPage() {
   const [category, setCategory] = useState(getInitialCategory)
   const [categoryError, setCategoryError] = useState('')
   const [urgency, setUrgency] = useState('normal')
+  const [initialLocationId] = useState(getInitialLocationId)
   const referenceHintId = useId()
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -532,16 +537,23 @@ export function SubmitComplaintPage() {
                 value={urgency}
               />
 
-              <div className="field-preview">
-                <label htmlFor="complaint-location">{copy.location}</label>
-                <input
-                  id="complaint-location"
-                  name="location"
-                  placeholder={copy.locationPlaceholder}
-                  type="text"
-                  required
-                />
-              </div>
+              {initialLocationId ? (
+                <>
+                  <input name="locationId" type="hidden" value={initialLocationId} />
+                  <input name="locationSource" type="hidden" value="qr" />
+                </>
+              ) : (
+                <div className="field-preview">
+                  <label htmlFor="complaint-location">{copy.location}</label>
+                  <input
+                    id="complaint-location"
+                    name="location"
+                    placeholder={copy.locationPlaceholder}
+                    type="text"
+                    required
+                  />
+                </div>
+              )}
 
               <div className="field-preview">
                 <label htmlFor="complaint-details">{copy.description}</label>

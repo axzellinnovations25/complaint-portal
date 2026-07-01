@@ -3033,6 +3033,7 @@ html[lang='ta'] .track-form-row input {
 }
 
 .admin-department-edit-row input,
+.admin-location-edit-row input,
 .admin-officer-edit-row input,
 .admin-officer-edit-row select {
   background: #ffffff;
@@ -3045,11 +3046,98 @@ html[lang='ta'] .track-form-row input {
 }
 
 .admin-department-edit-row input:focus,
+.admin-location-edit-row input:focus,
 .admin-officer-edit-row input:focus,
 .admin-officer-edit-row select:focus {
   border-color: var(--border-em);
   box-shadow: 0 0 0 3px var(--accent-dim);
   outline: none;
+}
+
+.admin-location-table .admin-table-row {
+  grid-template-columns:
+    minmax(150px, 1fr) minmax(150px, 0.9fr) minmax(140px, 0.85fr) 110px minmax(220px, 0.9fr);
+}
+
+.admin-qr-preview {
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.admin-qr-preview img {
+  aspect-ratio: 1;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: block;
+  max-width: 240px;
+  padding: 12px;
+  width: 100%;
+}
+
+.admin-qr-preview span {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-modal-backdrop {
+  align-items: center;
+  background: rgba(15, 23, 42, 0.38);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  z-index: 80;
+}
+
+.admin-modal-panel {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  gap: 16px;
+  max-height: min(720px, calc(100vh - 40px));
+  max-width: 520px;
+  overflow: auto;
+  padding: 20px;
+  width: min(100%, 520px);
+}
+
+.admin-qr-modal-panel {
+  max-width: 440px;
+}
+
+.admin-qr-modal-panel .admin-qr-preview {
+  justify-items: center;
+}
+
+.admin-modal-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.admin-modal-header h3 {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.2;
+  margin: 4px 0 0;
+}
+
+.admin-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
 }
 
 .admin-table-row .admin-row-actions {
@@ -3086,7 +3174,6 @@ html[lang='ta'] .track-form-row input {
 }
 
 .admin-user-table .admin-table-row,
-.admin-location-table .admin-table-row,
 .admin-audit-table .admin-table-row {
   grid-template-columns: minmax(170px, 1fr) minmax(140px, 0.8fr) minmax(130px, 0.7fr) minmax(120px, 0.7fr) 110px;
 }

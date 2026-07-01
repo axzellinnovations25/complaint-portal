@@ -84,6 +84,14 @@ for select
 to authenticated
 using (public.is_staff_role(public.current_user_role()));
 
+drop policy if exists "locations_manage_admins" on public.locations;
+create policy "locations_manage_admins"
+on public.locations
+for all
+to authenticated
+using (public.current_user_role() in ('super_admin', 'main_admin', 'department_head'))
+with check (public.current_user_role() in ('super_admin', 'main_admin', 'department_head'));
+
 drop policy if exists "complaints_select_staff" on public.complaints;
 create policy "complaints_select_staff"
 on public.complaints

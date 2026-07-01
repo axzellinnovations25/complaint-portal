@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from 'react'
+import { useEffect, useId, useState, type FormEvent } from 'react'
 import { usePublicLanguage, type PublicLanguage } from '../../../shared/i18n/PublicLanguageContext'
 
 type ReportIconName =
@@ -376,6 +376,16 @@ export function SubmitComplaintPage() {
   const [initialLocationId] = useState(getInitialLocationId)
   const referenceHintId = useId()
 
+  useEffect(() => {
+    if (!initialLocationId) {
+      return
+    }
+
+    window.requestAnimationFrame(() => {
+      document.getElementById('complaint-intake')?.scrollIntoView({ block: 'start' })
+    })
+  }, [initialLocationId])
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (currentStep < 3) {
@@ -443,7 +453,11 @@ export function SubmitComplaintPage() {
         </div>
       </section>
 
-      <section className="workflow-panel submit-panel complaint-intake-panel" aria-label="Complaint intake">
+      <section
+        className="workflow-panel submit-panel complaint-intake-panel"
+        id="complaint-intake"
+        aria-label="Complaint intake"
+      >
         {submittedReference ? (
           <section className="success-card report-success-card" aria-live="polite" aria-labelledby="submission-success-title">
             <span className="success-icon" aria-hidden="true">

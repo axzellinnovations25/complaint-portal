@@ -1198,6 +1198,7 @@ export function LocationsAdministrationPage() {
   const buildLocationQrPayload = (locationId: string) => {
     const submitUrl = new URL('/submit', 'https://complaint-portals.netlify.app')
     submitUrl.searchParams.set('locationId', locationId)
+    submitUrl.hash = 'complaint-intake'
 
     return submitUrl.toString()
   }

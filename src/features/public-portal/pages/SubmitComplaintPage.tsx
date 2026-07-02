@@ -43,7 +43,7 @@ const urgencyOptions: Record<PublicLanguage, Array<{ description: string; label:
     { description: 'For comments or lower urgency requests.', label: 'General feedback', value: 'low' },
   ],
   ta: [
-    { description: 'வழக்கமான பரிசீலனை மற்றும் ஒதுக்கீட்டிற்காக.', label: 'சாதாரண சேவை குறை', value: 'normal' },
+    { description: 'வழக்கமான பரிசீலனை மற்றும் ஒதுக்கீட்டிற்காக.', label: 'வழக்கமான சேவை தொடர்பான சிக்கல்', value: 'normal' },
     { description: 'அணுகல் அல்லது பொது பாதுகாப்பு பாதிக்கப்படும் போது பயன்படுத்தவும்.', label: 'பொது பாதுகாப்பு பாதிப்பு', value: 'high' },
     { description: 'கருத்து அல்லது குறைந்த அவசர கோரிக்கைகளுக்காக.', label: 'பொது கருத்து', value: 'low' },
   ],
@@ -112,7 +112,7 @@ const submitCopy = {
     heroEyebrow: 'முறைப்பாடு பதிவு',
     heroTitle: 'பொதுச் சேவை குறையை தெளிவாகவும் முழுமையாகவும் பதிவு செய்யவும்.',
     heroBody:
-      'இப்பக்கம் அவசர சேவைகளுக்காக அல்ல. பிரதேச சபை கவனிக்க வேண்டிய குறையை சேவை வகை, இடம், தொடர்பு விருப்பம் ஆகியவற்றுடன் பதிவு செய்தால் அது உரிய அணிக்கு விரைவாக ஒதுக்கப்படும்.',
+      'அவசரமற்ற நிலையில் உள்ள பிரதேச சபையின் சேவை தொடர்பான சிக்கல்களுக்கு இந்தப் பக்கத்தைப் பயன்படுத்தவும். வகை, இருப்பிடம் மற்றும் தொடர்பு விவரங்கள் குறித்த தெளிவான தேர்வுகள், புகாரை விரைவாக ஆய்வு செய்து உரிய பிரிவிடம் ஒப்படைக்கக் குழுவிற்கு உதவும்.',
     summaryLabel: 'பதிவுச் சுருக்கம்',
     referenceIssued: 'பதிவின் பின்னர் குறிப்பு எண் வழங்கப்படும்',
     referenceIssuedBody: 'பின்னர் நிலையை அறிய இதை பாதுகாப்பாக வைத்திருக்கவும்; அடையாளம் வெளிப்படுத்தாத முறைப்பாடுகளுக்கு இது அவசியம்.',
@@ -145,7 +145,7 @@ const submitCopy = {
     urgencyHelp: 'மிகப் பொருத்தமான நிலையைத் தேர்வு செய்யவும். பரிசீலனையின் பின்னர் அலுவலர்கள் மாற்றலாம்.',
     urgencyPlaceholder: 'அவசர நிலையைத் தேர்ந்தெடுக்கவும்',
     location: 'இடம்',
-    locationPlaceholder: 'வார்டு, வீதி பெயர், அடையாளம், கம்ப எண் அல்லது வரைபட குறிப்பு',
+    locationPlaceholder: 'வார்டு, வீதி பெயர், அடையாளம், மின்கம்ப எண் அல்லது வரைபட குறிப்பு',
     description: 'விவரம்',
     descriptionPlaceholder: 'பிரச்சினை என்ன, எப்போது தொடங்கியது, யார் பாதிக்கப்படுகின்றனர் என்பதைக் குறிப்பிடவும்.',
     evidence: 'படம் அல்லது ஆவணம்',
@@ -326,24 +326,23 @@ function ReportDropdown({
       {error && <span className="report-select-error-text">{error}</span>}
 
       {isOpen && (
-        <ul className="report-select-menu" role="listbox" aria-labelledby={`${id}-label`}>
+        <div className="report-select-menu" role="listbox" aria-labelledby={`${id}-label`}>
           {options.map((option) => (
-            <li key={option.value}>
-              <button
-                aria-selected={option.value === value}
-                onClick={() => {
-                  onChange(option.value)
-                  setIsOpen(false)
-                }}
-                role="option"
-                type="button"
-              >
-                <strong>{option.label}</strong>
-                {option.description && <span>{option.description}</span>}
-              </button>
-            </li>
+            <button
+              key={option.value}
+              aria-selected={option.value === value}
+              onClick={() => {
+                onChange(option.value)
+                setIsOpen(false)
+              }}
+              role="option"
+              type="button"
+            >
+              <strong>{option.label}</strong>
+              {option.description && <span>{option.description}</span>}
+            </button>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   )

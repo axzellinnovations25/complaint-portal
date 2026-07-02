@@ -499,7 +499,7 @@ export function PublicHomePage({ onNavigate }: PublicHomePageProps) {
                 <span className="checklist-icon" aria-hidden="true">
                   <HomeIcon name="check" />
                 </span>
-                <span className="checklist-label" style={{ whiteSpace: 'pre-line' }}>{detail}</span>
+                <span className="checklist-label">{detail}</span>
               </li>
             ))}
           </ul>

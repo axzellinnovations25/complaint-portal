@@ -19,7 +19,7 @@ const serviceGroups: Array<{
     title: { en: 'Roads and access', ta: 'வீதிகள் மற்றும் அணுகல் பாதைகள்' },
     owner: { en: 'Road works / field maintenance', ta: 'வீதி பணிகள் / கள பராமரிப்பு அணி' },
     examples: { en: ['Potholes', 'Broken culverts', 'Blocked footpaths', 'Damaged name boards'], ta: ['வீதி குழிகள்', 'சேதமடைந்த கல்வர்ட்கள்', 'தடைப்பட்ட நடைபாதைகள்', 'சேதமடைந்த பெயர்பலகைகள்'] },
-    details: { en: 'Include the road name, nearby landmark, direction of travel, and whether the issue blocks access.', ta: 'வீதி பெயர், அருகிலுள்ள அடையாளம், பயண திசை, அணுகல் பாதை தடைப்பட்டுள்ளதா என்பதைக் குறிப்பிடவும்.' },
+    details: { en: 'Include the road name, nearby landmark, direction of travel, and whether the issue blocks access.', ta: 'சாலையின் பெயர், அருகிலுள்ள முக்கிய அடையாளம், செல்லும் திசை மற்றும் அப்பிரச்சினை போக்குவரத்தைத் தடுக்கிறதா ஆகிய விவரங்களைச் சேர்க்கவும்.' },
     icon: 'road',
     tone: 'cyan',
   },
@@ -34,7 +34,7 @@ const serviceGroups: Array<{
   {
     title: { en: 'Waste and sanitation', ta: 'கழிவு மேலாண்மை மற்றும் சுகாதாரம்' },
     owner: { en: 'Solid waste / public health', ta: 'திடக்கழிவு / பொது சுகாதார அணி' },
-    examples: { en: ['Missed collection', 'Illegal dumping', 'Overflowing bins', 'Public toilet issues'], ta: ['சேகரிப்பு தவறுதல்', 'சட்டவிரோத கழிவு கொட்டுதல்', 'நிரம்பிய கழிவு தொட்டிகள்', 'பொது கழிப்பறை குறைகள்'] },
+    examples: { en: ['Missed collection', 'Illegal dumping', 'Overflowing bins', 'Public toilet issues'], ta: ['சேகரிப்பு தவறுதல்', 'சட்டவிரோத கழிவு கொட்டுதல்', 'நிரம்பிய கழிவுத் தொட்டிகள்', 'பொதுக் கழிப்பறைக் குறைகள்'] },
     details: { en: 'Add collection route, bin location, frequency of the issue, and any visible public health risk.', ta: 'சேகரிப்பு பாதை, தொட்டி அமைந்த இடம், பிரச்சினை ஏற்படும் அடிக்கடி நிலை, தெரியும் சுகாதார அபாயம் ஆகியவற்றைக் குறிப்பிடவும்.' },
     icon: 'trash',
     tone: 'teal',
@@ -43,7 +43,7 @@ const serviceGroups: Array<{
     title: { en: 'Street lighting and safety', ta: 'தெருவிளக்குகள் மற்றும் பாதுகாப்பு' },
     owner: { en: 'Electrical / field service', ta: 'மின்சார / கள சேவை அணி' },
     examples: { en: ['Broken lamps', 'Dark junctions', 'Exposed wiring', 'Unsafe public spaces'], ta: ['செயலிழந்த விளக்குகள்', 'இருண்ட சந்திப்புகள்', 'வெளிப்பட்ட மின்கம்பிகள்', 'பாதுகாப்பற்ற பொது இடங்கள்'] },
-    details: { en: 'Include pole number when available, street name, and whether the location is unsafe at night.', ta: 'கம்ப எண் தெரிந்தால் சேர்க்கவும்; வீதி பெயர் மற்றும் இரவு நேர பாதுகாப்பு குறை உள்ளதா என்பதையும் குறிப்பிடவும்.' },
+    details: { en: 'Include pole number when available, street name, and whether the location is unsafe at night.', ta: 'மின்கம்ப எண் தெரிந்தால் சேர்க்கவும்; வீதி பெயர் மற்றும் இரவு நேர பாதுகாப்பு குறை உள்ளதா என்பதையும் குறிப்பிடவும்.' },
     icon: 'light',
     tone: 'amber',
   },
@@ -51,15 +51,15 @@ const serviceGroups: Array<{
     title: { en: 'Public property and facilities', ta: 'பொது சொத்துகள் மற்றும் வசதிகள்' },
     owner: { en: 'Facilities / asset maintenance', ta: 'வசதிகள் / சொத்து பராமரிப்பு அணி' },
     examples: { en: ['Parks', 'Markets', 'Community halls', 'Libraries and cemeteries'], ta: ['பூங்காக்கள்', 'சந்தைகள்', 'சமூக மண்டபங்கள்', 'நூலகங்கள் / மயானங்கள்'] },
-    details: { en: 'Describe the damaged facility, exact area, safety risk, and whether it affects public use.', ta: 'சேதமடைந்த வசதி, துல்லியமான பகுதி, பாதுகாப்பு அபாயம், பொதுமக்கள் பயன்பாட்டில் ஏற்படும் பாதிப்பு ஆகியவற்றை விவரிக்கவும்.' },
+    details: { en: 'Describe the damaged facility, exact area, safety risk, and whether it affects public use.', ta: 'சேதமடைந்த வசதி, அதன் துல்லியமான பகுதி, பாதுகாப்பு அபாயம் மற்றும் அது பொதுமக்களின் பயன்பாட்டைப் பாதிக்கிறதா என்பது குறித்து விவரிக்கவும்.' },
     icon: 'building',
     tone: 'violet',
   },
   {
-    title: { en: 'Public health concerns', ta: 'பொது சுகாதார கவலைகள்' },
+    title: { en: 'Public health concerns', ta: 'பொதுச் சுகாதாரம் தொடர்பான கவலைகள்' },
     owner: { en: 'Public health / inspection', ta: 'பொது சுகாதாரம் / ஆய்வு அணி' },
     examples: { en: ['Mosquito breeding', 'Nuisance complaints', 'Unsafe premises', 'Sanitation risks'], ta: ['நுளம்பு பெருக்கும் இடங்கள்', 'தொந்தரவு தொடர்பான முறைப்பாடுகள்', 'பாதுகாப்பற்ற வளாகங்கள்', 'சுகாதார அபாயங்கள்'] },
-    details: { en: 'Share the location, visible risk, how long it has continued, and whether children or elders are affected.', ta: 'இடம், தென்படும் அபாயம், அது தொடரும் காலம், குழந்தைகள் அல்லது முதியவர்கள் பாதிக்கப்படுகிறார்களா என்பதைக் குறிப்பிடவும்.' },
+    details: { en: 'Share the location, visible risk, how long it has continued, and whether children or elders are affected.', ta: 'அமைவிடம், கண்ணுக்குத் தெரியும் ஆபத்து, அது எவ்வளவு காலமாக நீடிக்கிறது மற்றும் குழந்தைகள் அல்லது முதியவர்கள் பாதிக்கப்பட்டுள்ளார்களா ஆகிய விவரங்களைப் பகிரவும்.' },
     icon: 'alert',
     tone: 'rose',
   },
@@ -68,7 +68,7 @@ const serviceGroups: Array<{
 const portalBoundaries = [
   {
     title: { en: 'Use emergency channels first', ta: 'அவசர நிலைகளில் முதலில் அவசர சேவைகளை அணுகவும்' },
-    description: { en: 'Fire, crime, medical emergencies, and immediate life-safety matters should not wait for portal review.', ta: 'தீ, குற்றம், மருத்துவ அவசரம், உடனடி உயிர் பாதுகாப்பு அபாயம் போன்றவை மைய பரிசீலனைக்காக காத்திருக்கக் கூடாது.' },
+    description: { en: 'Fire, crime, medical emergencies, and immediate life-safety matters should not wait for portal review.', ta: 'தீ, குற்றம், மருத்துவ அவசரம், உடனடி உயிர் பாதுகாப்பு அபாயம் போன்றவை இணையதளப் பரிசீலனைக்காகக் காத்திருக்கக் கூடாது.' },
     icon: 'alert' as const,
   },
   {
@@ -78,7 +78,7 @@ const portalBoundaries = [
   },
   {
     title: { en: 'Keep your reference number', ta: 'குறிப்பு எண்ணை பாதுகாப்பாக வைத்திருக்கவும்' },
-    description: { en: 'Anonymous complaints cannot be recovered from a phone number, so the reference is required for tracking.', ta: 'அடையாளம் வெளிப்படுத்தாத முறைப்பாடுகளை தொலைபேசி எண்ணால் மீட்க முடியாது; நிலையை அறிய குறிப்பு எண் அவசியம்.' },
+    description: { en: 'Anonymous complaints cannot be recovered from a phone number, so the reference is required for tracking.', ta: 'அடையாளம் குறிப்பிடாத புகார்களைத் தொலைபேசி எண்ணைக் கொண்டு கண்டறிய முடியாது; எனவே, அவற்றைக் கண்காணிக்கக் குறிப்பு எண் (reference) தேவைப்படுகிறது.' },
     icon: 'lock' as const,
   },
 ]
@@ -127,12 +127,12 @@ const servicesCopy = {
     summaryLabel: 'சேவை வகைச் சுருக்கம்',
     closestCategory: 'மிகப் பொருத்தமான வகையைத் தேர்வு செய்தால் போதுமானது',
     closestCategoryBody: 'வேறு அணி கையாள வேண்டியிருந்தால், பரிசீலனையின் பின்னர் அலுவலர்கள் முறைப்பாட்டை மாற்றுவார்கள்.',
-    heroBullets: ['6 பொதுவான குடிமக்கள் சேவை பிரிவுகள்', 'இட விவரம் கள அணிக்கு வழிகாட்டும்', 'குறிப்பு எண் மூலம் நிலையை கண்காணிக்கலாம்'],
+    heroBullets: ['6 பொதுவான குடிமக்கள் சேவை பிரிவுகள்', 'இட விவரங்கள் கள அலுவலர்களுக்கு வழிகாட்டுகின்றன.', 'குறிப்பு எண் மூலம் நிலையை கண்காணிக்கலாம்'],
     guidanceLabel: 'முக்கிய சேவை வழிகாட்டல்',
     commonEyebrow: 'பொதுவான பிரிவுகள்',
     commonTitle: 'குடிமக்கள் வழக்கமாக பதிவு செய்யும் பிரச்சினைகள்',
     commonBody:
-      'குடிமக்கள் பொதுவாக விவரிக்கும் பிரச்சினைகளின் அடிப்படையில் இவ்வகைகள் அமைக்கப்பட்டுள்ளன. மிகப் பொருத்தமான ஒன்றைத் தேர்ந்தெடுத்தால் செயற்பாட்டு அணி அதை உரிய அலுவலர் அல்லது துறைக்கு ஒதுக்கும்.',
+      'இப்பிரிவுகள் குடிமக்கள் தங்கள் பிரச்சினைகளை விவரிக்கும் விதத்துடன் ஒத்துப்போகின்றன. இதில் மிகவும் பொருத்தமானதைத் தேர்ந்தெடுத்தால், செயல்பாட்டுக் குழுவினர் அதைச் சரியான அதிகாரி அல்லது துறைக்கு ஒதுக்க முடியும்.',
     examplesSuffix: 'எடுத்துக்காட்டுகள்',
     qualityEyebrow: 'முறைப்பாட்டின் தரம்',
     qualityTitle: 'தெளிவான விவரங்கள் அலுவலர்கள் விரைவாக நடவடிக்கை எடுக்க உதவும்.',

@@ -1,8 +1,24 @@
 {
-  "extends": ["development"],
+  "extends": [
+    "development"
+  ],
   "hints": {
-    "axe/aria": ["default", {
-      "aria-valid-attr-value": "off"
-    }]
+    "axe/aria": [
+      "default",
+      {
+        "aria-valid-attr-value": "off"
+      }
+    ],
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "min-height",
+          "overscroll-behavior",
+          "overscroll-behavior: contain",
+          "min-height: auto"
+        ]
+      }
+    ]
   }
 }

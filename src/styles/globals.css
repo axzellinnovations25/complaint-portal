@@ -362,8 +362,8 @@ html[lang='ta'] .track-form-row input {
   background: rgba(15, 78, 99, 0.92);
   border: 1px solid rgba(103, 232, 249, 0.24);
   border-radius: 22px;
-  backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
+  backdrop-filter: blur(24px) saturate(200%);
   box-shadow:
     0 10px 34px rgba(15, 23, 42, 0.14),
     0 1px 3px rgba(15, 23, 42, 0.12),
@@ -732,6 +732,7 @@ html[lang='ta'] .track-form-row input {
   background: var(--glass);
   border-color: var(--border-light);
   color: var(--text);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -901,8 +902,8 @@ html[lang='ta'] .track-form-row input {
 
 .hero-copy h1 {
   background: linear-gradient(140deg, #111827 0%, #164e63 54%, var(--amber-500) 100%);
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
   background-clip: text;
   font-size: 3.85rem;
   line-height: 1.09;
@@ -945,6 +946,7 @@ html[lang='ta'] .track-form-row input {
   font-size: 0.8rem;
   font-weight: 600;
   padding: 7px 14px;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   transition: all 0.2s;
 }
@@ -1008,6 +1010,7 @@ html[lang='ta'] .track-form-row input {
   background: rgba(255, 255, 255, 0.90);
   border: 1px solid rgba(0, 0, 0, 0.09);
   border-radius: var(--radius-lg);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   padding: 16px 18px;
   display: grid;
@@ -1050,6 +1053,7 @@ html[lang='ta'] .track-form-row input {
 
 .quick-access-band a {
   background: var(--surface);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   padding: 26px 28px;
   display: grid;
@@ -1133,7 +1137,10 @@ html[lang='ta'] .track-form-row input {
 }
 
 .home-page .service-section-heading p:not(.eyebrow) {
+  font-size: 0.9875rem;
+  margin-inline: auto;
   max-width: 900px;
+  text-align: center;
 }
 
 @media (min-width: 761px) {
@@ -1158,6 +1165,7 @@ html[lang='ta'] .track-form-row input {
   padding: 26px;
   display: grid;
   gap: 14px;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   transition: all 0.3s var(--ease-out);
   position: relative;
@@ -1221,6 +1229,7 @@ html[lang='ta'] .track-form-row input {
   padding: 24px;
   display: grid;
   gap: 12px;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   transition: all 0.25s var(--ease-out);
 }
@@ -1267,6 +1276,7 @@ html[lang='ta'] .track-form-row input {
   grid-template-columns: 46px minmax(0, 1fr);
   gap: 10px;
   align-items: start;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   transition: all 0.25s var(--ease-out);
 }
@@ -1337,6 +1347,7 @@ html[lang='ta'] .track-form-row input {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   padding: clamp(28px, 4vw, 52px);
   margin-top: clamp(28px, 4vw, 48px);
@@ -1383,6 +1394,7 @@ html[lang='ta'] .track-form-row input {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   padding: clamp(24px, 3vw, 40px);
   display: grid;
@@ -1537,6 +1549,7 @@ html[lang='ta'] .track-form-row input {
 .field-preview textarea::placeholder,
 .tracking-row input::placeholder {
   color: var(--text-muted);
+  font-weight: 400;
 }
 
 .field-preview select {
@@ -2108,6 +2121,7 @@ html[lang='ta'] .track-form-row input {
   padding: 22px;
   display: grid;
   gap: 10px;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 
@@ -4133,6 +4147,7 @@ html[lang='ta'] .track-form-row input {
   border: 0;
   border-radius: var(--radius-md);
   color: #fff;
+  font-size: 0.9375rem;
   font-weight: 800;
   min-height: 44px;
   padding: 0 16px;
@@ -4207,7 +4222,7 @@ html[lang='ta'] .track-form-row input {
 .trust-fact-grid span {
   color: var(--text-soft);
   font-size: 0.88rem;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.5;
   max-width: 210px;
 }
@@ -4370,9 +4385,9 @@ html[lang='ta'] .track-form-row input {
 
 .home-cta-banner h2 {
   background: linear-gradient(140deg, #111827 0%, #164e63 54%, var(--amber-500) 100%);
+  -webkit-background-clip: text;
   background-clip: text;
   max-width: 680px;
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -4549,6 +4564,7 @@ html[lang='ta'] .track-form-row input {
   border-radius: var(--radius-md);
   color: var(--text-soft);
   display: grid;
+  font-size: 0.9375rem;
   font-weight: 700;
   gap: 10px;
   grid-template-columns: 28px minmax(0, 1fr);
@@ -4559,6 +4575,10 @@ html[lang='ta'] .track-form-row input {
 
 .report-hero-card li svg {
   color: var(--primary-600);
+}
+
+html[lang='ta'] .report-hero-card li {
+  font-size: 0.875rem;
 }
 
 .report-boundary-note {
@@ -4969,7 +4989,7 @@ html[lang='ta'] .track-form-row input {
 }
 
 .report-step-panel .field-preview label {
-  color: #64748b;
+  color: var(--text-soft);
   font-size: 0.7rem;
   letter-spacing: 0.12em;
 }
@@ -5011,6 +5031,7 @@ html[lang='ta'] .track-form-row input {
 
 .report-select-trigger-placeholder {
   color: var(--text-muted);
+  font-weight: 400;
 }
 
 .report-select-arrow {
@@ -5370,12 +5391,17 @@ html[lang='ta'] .track-form-row input {
   border-radius: var(--radius-md);
   color: var(--text-soft);
   display: grid;
+  font-size: 0.9375rem;
   font-weight: 700;
   gap: 10px;
   grid-template-columns: 28px minmax(0, 1fr);
   text-align: left;
   min-height: 44px;
   padding: 10px 12px;
+}
+
+html[lang='ta'] .services-hero-card li {
+  font-size: 0.875rem;
 }
 
 .services-hero-card li svg {
@@ -5698,6 +5724,7 @@ html[lang='ta'] .track-form-row input {
   border-radius: var(--radius-md);
   color: var(--text-soft);
   display: grid;
+  font-size: 0.9375rem;
   font-weight: 700;
   gap: 10px;
   grid-template-columns: 28px minmax(0, 1fr);
@@ -6347,6 +6374,7 @@ html[lang='ta'] .track-form-row input {
   border-radius: var(--radius-md);
   color: var(--text-soft);
   display: grid;
+  font-size: 0.9375rem;
   font-weight: 700;
   gap: 10px;
   grid-template-columns: 28px minmax(0, 1fr);
@@ -6357,6 +6385,14 @@ html[lang='ta'] .track-form-row input {
 
 .notices-hero-card li svg {
   color: var(--primary-600);
+}
+
+html[lang='ta'] .notices-hero-card p {
+  font-size: 0.9375rem;
+}
+
+html[lang='ta'] .notices-hero-card li {
+  font-size: 0.875rem;
 }
 
 .notices-priority-panel {
@@ -6630,7 +6666,7 @@ html[lang='ta'] .track-form-row input {
   }
 
   .hero-section {
-    min-height: auto;
+    min-height: 0;
     padding-top: 10px;
     gap: 32px;
   }
@@ -7178,7 +7214,7 @@ html[lang='ta'] .track-form-row input {
   }
 
   .trust-fact-grid article {
-    min-height: auto;
+    min-height: 0;
     text-align: center;
   }
 
@@ -7978,7 +8014,7 @@ html[lang='ta'] .track-form-row input {
 
   .home-page .civic-hero-section {
     gap: 14px;
-    min-height: auto;
+    min-height: 0;
     padding: 8px 0 0;
   }
 
@@ -9018,7 +9054,7 @@ html[lang='ta'] .track-form-tip p {
   html[lang='ta'] .track-reference-demo,
   html[lang='ta'] .track-privacy-note,
   html[lang='ta'] .track-form-tip {
-    min-height: auto;
+    min-height: 0;
   }
 }
 
@@ -9319,7 +9355,7 @@ html[lang='ta'] .track-form-tip p {
 
   .home-page .trust-fact-grid article,
   .trust-fact-grid article {
-    min-height: auto;
+    min-height: 0;
     padding: 18px 16px;
   }
 
@@ -11941,6 +11977,13 @@ html[lang='ta'] .home-page #guidance-title {
     line-height: 1.3;
   }
 
+  /* Report form fields: shrink 1px so long Tamil placeholders fit comfortably */
+  html[lang='ta'] .report-step-panel .field-preview input,
+  html[lang='ta'] .report-step-panel .field-preview textarea,
+  html[lang='ta'] .report-select-trigger {
+    font-size: 0.9575rem;
+  }
+
   /* Services section intro paragraphs: tighter max-width prevents wall-of-text */
   html[lang='ta'] .home-page .service-section-heading p:not(.eyebrow) {
     max-width: 720px;
@@ -11948,7 +11991,7 @@ html[lang='ta'] .home-page #guidance-title {
 
   /* Process intro: reduce h2 size so long Tamil sentence stays within 3 lines */
   html[lang='ta'] .home-page .process-intro h2 {
-    font-size: clamp(1.45rem, 1.8vw, 1.75rem);
+    font-size: clamp(1.3875rem, 1.74vw, 1.6875rem);
     line-height: 1.28;
   }
 }
